@@ -1,5 +1,5 @@
 a:link {
-	
+
 	color: blue;
 }
 
@@ -20,8 +20,10 @@ a:link {
 }
 
 .content{
+	float:center;
 	text-align: center
 	padding-bottom:60px; /*to make the footer further down*/
+	position: absolute;
 }
 
 .footer{
@@ -35,4 +37,15 @@ a:link {
 	float: right;
     width: 100px;
     background: red;
+    position:relative;
+}
+
+.image { 
+   position: relative; 
+   width: 100%;
+}
+
+h2 { 
+   position: absolute; 
+    color:red;
 }
