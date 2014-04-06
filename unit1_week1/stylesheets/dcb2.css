@@ -1,0 +1,38 @@
+a:link {
+	
+	color: blue;
+}
+
+.header{
+
+	height: 40px;
+	color: purple; 
+	padding: 15px;
+    border-top: 4px dotted blue;
+    margin: 15px; 
+    text-align: center;
+}
+
+.align-right{
+  text-align:right;
+  color: purple; 
+  font-weight: bold;
+}
+
+.content{
+	text-align: center
+	padding-bottom:60px; /*to make the footer further down*/
+}
+
+.footer{
+    position:absolute;
+    bottom:0;
+	width:100%;
+	text-align: center
+}
+
+.sidebar{
+	float: right;
+    width: 100px;
+    background: red;
+}
