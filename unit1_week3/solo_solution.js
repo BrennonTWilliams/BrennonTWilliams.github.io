@@ -87,10 +87,10 @@ adam.children = terah.children;
 
 // __________________________________________
 // Reflection: Use the reflection guidelines
-// 
-// 
-// 
-// 
+// I'm feeling a lot more confident with JavaScript already. Really my biggest challenge is
+// writing psuedocode. I know its important to do as a practice, but it feels tedious and
+// unnecessary. As the assignments get more and more challenging I'm sure I'll rely more
+// on psuedocode.
 // 
 // 
 
