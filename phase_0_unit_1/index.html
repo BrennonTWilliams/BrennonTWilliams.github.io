@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Brennon Williams, Technical DBC Blog</title>
+
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css"
+      rel="stylesheet">
+    <link rel="stylesheet" type="text/css"href="blog_template_stylesheet.css" />
+    <link rel="stylesheet" type="text/css"href="index.css" />
+
+  </head>
+  <body>
+    <div class="page-header">
+      <div id="photo">
+        <img src="https://lh3.googleusercontent.com/-sNLAjKZfVqg/AAAAAAAAAAI/AAAAAAAAAAA/gNfL6v8o3-k/photo.jpg" alt="Brennon Williams" width="150" height="150" class="img-circle">
+        <h4><small>Brennon Williams</small></h5>
+      </div>
+    	<h1><br>A Programmer and a Gentleman<br> <small>One Man's Life in the Dev Bootcamp Trenches</small><br><br></h1>
+    </div>
+    <h3><br><small><strong><span style="color:#3498db">ABOUT ME</span></strong><br><br>Work History</small></h3>
+    <p>
+      Before being a student at DBC I was a software engineer at Bespoke Innovations in San Francisco (now owned by 3D Systems). I worked on software for 3D patient scanners. After working at Bespoke for two consecutive summers I interned as a Toy Inventor in the IDEO ToyLab. There I did electronics and embedded systems programming for toys.
+    </p>
+    <h3><small>Personal Interests</small></h3>
+    <p>
+      As a Bay Area native I'm pretty much required to cycle as a hobby. It's a good thing too, becuase I happen to really enjoy biking. I also am an audiophile, one of those annoying people who thinks vinyl is better than digital music. I love good food and travel, particularly when the two are combined. I am also a voracious reader. David Foster Wallace is my favorite author. I get lost very easily and I wouldn't have it any other way.
+    </p>
+    <h3><br><small><strong><span style="color:#3498db">MY BLOG</span></strong><br></small></h3>
+    <h4><br><small><span style="color:#3498db">THE SOURCE OF ALL CONFLICT IS ONE TREE HILL</span><br>APRIL 27, 2014</small></h4>
+    <blockquote class="blockquote-reverse"><p>Discuss a time you had an emotional conflict with someone. What was it about? What happened?</p><footer>-DBC Prompt</footer></blockquote>
+    <p>
+      Well, I didn’t see that one coming. These Dev Bootcamp prompts never fail to surprise. <br>
+
+      I’m generally a conflict-free person. The last time I got in trouble was in Kindergarten, and that was for pranks, not acts of violence or aggression. In fifth grade I was a badge-wearing, clipboard-toting Conflict Mediator (I was eventually removed in a coup d’etat. Admittedly I was drunk off my own power). Now in college I’m a Peer Counselor, so people expect me to be temperate, soft-spoken, and agreeable (I’m at least one of these three things). <br>
+
+      Every “conflict” I’ve had in my life has been between me and my brother during childhood. I love my brother, but he was the kind of kid who took the TV remote with him to the bathroom so you couldn’t change the channel. I’m neat and organized, he’s slobbish and unkempt.<br>
+
+      Most of my memories of conflict with my brother have been blocked, thanks to the miracles of modern science, but I do recall one time in particular. My parents were out of town, and it was just me and him at home for the weekend. I was probably about twelve. My brother was being particularly tyrannical with the TV remote and I was in a bad mood. At one point during his One Tree Hill binge he left to go get a snack, leaving the remote unguarded for a full thirty seconds. I snuck down into the TV room, turned the TV to infomercials, removed one of the remote’s AA batteries, and snuck back out. He went through at least three or four hours of sweaty panic before he thought to check the battery compartment. He put two and two together and was less that happy about my trick. Long story short, he manages to lock me out of the house. While pressing his face up to a window and taunting me I punched him through the glass. <br>
+    </p>
+
+    <blockquote class="blockquote-reverse"><p>What was the source of the conflict?</p><footer>-DBC Prompt</footer></blockquote>
+    <p>
+      The source of the conflict, I suppose, was One Tree Hill. Those shows really aren’t healthy. Or perhaps it was two antithetical boys trapped in a crucible of boredom. I prefer to blame the former.
+    </p>
+
+    <blockquote class="blockquote-reverse"><p>How did you handle the conflict?</p><footer>-DBC Prompt</footer></blockquote>
+    <p>
+      Very, very poorly.
+    </p>
+     <blockquote class="blockquote-reverse"><p>Did your actions make the conflict better or worse?</p><footer>-Sun Tsu</footer></blockquote>
+     <p>
+      Much worse, though I did feel smug about the remote for awhile.
+    </p>
+
+    <blockquote class="blockquote-reverse"><p>If you could go back, what would you do differently, if anything?</p><footer>-DBC Prompt</footer></blockquote>
+    <p>
+      I handled pretty much everything wrong, but I would’t change a thing. If I did then I wouldn’t have anything to write this blog post about, and you would be far less entertained. 
+    </P>
+
+    <blockquote class="blockquote-reverse"><p>What did you learn from this experience?</p><footer>-DBC Prompt</footer></blockquote>
+    <p>
+      Glass is weak, One Tree Hill fans are easily angered, and outdoor hobbies are probably a good idea for kids.
+    </p>
+    <h4><br><small><span style="color:#3498db">LETS HASH IT OUT: ARRAYS VS. HASHES</span><br>APRIL 27, 2014</small></h4>
+    <blockquote class="blockquote-reverse"><p>Arrays vs. Hashes. What are they? What are they good for? How do you know which one to use?</p><footer>-DBC Prompt</footer></blockquote>
+    <p>
+      An array is an ordered, integer-indexed list of elements/objects. An array is essentially a collection of unique values, be they integers, strings or any other data type. Indexing starts at zero, which is annoying if you’re not used to it (you will be).<br>
+
+      Back in my Java days (oh, the things I’ve seen…) we did a lot of work with multi-dimensional arrays. If a one-dimensional array is a list, then a two-dimensional array is a grid. 2D arrays were great for things like coordinates. It wasn’t long ago that I wanted to use a 2D array in a Ruby project. I was surprised to find that 2D arrays don’t exist in Ruby, though as with anything in life, there are ways to get around it. In Ruby, you can create Inception-Arrays, that is, arrays within arrays. For example:<br><br>
+      <code>
+      a = [[0,1,2], [3,4,5]]
+      </code>
+      <br><br>
+      So next time you’re at a cocktail party and some snobby Java programmer tells you Ruby can’t do two dimensional arrays, you know what to say. Also, find better cocktail parties to go to.<br>
+
+      In contrast to arrays, which are but simple lists, hashes are key/value pairs. Objects are in groups of two. This is really useful when storing things like usernames and passwords. Instead of having two arrays (or even more confusingly, a hacky 2D array), one for usernames and one for passwords, you can use a hash to link each username with the corresponding password.
+    </p>
+    <h4><br><small><span style="color:#3498db">FROM PROGRAMMER TO BROGRAMMER</span><br>APRIL 20, 2014</small></h4>
+    <blockquote class="blockquote-reverse"><p>If as many people are programming as would seem to be programming, then it would be inexcusable to program alone.</p><footer>-Tennessee Williams (paraphrased)</footer></blockquote>
+    <p>
+      Programmers have a bad reputation when it comes to working with others. In many cases this is merited (boy do I have some stories), but the best programmers know how to work in teams. I’m glad that DBC is starting us early on group programming.<br>
+      I’ve enjoyed working with other DBC students thus far. We’re a pretty fun bunch.<br>
+      One thing that’s been great about working with others is that we’re able to fill in each others’ gaps in knowledge. When I don’t know something generally another student will, and when someone I’m working with (such as in this week’s GPS) doesn’t know something I’m able to help out. <br>
+      I noticed that there is definite caution to the way students interact. Everything is posed as a tentative question, such as “Would it be OK with you if I navigated now?” This isn’t a bad thing, it is good that everyone’s polite, but I think knowing that we are constantly under review changes how we interact and adds a bit of pressure. <br>
+      I’m honestly not crazy about DBC’s feedback system. It is purportedly anonymous, but it is always clear who’s giving you feedback based on the timing. Don’t get me wrong, I’m happy to be critiqued. My discomfort comes more from when I have to write feedback for others. It’s uncomfortable to have to tell others what their character flaws are. In the DBC system we’re required to spend half our review on what the reviewee did wrong. My partner in my first GPS was great, I honestly didn’t want him to change how he interacted with team member. However, I had to come up with something he did wrong per the feedback prompt.<br>
+      I would prefer it if feedback was left to the instructors. They’re present for the entire session and can focus on the student interactions, freeing us to focus on the assignment.
+    </p>
+    <h4><br><small><span style="color:#3498db">POPULARITY IS A SYNTACTICALLY-TRANSMITTED-DISEASE</span><br>APRIL 20, 2014</small></h4>
+    <blockquote class="blockquote-reverse"><p>Why is JavaScript so popular?</p><footer>-Dev Bootcamp Prompt</footer></blockquote>
+    <p>
+      People have been hating on JavaScript for a long time. Anyone who reads Hacker News some semblance of regularity knows that programmers love to write about how much JavaScript sucks. And in many ways they have a point. Compared to other languages like Python and Ruby it is ugly. That’s why languages that compile to JavaScript, like CoffeeScript, exist. They want to make scripts shorter and prettier. I used CoffeeScript for a little while and really liked it, but the problem is that its not the standard. JavaScript is. JavaScript’s biggest strength is that pretty much everyone uses it for almost every website.<br>
+      Another reason why JavaScript is popular is that its fairly easy to use. Sure, the creators of CoffeeScript would probably disagree, but anyone who has waded through C or VB state machines (the horror!) knows that code can get a lot uglier than JVS.<br>
+      A big part of usability is tool diversity. There are TONS of tools to program in JavaScript. While this is perhaps a result of popularity (more people using javascript means more customers for people who make programming tools) it also feeds popularity. Programmers, like everybody else, like to have options. The more options available the more incentive there is to learn a language.<br>
+      Another reason why JavaScript is popular is that it can be edited, modified, and tested really, really quickly. I’ve spent years programming hardware, and testing new code means compiling it in an editor, uploading it to a microprocessor and powering up the device. Depending on the compiler it could take up to a minute to test new code. Programming involves lots of testing, so this ate up a huge amount of time. With JavaScript I can write a new block of code and test it in just a couple seconds. 
+      <br>That’s pretty awesome.
+JavaScript, for better or worse, will continue to be the standard for the foreseeable future. Many gripe about this, but believe me, it could be a lot worse.
+    </p>
+    <h4><br><small><span style="color:#3498db">PUTTING THE "CLASS" IN "CLASS"</span><br>APRIL 14, 2014</small></h4>
+    <blockquote class="blockquote-reverse"><p>What are the best practices associated with using classes vs. ids?</p><footer>-Dev Bootcamp Prompt</footer></blockquote>
+    <p>
+      When I joined my first Guided Pairing Session with Greg and Ariel I relized I had only been using classes up to that point.
+      I had never once used an id. This was technically working for me. None of my css files were too complicated so I could create
+      a class for a single element without any negative consequences. However as Ariel explained to me, this isn't an ideal practice
+      long-term. Ids are for single elements, whereas classes are for groups of them. They are defined slightly differently (ids have hash tags when being defined in CSS) but attributes are specified the same way. I've since found myself using ids a lot more, and I think my code is the better for it.
+    </p>
+  </body>
+
+</html>
