@@ -44,7 +44,7 @@
 
       <code>
       SELECT * FROM users WHERE name = '' OR '1'='1';
-      </code>
+      </code><br>
       (Courtesy of Wikipedia)
       <br><br>
 
@@ -53,21 +53,21 @@
 
       <code>
       statement := "SELECT * FROM userinfo WHERE id =" + a_variable + ";"
-      </code> 
+      </code> <br>
       (Courtesy of Wikipedia)
       <br><br>
       In this example a_variable is intended to be a numeric identification value. However, if not checked for type constraints a_variable can be set to a string and be executed as a command. Were a_variable to be set to “DROP TABLE users” the user table would be deleted from the database. <br>
       The most effective method to defend against SQL injections is the use of bind variables. Bind variables (also known as prepared or parameterized statements) ensure that user input is not being directly embedded in the passed input. A template is used in which statements are created with associated parameters (the input) that are then sent to a database. The database then compiles and stores the command, and later executes it. <br>
       An example of prepared statements in Ruby: <br><br>
 
-      <code>
+      <pre>
       require 'mysql'
       db = Mysql.new('localhost', 'user', 'password', 'database')
       statement = db.prepare "SELECT * FROM table WHERE field = ?"
       statement.execute 'value'
       statement.fetch
       statement.close
-      </code>
+      </pre><br>
       (Courtesy of StackOverflow)
     </p>
     <h4><br><small><span style="color:#3498db">OBJECT-ORIENTED LANGUAGES, FUNCTIONAL LANGUAGES, AND YOU</span><br>MAY 11, 2014</small></h4>
