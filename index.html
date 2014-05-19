@@ -30,7 +30,47 @@
       As a Bay Area native I'm pretty much required to cycle as a hobby. It's a good thing too, becuase I happen to really enjoy biking. I also am an audiophile, one of those annoying people who thinks vinyl is better than digital music. I love good food and travel, particularly when the two are combined. I am also a voracious reader. David Foster Wallace is my favorite author. I get lost very easily and I wouldn't have it any other way.
     </p>
     <h3><br><small><strong><span style="color:#3498db">MY BLOG</span></strong><br></small></h3>
-    <h4><br><small><span style="color:#3498db">oOBJECT-ORIENTED LANGUAGES, FUNCTIONAL LANGUAGES, AND YOU</span><br>MAY 11, 2014</small></h4>
+    <h4><br><small><span style="color:#3498db">REAFFIRMING VALUES</span><br>MAY 18, 2014</small></h4>
+    <blockquote class="blockquote-reverse"><p>How do you feel when you think about your values? Do you think it can help you mediate stereotype threat?</p><footer>-DBC Prompt</footer></blockquote>
+    <p>
+      My set of values is (I hope) built around empathy. Empathizing with people is hard. We’re stuck in our own heads, behind our own eyes. Everything that happens we experience in relation to ourselves. The only things that are truly immediate are our own needs and wants and feelings. Understanding and evaluating the world from another’s POV requires that we override our own thoughts. We have to pacify what we want and fabricate a hopefully correct version of what we think someone else wants. <br>
+      Empathy is the best way I know of to mitigate stereotype threat. When the chasm between individuals is bridged preconceived notions generally become irrelevant. 
+    </p>
+    <h4><br><small><span style="color:#3498db">IN DEFENSE OF TRYANOPHOBIA: ON SQL INJECTIONS</span><br>MAY 18, 2014</small></h4>
+    <blockquote class="blockquote-reverse"><p>What is an SQL injection? Why is it a problem? What can newb programmers do to combat this issue?</p><footer>-DBC Prompt</footer></blockquote>
+    <p>
+      SQL injection is a hacking technique in which client side entry fields are used to execute malicious SQL statements. SQL injections can be used to read, modify, or destroy information stored in a database. <br>
+      When user input is improperly filtered a hacker can pass a malicious SQL statement that tricks the application into thinking its valid. For example, input can be made to evaluate as true while not containing valid information. <br><br>
+
+      [code]
+      SELECT * FROM users WHERE name = '' OR '1'='1';
+      [/code]
+      (Courtesy of Wikipedia)
+      <br><br>
+
+      Here, one will always be equal to one, so an unfiltered application can be tricked into thinking that the input is valid. A hacker than then get access to stored information.<br>
+      Also, if the input is not audited for type constraints a hacker can pass a SQL statement through a field intended for something else (like numeric input). <br><br>
+
+      [code]
+      statement := "SELECT * FROM userinfo WHERE id =" + a_variable + ";"
+      [/code] 
+      (Courtesy of Wikipedia)
+      <br><br>
+      In this example a_variable is intended to be a numeric identification value. However, if not checked for type constraints a_variable can be set to a string and be executed as a command. Were a_variable to be set to “DROP TABLE users” the user table would be deleted from the database. <br>
+      The most effective method to defend against SQL injections is the use of bind variables. Bind variables (also known as prepared or parameterized statements) ensure that user input is not being directly embedded in the passed input. A template is used in which statements are created with associated parameters (the input) that are then sent to a database. The database then compiles and stores the command, and later executes it. <br>
+      An example of prepared statements in Ruby: <br><br>
+
+      [code]
+      require 'mysql'
+      db = Mysql.new('localhost', 'user', 'password', 'database')
+      statement = db.prepare "SELECT * FROM table WHERE field = ?"
+      statement.execute 'value'
+      statement.fetch
+      statement.close
+      [/code]
+      (Courtesy of StackOverflow)
+    </p>
+    <h4><br><small><span style="color:#3498db">OBJECT-ORIENTED LANGUAGES, FUNCTIONAL LANGUAGES, AND YOU</span><br>MAY 11, 2014</small></h4>
     <blockquote class="blockquote-reverse"><p>What is the difference between OO Languages and Functional Languages?</p><footer>-DBC Prompt</footer></blockquote>
     <p>
       The main difference between Object oriented languages and Functional languages can be put into terms of operations (what is actually done, think “verbs”) and things (the things the operations are done on, think “nouns”). Object-oriented languages are great when you have a set number of operations, adding new things as your code evolves is incredibly simple. In contrast, functional languages are ideal when you have a set number of things because adding operations is fairly easy.
