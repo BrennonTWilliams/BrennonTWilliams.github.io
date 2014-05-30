@@ -30,3 +30,6 @@ p {
 	text-align: left;
 	padding-right: 200px;
 }
+
+div.toggler {cursor:pointer;}
+div.toggler div { display:none; }
