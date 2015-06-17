@@ -1,4 +1,4 @@
-h1 {
+h1, h2 {
 	text-align: center;
 	padding-right: 200px;
 	color: #2980b9;
@@ -15,6 +15,10 @@ h3 {
 
 body {
 	padding-left: 40px;
+}
+
+.menu-item{
+	padding-right: 2em;
 }
 
 #photo{
