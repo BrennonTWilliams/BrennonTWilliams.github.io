@@ -1,13 +1,13 @@
 export const siteConfig = {
-  author: 'Kevin Wong',
-  title: 'Vitesse theme for Astro',
-  subtitle: 'Vitesse theme for Astro, supports Vue and UnoCSS.',
-  description: 'A Minimal, SEO-friendly portfolio and blog theme for Astro.',
+  author: 'Brennon Williams',
+  title: 'Brennon Williams Software Engineer',
+  subtitle: 'Explorations in code and language.',
+  description: 'Personal website for Brennon Williams, software engineer.',
   image: {
     src: '/hero.jpg',
     alt: 'Website Main Image',
   },
-  email: 'kevinwong865@gmail.com',
+  email: 'brennon@brennonw.com',
   socialLinks: [
     {
       text: 'GitHub',
