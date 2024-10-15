@@ -6,6 +6,7 @@ import vue from '@astrojs/vue'
 
 export default defineConfig({
   site: 'https://brennontwilliams.github.io',
+  base: '/PersonalWebsite',
   server: {
     port: 1977,
   },
