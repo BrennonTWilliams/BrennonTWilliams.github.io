@@ -5,7 +5,7 @@ import UnoCSS from 'unocss/astro'
 import vue from '@astrojs/vue'
 
 export default defineConfig({
-  site: 'https://brennonw.com/',
+  site: 'https://brennontwilliams.github.io',
   server: {
     port: 1977,
   },
