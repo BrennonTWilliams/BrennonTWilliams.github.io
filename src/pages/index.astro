@@ -5,15 +5,31 @@ import siteConfig from '@/site-config'
 
 <BaseLayout description={siteConfig.description}>
   <article class="prose">
-    <h1 class="text-title">Brennon Williams</h1>
-    <p>I build software (and a little hardware too).</p>
-    <p>Some things I'm interested in:</p>
-    <ul>
-      <li>Machine Reasoning</li>
-      <li>Local-First Software</li>
-      <li>Physical Computing</li>
-      <li>Rapid Prototyping</li>
-    </ul>
+    <h1 class="text-title">Where code flows like fine wine</h1>
+
+    <div class="flex mb-6">
+      <img
+        src="/brennon-headshot-bw-stylized.png"
+        alt="Brennon Williams headshot"
+        class="w-92 h-92 rounded-full"
+      />
+      <div>
+        <p>Hi, I'm <b>Brennon</b>.</p>
+        <p>I build software (and sometimes hardware).</p>
+        <p>Some things I'm interested in:</p>
+        <ul>
+          <li>Machine Reasoning</li>
+          <li>Local-First Software</li>
+          <li>Physical Computing</li>
+          <li>Rapid Prototyping</li>
+        </ul>
+        <p>
+          Actively obsessed with building on-device reasoning Agents, for work
+          and fun.
+        </p>
+        <p>Hiker, reader, tinkerer, dog dad.</p>
+      </div>
+    </div>
     <hr class="hr-line" />
     <p>Find me on</p>
     <p class="flex gap-x-4 gap-y-2 flex-wrap">
@@ -32,14 +48,14 @@ import siteConfig from '@/site-config'
       }
     </p>
     <p>
-      If you have any questions, please email me at
+      Or, drop me a line at
       <a
         prose-link
         aria-label={siteConfig.email}
         href={`mailto:${siteConfig.email}`}
       >
         {siteConfig.email}
-      </a>.
+      </a>
     </p>
   </article>
 </BaseLayout>
