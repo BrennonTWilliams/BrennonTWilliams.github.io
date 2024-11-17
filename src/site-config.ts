@@ -28,7 +28,7 @@ export const siteConfig = {
     },
     navLinks: [
       {
-        text: 'Blog',
+        text: 'Writing',
         href: '/blog',
       },
       {
@@ -48,7 +48,7 @@ export const siteConfig = {
   page: {
     blogLinks: [
       {
-        text: 'Blog',
+        text: 'Writing',
         href: '/blog',
       },
       {
