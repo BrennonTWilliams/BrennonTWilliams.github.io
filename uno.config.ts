@@ -40,7 +40,7 @@ export default defineConfig({
     presetTypography(),
     presetWebFonts({
       fonts: {
-        sans: 'Inter:400,600,800',
+        sans: 'Valkyrie A', // Use Valkyrie A as the default sans-serif
         mono: 'DM Mono:400,600',
       },
     }),

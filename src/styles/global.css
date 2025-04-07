@@ -1,3 +1,60 @@
+@font-face {
+  font-family: 'Valkyrie B';
+  font-style: normal;
+  font-weight: normal; /* 400 */
+  font-stretch: normal;
+  font-display: swap;
+  src: url('/fonts/WOFF2/Valkyrie B/valkyrie_b_regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Valkyrie B';
+  font-style: italic;
+  font-weight: normal; /* 400 */
+  font-stretch: normal;
+  font-display: swap;
+  src: url('/fonts/WOFF2/Valkyrie B/valkyrie_b_italic.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Valkyrie B';
+  font-style: normal;
+  font-weight: bold; /* 700 */
+  font-stretch: normal;
+  font-display: swap;
+  src: url('/fonts/WOFF2/Valkyrie B/valkyrie_b_bold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Valkyrie B';
+  font-style: italic;
+  font-weight: bold; /* 700 */
+  font-stretch: normal;
+  font-display: swap;
+  src: url('/fonts/WOFF2/Valkyrie B/valkyrie_b_bold_italic.woff2')
+    format('woff2');
+}
+
+@font-face {
+  font-family: 'Valkyrie B Caps';
+  font-style: normal;
+  font-weight: normal; /* 400 */
+  font-stretch: normal;
+  font-display: swap;
+  src: url('/fonts/WOFF2/Valkyrie B Caps/valkyrie_b_caps_regular.woff2')
+    format('woff2');
+}
+
+@font-face {
+  font-family: 'Valkyrie B Caps';
+  font-style: normal;
+  font-weight: bold; /* 700 */
+  font-stretch: normal;
+  font-display: swap;
+  src: url('/fonts/WOFF2/Valkyrie B Caps/valkyrie_b_caps_bold.woff2')
+    format('woff2');
+}
+
 html.dark .astro-code,
 html.dark .astro-code span {
   color: var(--shiki-dark) !important;
@@ -61,4 +118,14 @@ html.dark::view-transition-old(root) {
 }
 html.dark::view-transition-new(root) {
   z-index: 1;
+}
+
+body {
+  font-family: 'Valkyrie B', sans-serif;
+}
+
+h1 {
+  font-family: 'Valkyrie B Caps', sans-serif;
+  font-weight: bold; /* 700 */
+  font-style: normal;
 }

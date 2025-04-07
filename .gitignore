@@ -4,3 +4,10 @@ node_modules
 .DS_Store
 .eslintcache
 *.log
+
+.specstory/
+
+.notes/
+public/fonts/**/READ*.txt
+public/fonts/**/sample.css
+public/fonts/**/sample.html
