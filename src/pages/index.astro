@@ -5,9 +5,9 @@ import siteConfig from '@/site-config'
 
 <BaseLayout description={siteConfig.description}>
   <article class="prose">
-    <h1 class="text-title">Where code flows like fine wine</h1>
+    <h1 class="text-title">where code flows like fine wine</h1>
 
-    <div class="flex mb-6">
+    <div class="flex mb-1">
       <img
         src="/brennon-headshot-bw-stylized.png"
         alt="Brennon Williams headshot"
@@ -31,8 +31,9 @@ import siteConfig from '@/site-config'
       </div>
     </div>
     <hr class="hr-line" />
-    <p>Find me on</p>
+    {/* Removed the p tag from line 34 and moved the text below */}
     <p class="flex gap-x-4 gap-y-2 flex-wrap">
+      Find me on {/* Added the text here */}
       {
         siteConfig.socialLinks.map((link) => (
           <a
