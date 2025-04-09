@@ -1,0 +1,147 @@
+---
+// src/components/PovBlock.astro
+// Component for the vertically auto-animating Point-of-View blocks
+
+// Define the POV items based on the plan
+const povItems = [
+  { top: 'DYNAMISM', bottom: 'DOGMA' },
+  { top: 'PLAY', bottom: 'PROCEDURE' },
+  { top: 'PROTOTYPE', bottom: 'POLISH' },
+  { top: 'LOCAL', bottom: 'CLOUD' },
+  { top: 'DEPTH', bottom: 'BREADTH' },
+]
+
+// Duplicate the first item at the end for seamless looping animation
+const itemsForLoop = [...povItems, povItems[0]]
+
+// Component props (optional, if needed later)
+// interface Props {}
+// const {} = Astro.props;
+---
+
+<div id="pov-anim-container" class="pov-anim-container">
+  <ul class="pov-list">
+    {
+      itemsForLoop.map((item, index) => (
+        <li class="pov-block" data-index={index}>
+          <div class="top">{item.top}</div>
+          <div class="divider" />
+          <div class="bottom">{item.bottom}</div>
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<style>
+  .pov-anim-container {
+    /* Define fixed height - adjust as needed based on content/font */
+    height: 100px; /* Example: Adjust this value */
+    overflow: hidden;
+    position: relative; /* Needed for absolute/relative positioning inside if used */
+    /* Add positioning styles (e.g., margin, alignment) as needed */
+    margin: 2rem 0; /* Example margin */
+    border: 1px solid var(--color-border, #ccc); /* Example border */
+  }
+
+  .pov-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    /* transform will be controlled by Anime.js */
+  }
+
+  .pov-block {
+    height: 100px; /* Match container height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; /* Center-align content */
+    text-align: center;
+    box-sizing: border-box; /* Include padding/border in height */
+    padding: 0.5rem; /* Example padding */
+  }
+
+  .pov-block .top,
+  .pov-block .bottom {
+    font-family: 'Valkyrie B Caps', sans-serif; /* As per plan */
+    text-transform: uppercase; /* As per plan */
+    color: var(--color-text-muted); /* As per plan */
+    font-weight: normal; /* As per plan */
+    line-height: 1.2;
+  }
+
+  .pov-block .divider {
+    width: 60%; /* Example width */
+    height: 1px;
+    background-color: var(--color-divider); /* As per plan */
+    margin: 0.4rem 0; /* Adjust spacing */
+  }
+</style>
+
+<script>
+  // Import anime.js - Make sure it's installed and accessible
+  // You might need to adjust the import path based on your project setup
+  import { createTimeline } from 'animejs'
+
+  // Wait for the component to be mounted
+  document.addEventListener('astro:page-load', () => {
+    // Assert as HTMLElement for style access
+    const list = document.querySelector(
+      '#pov-anim-container .pov-list',
+    ) as HTMLElement
+    // Assert NodeListOf<HTMLElement> for offsetHeight access
+    const items = list?.querySelectorAll(
+      '.pov-block',
+    ) as NodeListOf<HTMLElement>
+
+    if (!list || !items || items.length === 0) {
+      console.error('POV Animator: Could not find list or items.')
+      return
+    }
+
+    // Ensure styles are applied and get the actual height
+    // Using setTimeout defers execution slightly to help ensure rendering
+    setTimeout(() => {
+      const blockHeight = items[0].offsetHeight
+      const itemCount = items.length - 1 // Number of unique items
+
+      if (blockHeight === 0) {
+        console.error(
+          'POV Animator: Block height is 0. Check CSS and rendering.',
+        )
+        return
+      }
+
+      // Set initial position
+      list.style.transform = 'translateY(0px)'
+
+      // Create the looping animation timeline
+      // Create the looping animation timeline using the imported function
+      const loopTimeline = createTimeline({
+        defaults: {
+          // Wrap timeline-wide settings in 'defaults'
+          duration: 600, // Transition duration (adjust as needed)
+          // Easing and delay seem to belong to the .add() step, not defaults
+        },
+        loop: true, // loop remains a direct property of the timeline params
+      })
+
+      // Add animation steps for each unique block transition
+      for (let i = 0; i < itemCount; i++) {
+        // Use the correct add(target, params) signature
+        loopTimeline.add(list, {
+          easing: 'easeInOutCubic', // Apply easing here
+          delay: 4000, // Apply delay here (will pause *before* each step)
+          translateY: `-${(i + 1) * blockHeight}px`,
+          // Optional: Add delay specific to this step if needed
+        })
+      }
+
+      // Because we duplicated the first item at the end, the loop
+      // naturally transitions from the last unique item back to the
+      // (duplicated) first item, creating a seamless visual loop.
+      // No explicit reset step is needed here.
+    }, 100) // Small delay to help ensure rendering
+  })
+</script>

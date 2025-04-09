@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import siteConfig from '@/site-config'
+import PovBlock from '@/components/PovBlock.astro' // Import the new component
 ---
 
 <BaseLayout description={siteConfig.description}>
@@ -30,6 +31,10 @@ import siteConfig from '@/site-config'
         <p>Hiker, reader, tinkerer, dog dad.</p>
       </div>
     </div>
+
+    {/* Add the POV Block component here */}
+    <PovBlock />
+
     <hr class="hr-line" />
     {/* Removed the p tag from line 34 and moved the text below */}
     <p class="flex gap-x-4 gap-y-2 flex-wrap">
