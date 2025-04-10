@@ -24,13 +24,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout your repository using git
-        uses: actions/checkout@v2
-      - name: Install, build, and upload your site output
-        uses: withastro/action@v0
-        # with:
-        # path: . # The root location of your Astro project inside the repository. (optional)
-        # node-version: 16 # The specific version of Node that should be used to build your site. Defaults to 16. (optional)
-        # package-manager: yarn # The Node package manager that should be used to install dependencies and build your site. Automatically detected based on your lockfile. (optional)
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x # Use Node.js 20.x based on package.json
+          cache: 'npm' # Cache npm dependencies
+      - name: Install dependencies
+        run: npm ci
+      - name: Build with Astro
+        run: npm run build
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Upload entire repository
+          path: './dist' # Astro builds to 'dist' by default
 
   deploy:
     needs: build
@@ -41,4 +51,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v4
