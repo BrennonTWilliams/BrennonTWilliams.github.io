@@ -20,5 +20,5 @@ html:not(.dark) {
     var(--dot-color);
   background-position: center center;
   background-size: 24px 24px;
-  mask-image: linear-gradient(0deg, transparent 5%, var(--dot-mask-color));
+  mask-image: linear-gradient(180deg, var(--dot-mask-color) 0%, var(--dot-mask-color) 80%, transparent 100%);
 }

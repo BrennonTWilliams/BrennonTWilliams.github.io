@@ -1,8 +1,7 @@
 ---
 // src/components/PovBlock.astro
-// Component for the vertically auto-animating Point-of-View blocks
+// Imports for client-side script are below
 
-// Define the POV items based on the plan
 const povItems = [
   { top: 'DYNAMISM', bottom: 'DOGMA' },
   { top: 'PLAY', bottom: 'PROCEDURE' },
@@ -11,137 +10,276 @@ const povItems = [
   { top: 'DEPTH', bottom: 'BREADTH' },
 ]
 
-// Duplicate the first item at the end for seamless looping animation
-const itemsForLoop = [...povItems, povItems[0]]
-
-// Component props (optional, if needed later)
-// interface Props {}
-// const {} = Astro.props;
+// Placeholder for item width - will need adjustment based on styling
+const itemWidth = 200 // Example width, adjust as needed
 ---
 
-<div id="pov-anim-container" class="pov-anim-container">
-  <ul class="pov-list">
+<div
+  id="pov-block-carousel"
+  class="pov-block-container relative overflow-hidden select-none cursor-grab"
+>
+  <ul class="carousel flex absolute top-0 left-0 h-full will-change-transform">
     {
-      itemsForLoop.map((item, index) => (
-        <li class="pov-block" data-index={index}>
-          <div class="top">{item.top}</div>
-          <div class="divider" />
-          <div class="bottom">{item.bottom}</div>
+      povItems.map((item, index) => (
+        <li
+          class={`carousel-item flex flex-col items-center justify-center p-2 ${index !== povItems.length - 1 ? 'mr-2.5' : ''}`}
+          style={`width: ${itemWidth}px; flex-shrink: 0;`}
+        >
+          {' '}
+          {/* Removed h-full */}
+          <span class="font-valkyrie-b-caps text-xl leading-tight text-center">
+            {item.top}
+          </span>
+          <div class="divider w-1/3 my-2" /> {/* Replaced hr with a div */}
+          <span class="font-valkyrie-b-caps text-xl leading-tight text-center">
+            {item.bottom}
+          </span>
         </li>
       ))
     }
   </ul>
 </div>
 
+<style is:global>
+  /* Apply grab cursor styles during interaction if needed */
+  #pov-block-carousel.is-dragging {
+    cursor: grabbing;
+  }
+  body.is-dragging {
+    /* Apply cursor globally during drag */
+    cursor: grabbing !important;
+  }
+</style>
+
 <style>
-  .pov-anim-container {
-    /* Define fixed height - adjust as needed based on content/font */
-    height: 100px; /* Example: Adjust this value */
-    overflow: hidden;
-    position: relative; /* Needed for absolute/relative positioning inside if used */
-    /* Add positioning styles (e.g., margin, alignment) as needed */
-    margin: 2rem 0; /* Example margin */
-    border: 1px solid var(--color-border, #ccc); /* Example border */
+  .pov-block-container {
+    /* Set initial dimensions - adjust based on index.astro layout */
+    width: 200px; /* Match itemWidth for single item view */
+    height: 12rem; /* Increased relative height */
+    /* border: 1px dashed gray; /* For debugging layout */
   }
 
-  .pov-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    /* transform will be controlled by Anime.js */
+  /* Font is applied via UnoCSS class 'font-valkyrie-b-caps' */
+  .font-valkyrie-b-caps {
+    font-family: 'Valkyrie B Caps', sans-serif; /* Already defined in global.css */
   }
 
-  .pov-block {
-    height: 100px; /* Match container height */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center; /* Center-align content */
-    text-align: center;
-    box-sizing: border-box; /* Include padding/border in height */
-    padding: 0.5rem; /* Example padding */
-  }
-
-  .pov-block .top,
-  .pov-block .bottom {
-    font-family: 'Valkyrie B Caps', sans-serif; /* As per plan */
-    text-transform: uppercase; /* As per plan */
-    color: var(--color-text-muted); /* As per plan */
-    font-weight: normal; /* As per plan */
-    line-height: 1.2;
-  }
-
-  .pov-block .divider {
-    width: 60%; /* Example width */
-    height: 1px;
-    background-color: var(--color-divider); /* As per plan */
-    margin: 0.4rem 0; /* Adjust spacing */
+  /* Style the divider div */
+  .carousel-item .divider {
+    height: 1px; /* Set explicit height */
+    background-color: currentColor; /* Use text color for background */
+    /* margin: 0.5rem auto; /* Use UnoCSS my-2 */
   }
 </style>
 
 <script>
-  // Import anime.js - Make sure it's installed and accessible
-  // You might need to adjust the import path based on your project setup
-  import { createTimeline } from 'animejs'
+  import { animate } from 'animejs' // Correct v4 named import
 
-  // Wait for the component to be mounted
+  // Custom Carousel Logic
   document.addEventListener('astro:page-load', () => {
-    // Assert as HTMLElement for style access
-    const list = document.querySelector(
-      '#pov-anim-container .pov-list',
-    ) as HTMLElement
-    // Assert NodeListOf<HTMLElement> for offsetHeight access
-    const items = list?.querySelectorAll(
-      '.pov-block',
-    ) as NodeListOf<HTMLElement>
+    console.log('[PovBlock DEBUG] astro:page-load event fired.');
+    const povBlockContainer = document.getElementById(
+      'pov-block-carousel',
+    ) as HTMLElement | null
+    const povBlockList = povBlockContainer?.querySelector(
+      'ul',
+    ) as HTMLUListElement | null
+    const povItemsOriginal = povBlockList?.querySelectorAll('li')
 
-    if (!list || !items || items.length === 0) {
-      console.error('POV Animator: Could not find list or items.')
+    if (
+      !povBlockContainer ||
+      !povBlockList ||
+      !povItemsOriginal ||
+      povItemsOriginal.length === 0
+    ) {
+      console.error('PovBlock elements not found or empty.')
       return
     }
 
-    // Ensure styles are applied and get the actual height
-    // Using setTimeout defers execution slightly to help ensure rendering
-    setTimeout(() => {
-      const blockHeight = items[0].offsetHeight
-      const itemCount = items.length - 1 // Number of unique items
+    const originalItemCount = povItemsOriginal.length
+    // Recalculate itemWidth based on actual rendered element
+    const itemWidth = povItemsOriginal[0].offsetWidth
+    if (itemWidth === 0) {
+      console.error('PovBlock item width is 0, cannot initialize carousel.')
+      return
+    }
+    const containerWidth = povBlockContainer.offsetWidth
+    const itemsToClone =
+      Math.ceil(containerWidth / itemWidth) + originalItemCount // Ensure enough clones
 
-      if (blockHeight === 0) {
-        console.error(
-          'POV Animator: Block height is 0. Check CSS and rendering.',
-        )
-        return
+    // Clone items for seamless looping
+    for (let i = 0; i < itemsToClone; i++) {
+      const clone = povItemsOriginal[i % originalItemCount].cloneNode(
+        true,
+      ) as HTMLElement
+      clone.setAttribute('aria-hidden', 'true') // Hide clones from accessibility tree
+      povBlockList.appendChild(clone)
+    }
+
+    const totalItems = povBlockList.children.length // Update total items count after cloning
+    const fullScrollWidth = itemWidth * originalItemCount // Width of the original set of items
+
+    let isDragging = false
+    let startX = 0
+    let currentTranslate = 0
+    let dragOffset = 0
+    let currentIndex = 0 // Track the current item index
+    let autoPlayTimer: ReturnType<typeof setTimeout> | null = null // Timer for auto-play
+    const autoPlayDelay = 3000 // Delay between automatic transitions
+    const animationDuration = 500 // Duration for slide animation
+    const snapDuration = 300 // Duration for snap animation
+
+    // Function to animate to a specific item index
+    function animateToItem(index: number, duration = animationDuration) {
+      if (!povBlockList) return
+
+      const targetIndex = index % originalItemCount // The logical target index (0 to originalItemCount - 1)
+      let targetTranslateForAnimation: number
+      let isLoopingFromEndToStart = false
+
+      // Check if we are looping from the last item back to the first
+      if (currentIndex === originalItemCount - 1 && targetIndex === 0) {
+        // Animate to the first *cloned* item (visually same as the first original)
+        targetTranslateForAnimation = -(originalItemCount * itemWidth)
+        isLoopingFromEndToStart = true
+        // console.log(`Looping: Animating from ${currentIndex} to clone of 0 at ${targetTranslateForAnimation}`)
+      } else {
+        // Normal animation to the target index's position
+        targetTranslateForAnimation = -(targetIndex * itemWidth)
+        // console.log(`Normal: Animating from ${currentIndex} to ${targetIndex} at ${targetTranslateForAnimation}`)
       }
 
-      // Set initial position
-      list.style.transform = 'translateY(0px)'
+          console.log(`[PovBlock DEBUG] Animating: From Index=${currentIndex}, To Logical Index=${targetIndex}, Target Translate=${targetTranslateForAnimation}, Duration=${duration}, IsLooping=${isLoopingFromEndToStart}`);
+      animate(povBlockList, {
+        // targets property removed as it's now the first argument
+        translateX: targetTranslateForAnimation,
+        duration: duration,
+        easing: 'easeOutExpo', // Smooth easing
+        complete: () => {
+            console.log(`[PovBlock DEBUG] Animation Complete. IsLooping=${isLoopingFromEndToStart}, Final Animated Translate=${povBlockList.style.transform}`);
+          // console.log(`Animation complete. Looping flag: ${isLoopingFromEndToStart}, Target Translate: ${targetTranslateForAnimation}`)
+          if (isLoopingFromEndToStart) {
+            // We just finished animating smoothly to the *clone* of the first item.
+            // NOW, instantly reset the transform to the *actual* first item's position (0px)
+            // without animation, so the next slide (0 -> 1) starts from the correct base.
+              console.log(`[PovBlock DEBUG] Resetting: Setting transition to none.`);
+            povBlockList.style.transition = 'none' // Disable transitions for the reset
+            povBlockList.style.transform = 'translateX(0px)'
+              console.log(`[PovBlock DEBUG] Resetting: Setting transform to 0px. Current was: ${povBlockList.style.transform}`);
+            // Force reflow might not be needed, but uncomment if visual glitches occur
+            // povBlockList.offsetHeight;
+            povBlockList.style.transition = '' // Re-enable transitions for subsequent animations
+              console.log(`[PovBlock DEBUG] Resetting: Re-enabled transitions. New transform: ${povBlockList.style.transform}`);
 
-      // Create the looping animation timeline
-      // Create the looping animation timeline using the imported function
-      const loopTimeline = createTimeline({
-        defaults: {
-          // Wrap timeline-wide settings in 'defaults'
-          duration: 600, // Transition duration (adjust as needed)
-          // Easing and delay seem to belong to the .add() step, not defaults
+            currentTranslate = 0 // Reset internal tracking to 0
+            currentIndex = 0     // Reset internal tracking to 0
+            // console.log('Reset to start position (0px) after loop animation.')
+              console.log(`[PovBlock DEBUG] Reset Complete. Updated currentTranslate=${currentTranslate}, currentIndex=${currentIndex}`);
+          } else {
+            // Update position and index normally for non-looping slides
+            currentTranslate = targetTranslateForAnimation // Use the value we animated to
+            currentIndex = targetIndex
+            // console.log(`Normal animation complete. New index: ${currentIndex}, New translate: ${currentTranslate}`)
+            console.log(`[PovBlock DEBUG] Normal Animation Complete. Updated currentTranslate=${currentTranslate}, currentIndex=${currentIndex}`);
+          }
+          // Reschedule the next automatic slide AFTER state is fully updated
+          scheduleNextAutoPlay()
         },
-        loop: true, // loop remains a direct property of the timeline params
       })
+    }
 
-      // Add animation steps for each unique block transition
-      for (let i = 0; i < itemCount; i++) {
-        // Use the correct add(target, params) signature
-        loopTimeline.add(list, {
-          easing: 'easeInOutCubic', // Apply easing here
-          delay: 4000, // Apply delay here (will pause *before* each step)
-          translateY: `-${(i + 1) * blockHeight}px`,
-          // Optional: Add delay specific to this step if needed
-        })
+    // Function to schedule the next automatic slide
+    function scheduleNextAutoPlay() {
+      if (autoPlayTimer) clearTimeout(autoPlayTimer) // Clear existing timer
+
+      autoPlayTimer = setTimeout(() => {
+        const nextIndex = (currentIndex + 1) % originalItemCount
+        animateToItem(nextIndex)
+        // Note: The next call to scheduleNextAutoPlay happens inside animateToItem's complete callback
+      }, autoPlayDelay)
+    }
+
+    function handleDragStart(e: MouseEvent | TouchEvent) {
+      if (autoPlayTimer) clearTimeout(autoPlayTimer) // Stop auto-play on drag start
+      isDragging = true
+      povBlockContainer?.classList.add('is-dragging')
+      document.body.classList.add('is-dragging') // Add class to body
+      startX = e instanceof MouseEvent ? e.pageX : e.touches[0].clientX
+      povBlockList!.style.transition = 'none' // Disable transition during drag
+    }
+
+    function handleDragMove(e: MouseEvent | TouchEvent) {
+      if (!isDragging) return
+      e.preventDefault() // Prevent page scroll on touch devices
+      const currentX = e instanceof MouseEvent ? e.pageX : e.touches[0].clientX
+      dragOffset = currentX - startX
+      const newTranslate = currentTranslate + dragOffset
+      povBlockList!.style.transform = `translateX(${newTranslate}px)`
+    }
+
+    function handleDragEnd() {
+      if (!isDragging) return
+      isDragging = false
+      povBlockContainer?.classList.remove('is-dragging')
+      document.body.classList.remove('is-dragging') // Remove class from body
+      currentTranslate += dragOffset // Update current position based on drag
+
+      // Calculate the target index based on the drag distance
+      // We use the currentTranslate + dragOffset to get the final position if the drag ended now
+      const finalTranslate = currentTranslate + dragOffset
+      // Normalize to handle looping correctly when calculating the nearest index
+      const normalizedTranslate = finalTranslate % fullScrollWidth
+      // Find the nearest original item index
+      let nearestIndex = Math.round(normalizedTranslate / itemWidth)
+
+      // Ensure the index is within the bounds of original items and negative
+      nearestIndex = Math.abs(nearestIndex) % originalItemCount
+
+      const targetTranslate = -(nearestIndex * itemWidth)
+
+      // Use anime for snapping animation
+      // Note: Removed anime.remove call
+      if (!povBlockList) return // Add null check before animating
+      animate(povBlockList, {
+        // targets property removed as it's now the first argument
+        translateX: targetTranslate,
+        duration: snapDuration, // Use snap duration
+        easing: 'easeOutCubic', // Snappy easing
+        complete: () => {
+          currentTranslate = targetTranslate // Update position after snap
+          currentIndex = nearestIndex // Update index after snap
+          // Restart auto-play only after snapping is complete and if not dragging
+          if (!isDragging) {
+            scheduleNextAutoPlay()
+          }
+        },
+      })
+    }
+
+    // Event listeners for interaction
+    povBlockContainer.addEventListener('mousedown', handleDragStart, {
+      passive: true,
+    })
+    povBlockContainer.addEventListener('touchstart', handleDragStart, {
+      passive: true,
+    })
+
+    document.addEventListener('mousemove', handleDragMove)
+    document.addEventListener('touchmove', handleDragMove, { passive: false }) // Need passive: false to prevent scroll
+
+    document.addEventListener('mouseup', handleDragEnd)
+    document.addEventListener('touchend', handleDragEnd)
+    document.addEventListener('mouseleave', (e) => {
+      // Handle mouse leaving the container
+      if (isDragging) {
+        handleDragEnd()
       }
+    })
 
-      // Because we duplicated the first item at the end, the loop
-      // naturally transitions from the last unique item back to the
-      // (duplicated) first item, creating a seamless visual loop.
-      // No explicit reset step is needed here.
-    }, 100) // Small delay to help ensure rendering
+    // Initial setup: Animate to the first item (optional, for consistency)
+    // povBlockList!.style.transform = `translateX(0px)` // Set initial position if needed
+
+    // Start the automatic playback cycle
+    scheduleNextAutoPlay()
   })
 </script>

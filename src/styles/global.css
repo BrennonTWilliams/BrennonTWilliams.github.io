@@ -72,6 +72,10 @@ html:not(.dark) {
   color-scheme: light;
 }
 
+html {
+  --color-divider: #bbb; /* Define divider color */
+}
+
 #nprogress {
   pointer-events: none;
 }

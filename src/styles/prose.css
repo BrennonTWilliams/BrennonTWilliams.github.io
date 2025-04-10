@@ -81,11 +81,11 @@
 .prose blockquote p:last-of-type::after {
   content: close-quote;
 }
-.prose h1 {
+.prose > h1:first-child { /* Increased specificity */
   font-weight: 800;
   font-size: 2.25em;
-  margin-top: 0;
-  margin-bottom: 0.8888889em;
+  margin-top: 0.5em; /* Increased top margin */
+  margin-bottom: 1em; /* Increased bottom margin */
   line-height: 1.1111111;
 }
 .prose h2 {
@@ -474,3 +474,23 @@
 .prose-sm > :last-child {
   margin-bottom: 0;
 }
+
+
+/* Override prose styles for PovBlock carousel */
+#pov-block-carousel .carousel {
+  list-style-type: none !important;
+  padding-left: 0 !important;
+  margin-top: 0 !important; /* Reset prose margins */
+  margin-bottom: 0 !important; /* Reset prose margins */
+}
+
+#pov-block-carousel .carousel > li {
+  padding-left: 0 !important; /* Reset prose padding */
+  margin-top: 0 !important; /* Reset prose margins */
+  margin-bottom: 0 !important; /* Reset prose margins */
+}
+
+#pov-block-carousel .carousel > li::before {
+  content: none !important; /* Remove bullet point */
+}
+
