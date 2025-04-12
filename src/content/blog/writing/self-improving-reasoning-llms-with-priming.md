@@ -10,7 +10,7 @@ I have a print on my office wall with the Philip K Dick quote, "I wonder what th
 
 <img src="/images/blog/reasoning-llms-with-priming/philip-k-dick-i-wonder-what-the-machines-will-think.webp" alt="Philip K Dick Quote" style="width: 50%; display: block; margin-left: auto; margin-right: auto;">
 
-One prototype I built in 2024 implemented the Self-Discover Whitepaper (Zhou et al 2024). This approach to LLM reasoning has a few core steps:
+One prototype I built in 2024 implemented the [Self-Discover Whitepaper](https://arxiv.org/abs/2402.03620) (Zhou et al 2024). This approach to LLM reasoning has a few core steps:
 1) Provide a set of reasoning modules, showing different ways of structuring a reasoning problem, such as:
 	1) Use systems thinking: Consider the problem as part of a larger system and understanding the interconnectedness of various elements. Focuses on identifying the underlying causes, feedback loops, and interdependencies that influence the problem, and developing holistic solutions that address the system as a whole.
 	2) Use Risk Analysis: Evaluate potential risks, uncertainties, and tradeoffs associated with different solutions or approaches to a problem. Emphasize assessing the potential consequences and likelihood of success or failure, and making informed decisions based on a balanced analysis of risks and benefits.
@@ -29,7 +29,7 @@ Why can some models properly apply reasoning patterns while others cannot? At th
 
 > Why can some models properly apply reasoning patterns while others cannot?
 
-I recently came across a new paper from Stanford University researchers that tackles exactly this question: *Cognitive Behaviors that Enable Self-Improving Reasoners, or, Four Habits of Highly Effective STaRs* (Gandhi et al 2025).
+I recently came across a new paper from Stanford University researchers that tackles exactly this question: [*Cognitive Behaviors that Enable Self-Improving Reasoners, or, Four Habits of Highly Effective STaRs*](https://arxiv.org/abs/2503.01307) (Gandhi et al 2025).
 
 The paper begins with a similar observation - that some models can be "primed" for self-improvement through reasoning, while others improve some but quickly plateau with the same priming. The researchers identify four cognitive traits that a model must possess to improve their reasoning:
 1) Verification - The model is able to apply error checking to its reasoning/output. E.g., "This approach won't work because"
