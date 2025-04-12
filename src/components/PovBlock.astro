@@ -77,7 +77,6 @@ const itemWidth = 200 // Example width, adjust as needed
 
   // Custom Carousel Logic
   document.addEventListener('astro:page-load', () => {
-    console.log('[PovBlock DEBUG] astro:page-load event fired.');
     const povBlockContainer = document.getElementById(
       'pov-block-carousel',
     ) as HTMLElement | null
@@ -149,38 +148,31 @@ const itemWidth = 200 // Example width, adjust as needed
         // console.log(`Normal: Animating from ${currentIndex} to ${targetIndex} at ${targetTranslateForAnimation}`)
       }
 
-          console.log(`[PovBlock DEBUG] Animating: From Index=${currentIndex}, To Logical Index=${targetIndex}, Target Translate=${targetTranslateForAnimation}, Duration=${duration}, IsLooping=${isLoopingFromEndToStart}`);
       animate(povBlockList, {
         // targets property removed as it's now the first argument
         translateX: targetTranslateForAnimation,
         duration: duration,
         easing: 'easeOutExpo', // Smooth easing
         complete: () => {
-            console.log(`[PovBlock DEBUG] Animation Complete. IsLooping=${isLoopingFromEndToStart}, Final Animated Translate=${povBlockList.style.transform}`);
           // console.log(`Animation complete. Looping flag: ${isLoopingFromEndToStart}, Target Translate: ${targetTranslateForAnimation}`)
           if (isLoopingFromEndToStart) {
             // We just finished animating smoothly to the *clone* of the first item.
             // NOW, instantly reset the transform to the *actual* first item's position (0px)
             // without animation, so the next slide (0 -> 1) starts from the correct base.
-              console.log(`[PovBlock DEBUG] Resetting: Setting transition to none.`);
             povBlockList.style.transition = 'none' // Disable transitions for the reset
             povBlockList.style.transform = 'translateX(0px)'
-              console.log(`[PovBlock DEBUG] Resetting: Setting transform to 0px. Current was: ${povBlockList.style.transform}`);
             // Force reflow might not be needed, but uncomment if visual glitches occur
             // povBlockList.offsetHeight;
             povBlockList.style.transition = '' // Re-enable transitions for subsequent animations
-              console.log(`[PovBlock DEBUG] Resetting: Re-enabled transitions. New transform: ${povBlockList.style.transform}`);
 
             currentTranslate = 0 // Reset internal tracking to 0
             currentIndex = 0     // Reset internal tracking to 0
             // console.log('Reset to start position (0px) after loop animation.')
-              console.log(`[PovBlock DEBUG] Reset Complete. Updated currentTranslate=${currentTranslate}, currentIndex=${currentIndex}`);
           } else {
             // Update position and index normally for non-looping slides
             currentTranslate = targetTranslateForAnimation // Use the value we animated to
             currentIndex = targetIndex
             // console.log(`Normal animation complete. New index: ${currentIndex}, New translate: ${currentTranslate}`)
-            console.log(`[PovBlock DEBUG] Normal Animation Complete. Updated currentTranslate=${currentTranslate}, currentIndex=${currentIndex}`);
           }
           // Reschedule the next automatic slide AFTER state is fully updated
           scheduleNextAutoPlay()
