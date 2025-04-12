@@ -3,7 +3,7 @@ title: Optimizing Local LLM SVG Code Generation with TextGrad
 date: 2024-12-27
 author: Brennon Williams
 description: An exploration of using TextGrad to improve SVG generation with local LLMs
-tags: ["LLM", "TextGrad", "SVG", "Machine Learning"]
+tags: ["LLM", "TextGrad", "SVG", "Machine Learning", "AI", "reasoning"]
 ---
 
 I recently switched from the excellent DSPy framework to TextGrad. Like DSPy, TextGrad uses example inputs and outputs as training data to refine prompts and improve outputs. Unlike DSPy, though, there is no emphasis on prompt templating, and the Optimizers can be applied to more than just a re-usable prompt.
