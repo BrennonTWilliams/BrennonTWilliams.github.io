@@ -5,7 +5,9 @@ import BaseHead from '@/components/BaseHead.astro'
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
 import ScrollToTop from '@/components/ScrollToTop.vue'
+import '@/styles/global.css';
 
+import '@/styles/dot.css';
 const { ...head } = Astro.props
 ---
 
@@ -15,10 +17,10 @@ const { ...head } = Astro.props
     <BaseHead {...head} />
     <ViewTransitions />
   </head>
-  <body>
+  <body class="bg-dot">
     <Header client:idle />
     <main
-      class="grow max-w-3xl mx-auto sm:pt-16 pt-6 px-6 relative"
+      class="grow max-w-3xl mx-auto sm:pt-12 pt-10 px-6 relative"
       transition:animate={fade({ duration: '0.4s' })}
     >
       <slot />

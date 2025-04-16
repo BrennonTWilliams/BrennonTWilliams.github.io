@@ -15,10 +15,10 @@ html:not(.dark) {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, var(--dot-bg-color) 22px, transparent 1%) 50%,
-    linear-gradient(var(--dot-bg-color) 22px, transparent 1%) 50%,
+    linear-gradient(90deg, var(--dot-bg-color) 1.375rem, transparent 1%) 50%,
+    linear-gradient(var(--dot-bg-color) 1.375rem, transparent 1%) 50%,
     var(--dot-color);
   background-position: center center;
-  background-size: 24px 24px;
+  background-size: 1.5rem 1.5rem;
   mask-image: linear-gradient(180deg, var(--dot-mask-color) 0%, var(--dot-mask-color) 80%, transparent 100%);
 }

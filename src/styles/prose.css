@@ -84,7 +84,7 @@
 .prose > h1:first-child { /* Increased specificity */
   font-weight: 800;
   font-size: 2.25em;
-  margin-top: 0.5em; /* Increased top margin */
+  margin-top: 0.75em; /* Increased top margin */
   margin-bottom: 1em; /* Increased bottom margin */
   line-height: 1.1111111;
 }
