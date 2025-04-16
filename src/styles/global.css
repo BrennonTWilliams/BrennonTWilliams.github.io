@@ -126,6 +126,7 @@ html.dark::view-transition-new(root) {
 
 body {
   font-family: 'Valkyrie B', sans-serif;
+  --at-apply: bg-main text-main min-h-screen font-sans w-full bg-dot;
 }
 
 h1 {

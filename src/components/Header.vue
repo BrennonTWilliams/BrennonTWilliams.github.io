@@ -1,11 +1,20 @@
 <script lang="ts" setup>
-import { useWindowScroll } from '@vueuse/core'
-import { computed, onMounted, ref, unref } from 'vue'
+import { computed, ref } from 'vue' // Removed unref, added ref
 import ThemeToggle from './ThemeToggle.vue'
+import NavDrawer from './NavDrawer.vue' // Import the new component
 import siteConfig from '@/site-config'
 import { getLinkTarget } from '@/utils/link'
+import { useHeaderScroll } from '../composables/useHeaderScroll'
 
 const navLinks = siteConfig.header.navLinks || []
+
+// State for controlling the navigation drawer
+const isNavDrawerOpen = ref(false)
+
+// Function to toggle the navigation drawer state
+function toggleNavDrawer() {
+  isNavDrawerOpen.value = !isNavDrawerOpen.value
+}
 
 const socialLinks = computed(() => {
   return siteConfig.socialLinks.filter((link: Record<string, any>) => {
@@ -22,61 +31,15 @@ const socialLinks = computed(() => {
   })
 })
 
-const { y: scroll } = useWindowScroll()
+// Activate header scroll behavior
+useHeaderScroll()
 
-const oldScroll = ref(unref(scroll))
 
-onMounted(() => {
-  const navMask = document.querySelector('.nav-drawer-mask') as HTMLElement
-
-  navMask?.addEventListener('touchmove', (event) => {
-    event.preventDefault()
-  })
-
-  const headerEl = document.querySelector('#header') as HTMLElement
-  if (!headerEl)
-    return
-
-  if (document.documentElement.scrollTop > 100)
-    headerEl.classList.add('header-bg-blur')
-
-  window.addEventListener('scroll', () => {
-    if (scroll.value < 150) {
-      headerEl.classList.remove('header-hide')
-      return
-    }
-
-    if (scroll.value - oldScroll.value > 150) {
-      headerEl.classList.add('header-hide')
-      oldScroll.value = scroll.value
-    }
-
-    if (oldScroll.value - scroll.value > 150) {
-      headerEl.classList.remove('header-hide')
-      oldScroll.value = scroll.value
-    }
-  })
-})
-
-function toggleNavDrawer() {
-  const drawer = document.querySelector('.nav-drawer') as HTMLElement
-  const mask = document.querySelector('.nav-drawer-mask') as HTMLElement
-  if (!drawer || !mask)
-    return
-  if (drawer.style.transform === `translateX(0%)`) {
-    drawer.style.transform = `translateX(-100%)`
-    mask.style.display = `none`
-  }
-  else {
-    drawer.style.transform = `translateX(0%)`
-    mask.style.display = `block`
-  }
-}
 </script>
 
 <template>
   <header
-    id="header" :class="{ 'header-bg-blur': scroll > 20 }"
+    id="header"
     class="!fixed bg-transparent z-899 w-screen h-20 px-6 flex justify-between items-center relative"
   >
     <div class="flex items-center h-full">
@@ -105,18 +68,11 @@ function toggleNavDrawer() {
       <ThemeToggle />
     </div>
   </header>
-  <nav
-    class="nav-drawer sm:hidden"
-  >
-    <i i-ri-menu-2-fill />
-    <a
-      v-for="link in navLinks" :key="link.text" :aria-label="`${link.text}`" :target="getLinkTarget(link.href)"
-      nav-link :href="link.href" @click="toggleNavDrawer()"
-    >
-      {{ link.text }}
-    </a>
-  </nav>
-  <div class="nav-drawer-mask" @click="toggleNavDrawer()" />
+  <NavDrawer
+    :nav-links="navLinks"
+    :is-open="isNavDrawerOpen"
+    :toggle-nav-drawer="toggleNavDrawer"
+  />
 </template>
 
 <style scoped>
@@ -129,22 +85,4 @@ function toggleNavDrawer() {
   --at-apply: backdrop-blur-sm;
 }
 
-.nav-drawer {
-  transform: translateX(-100%);
-  --at-apply: box-border fixed h-screen z-999 left-0 top-0 min-w-32vw max-w-50vw
-    bg-main p-6 text-lg flex flex-col gap-5 transition-all;
-}
-
-.nav-drawer-mask {
-  display: none;
-  --at-apply: transition-all;
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 998;
-}
 </style>
