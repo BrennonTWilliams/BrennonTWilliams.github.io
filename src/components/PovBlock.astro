@@ -91,7 +91,9 @@ const itemWidth = 200 // Example width, adjust as needed
       !povItemsOriginal ||
       povItemsOriginal.length === 0
     ) {
-      console.error('PovBlock elements not found or empty.')
+      if (import.meta.env.DEV) {
+        console.error('PovBlock elements not found or empty.')
+      }
       return
     }
 
@@ -99,7 +101,9 @@ const itemWidth = 200 // Example width, adjust as needed
     // Recalculate itemWidth based on actual rendered element
     const itemWidth = povItemsOriginal[0].offsetWidth
     if (itemWidth === 0) {
-      console.error('PovBlock item width is 0, cannot initialize carousel.')
+      if (import.meta.env.DEV) {
+        console.error('PovBlock item width is 0, cannot initialize carousel.')
+      }
       return
     }
     const containerWidth = povBlockContainer.offsetWidth

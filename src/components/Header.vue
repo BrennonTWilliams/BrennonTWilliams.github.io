@@ -61,10 +61,10 @@ useHeaderScroll()
     <div class="flex gap-x-6">
       <a
         v-for="link in socialLinks" :key="link.text" :aria-label="`${link.text}`" :class="link.icon" nav-link
-        :target="getLinkTarget(link.href)" :href="link.href"
+        :target="getLinkTarget(link.href)" :href="link.href" rel="noopener noreferrer"
       />
 
-      <a nav-link target="_blank" href="/rss.xml" i-ri-rss-line aria-label="RSS" />
+      <a nav-link target="_blank" href="/rss.xml" i-ri-rss-line aria-label="RSS" rel="noopener noreferrer" />
       <ThemeToggle />
     </div>
   </header>
