@@ -17,3 +17,32 @@ export type ProjectData = Array<{
     href: string
   }>
 }>
+
+export interface NavLink {
+  text: string
+  href: string
+}
+
+export interface SocialLink {
+  text: string
+  href: string
+  icon: string
+  header?: string | boolean
+}
+
+export interface PostData {
+  title: string
+  description?: string
+  duration?: string
+  image?: {
+    src: string
+    alt: string
+  }
+  date: string
+  draft?: boolean
+  lang?: string
+  tag?: string
+  redirect?: string
+  video?: boolean
+  recording?: boolean
+}

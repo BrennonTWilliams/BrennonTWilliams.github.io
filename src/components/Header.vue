@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue' // Removed unref, added ref
+import type { SocialLink } from '@/types'
 import ThemeToggle from './ThemeToggle.vue'
 import NavDrawer from './NavDrawer.vue' // Import the new component
 import siteConfig from '@/site-config'
@@ -17,7 +18,7 @@ function toggleNavDrawer() {
 }
 
 const socialLinks = computed(() => {
-  return siteConfig.socialLinks.filter((link: Record<string, any>) => {
+  return siteConfig.socialLinks.filter((link: SocialLink) => {
     if (link.header && typeof link.header === 'boolean') {
       return link
     }

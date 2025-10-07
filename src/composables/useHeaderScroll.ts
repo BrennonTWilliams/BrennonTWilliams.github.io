@@ -1,5 +1,5 @@
 import { useWindowScroll, useThrottleFn } from '@vueuse/core'
-import { onMounted, ref, unref } from 'vue'
+import { onMounted, onUnmounted, ref, unref } from 'vue'
 
 export function useHeaderScroll() {
   const { y: scroll } = useWindowScroll()
@@ -47,6 +47,11 @@ export function useHeaderScroll() {
     }, 16) // 16ms ≈ 60fps for smooth performance
 
     window.addEventListener('scroll', handleScroll)
+
+    // Cleanup event listener on component unmount
+    onUnmounted(() => {
+      window.removeEventListener('scroll', handleScroll)
+    })
   })
 
   // Return the scroll ref if needed elsewhere, though not strictly required by the current Header.vue

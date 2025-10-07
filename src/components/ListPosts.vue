@@ -1,11 +1,12 @@
 <script lang="ts" setup>
+import type { PostData } from '@/types'
+
 interface Post {
   id: string
   slug: string
   body: string
-  data: Record<string, any>
+  data: PostData
   collection: string
-  render: any
 }
 
 withDefaults(defineProps<{
