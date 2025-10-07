@@ -1,4 +1,4 @@
-import { useWindowScroll } from '@vueuse/core'
+import { useWindowScroll, useThrottleFn } from '@vueuse/core'
 import { onMounted, ref, unref } from 'vue'
 
 export function useHeaderScroll() {
@@ -14,8 +14,8 @@ export function useHeaderScroll() {
     if (document.documentElement.scrollTop > 100)
       headerEl.classList.add('header-bg-blur')
 
-    // Scroll event listener for hide/show and blur
-    window.addEventListener('scroll', () => {
+    // Scroll event listener for hide/show and blur (throttled for performance)
+    const handleScroll = useThrottleFn(() => {
       // Always show header if near the top
       if (scroll.value < 150) {
         headerEl.classList.remove('header-hide')
@@ -44,7 +44,9 @@ export function useHeaderScroll() {
         headerEl.classList.add('header-bg-blur')
       else
         headerEl.classList.remove('header-bg-blur')
-    })
+    }, 16) // 16ms ≈ 60fps for smooth performance
+
+    window.addEventListener('scroll', handleScroll)
   })
 
   // Return the scroll ref if needed elsewhere, though not strictly required by the current Header.vue
