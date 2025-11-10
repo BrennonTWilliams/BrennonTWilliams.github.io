@@ -1,8 +1,8 @@
 # Code Quality Analysis Report
 
-**Project**: Brennon Williams Portfolio (Astro + Vue)  
-**Date**: 2025-11-10  
-**Analyzed Files**: 27 source files (.ts, .vue, .astro)
+**Project**: Brennon Williams Portfolio (Astro + Vue)
+**Date**: 2025-11-10
+**Analyzed Files**: 25 source files (.ts, .vue, .astro)
 
 ---
 
@@ -882,8 +882,8 @@ if (!document.startViewTransition) {
 
 | Metric | Count |
 |--------|-------|
-| Total Source Files | 27 |
-| Files > 100 lines | 3 |
+| Total Source Files | 25 |
+| Files > 100 lines | 1 |
 | Files > 200 lines | 1 |
 | High Priority Issues | 8 |
 | Medium Priority Issues | 12 |

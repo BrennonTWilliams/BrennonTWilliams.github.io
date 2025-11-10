@@ -539,9 +539,9 @@ src/content/
 ### Current State
 
 - **Content**: 2 blog posts in `writing/` category
-- **Components**: 8 Astro + 8 Vue components
+- **Components**: 3 Astro + 6 Vue components (9 total)
 - **Routes**: 6 dynamic routes + 2 static pages
-- **Dependencies**: 15 production + 18 dev dependencies
+- **Dependencies**: 10 production + 18 dev dependencies
 
 ### Scalability Assessment
 
@@ -589,9 +589,9 @@ src/content/
 
 4. **Component Directory**
    - Flat structure doesn't scale beyond ~20 components
-   - Already at 16 files (8 Astro + 8 Vue)
-   - **Risk**: Hard to navigate and maintain
-   - **Impact Timeline**: Issue NOW (at current size)
+   - Currently at 9 files (3 Astro + 6 Vue)
+   - **Risk**: Will become hard to navigate beyond 15-20 components
+   - **Impact Timeline**: Not urgent yet, plan for future growth
 
 5. **No Build Optimization**
    - No bundle analysis
@@ -1020,7 +1020,7 @@ This is a **well-architected foundation** for a personal portfolio site. The tec
 
 ### Metrics Summary
 
-- **Total Components**: 16 (8 Astro + 8 Vue)
+- **Total Components**: 9 (3 Astro + 6 Vue)
 - **Total Routes**: 8 (6 dynamic + 2 static API)
 - **Lines of Code (Components)**: ~1,200
 - **TypeScript Coverage**: 95%

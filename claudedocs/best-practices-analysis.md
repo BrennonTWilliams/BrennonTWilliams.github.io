@@ -9,7 +9,7 @@
 
 This report evaluates the codebase's adherence to industry best practices across five key areas: Astro framework patterns, Vue component architecture, CSS/styling conventions, version control hygiene, and build/deployment optimization. Overall, the codebase demonstrates **strong adherence to modern web development practices** with several areas of excellence and a few opportunities for improvement.
 
-**Overall Grade: A- (92/100)**
+**Overall Grade: B+ (88.4/100)**
 
 ---
 
@@ -300,10 +300,10 @@ shortcuts: [
 
 ### ⚠️ Areas for Improvement
 
-#### 3.6 Inconsistent Utility Syntax
-**File:** `src/components/NavDrawer.vue` (Lines 56-57, 63)
+#### 3.6 CSS Variable Apply Pattern
+**File:** `src/components/NavDrawer.vue` (Lines 26, 46), `src/styles/global.css`
 
-**Issue:** Mixing `--at-apply` with regular CSS properties:
+**Observation:** Codebase consistently uses `--at-apply` pattern (9 uses across files):
 
 ```css
 .nav-drawer {
@@ -312,15 +312,16 @@ shortcuts: [
 
 .nav-drawer-mask {
   --at-apply: transition-opacity duration-300;
-  content: '';  /* Regular CSS mixed in */
+  content: '';  /* Regular CSS mixed in as needed */
   position: fixed;
-  /* ... more regular CSS */
 }
 ```
 
-**Recommendation:** Use UnoCSS `@apply` directive consistently or stick to regular CSS. The `--at-apply` is a legacy UnoCSS pattern.
+**Note:** `--at-apply` is a valid UnoCSS pattern using CSS custom properties. The codebase is actually *consistent* in using this pattern throughout (zero uses of `@apply`). Both syntaxes are supported by UnoCSS.
 
-**Rating: 7/10** - Functional but inconsistent.
+**Recommendation (Optional):** Could migrate to standard `@apply` directive for broader CSS tooling support, but current pattern is working correctly and consistently applied.
+
+**Rating: 8/10** - Consistent pattern, valid UnoCSS syntax, works as intended.
 
 #### 3.7 Magic Numbers in Styles
 **Files:** Various
@@ -623,10 +624,11 @@ Or use Vite's built-in rollup-plugin-visualizer.
    - Impact: Prevents cross-platform git diff issues
    - Effort: Very Low (10 minutes)
 
-5. **Standardize CSS Patterns** (Section 3.6)
-   - Replace `--at-apply` with standard UnoCSS `@apply` or regular CSS
-   - Impact: More maintainable styles
-   - Effort: Low (1 hour)
+5. **Consider CSS Apply Syntax Migration (Optional)** (Section 3.6)
+   - Current `--at-apply` usage is consistent and valid
+   - Could optionally migrate to `@apply` for broader tooling support
+   - Impact: Minor - current pattern works correctly
+   - Effort: Low (1 hour) - but not required
 
 6. **Extract Magic Numbers** (Section 3.7)
    - Create CSS custom properties or constants for commonly used values

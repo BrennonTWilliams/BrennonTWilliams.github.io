@@ -153,40 +153,22 @@ All other Vue components are server-rendered, minimizing JavaScript payload.
 
 ### Recommendations
 
-#### 🔴 HIGH PRIORITY: Implement Astro Image Integration
+#### 🔴 HIGH PRIORITY: Implement Astro Image Optimization
 
-**Implementation:**
+**⚠️ IMPORTANT:** Do NOT use `@astrojs/image` - it was deprecated in Astro v3.0 (Fall 2023). Astro 4+ includes built-in image optimization via `astro:assets`.
 
-```bash
-npm install @astrojs/image
-```
-
-**File:** `/home/user/BrennonTWilliams.github.io/astro.config.ts:12-19`
-
-```typescript
-// Add to integrations array
-import image from '@astrojs/image';
-
-integrations: [
-  mdx(),
-  sitemap(),
-  UnoCSS({ injectReset: true }),
-  vue(),
-  image({
-    serviceEntryPoint: '@astrojs/image/sharp',
-  }),
-]
-```
+**No installation needed** - `astro:assets` is built into Astro 4.11.3
 
 **Update homepage image:**
 
 ```astro
 ---
-import { Image } from '@astrojs/image/components';
+import { Image } from 'astro:assets';
+import headshotImage from '../assets/brennon-headshot-bw-stylized.png';
 ---
 
 <Image
-  src="/brennon-headshot-bw-stylized.png"
+  src={headshotImage}
   alt="Brennon Williams headshot"
   width={368}
   height={368}
@@ -196,17 +178,33 @@ import { Image } from '@astrojs/image/components';
 />
 ```
 
+**Note:** Move image from `/public/` to `/src/assets/` for automatic optimization.
+
 **Update blog post images:**
 
 ```astro
-<Image 
-  width={640} 
-  height={360} 
-  src={image.src} 
-  alt={image.alt || ''} 
+---
+import { Image } from 'astro:assets';
+// Import images as modules
+import myImage from '../assets/images/blog/my-image.png';
+---
+
+<Image
+  src={myImage}
+  alt="Description"
+  width={640}
+  height={360}
   format="webp"
   quality={85}
 />
+```
+
+**For dynamic images in MDX:**
+
+```astro
+---
+import { getImage } from 'astro:assets';
+---
 ```
 
 **Impact:**
@@ -739,9 +737,10 @@ Based on typical hosting and analysis:
 ### Week 1: High Priority Items
 
 - [ ] Remove `presetWebFonts` from `uno.config.ts`
-- [ ] Install and configure `@astrojs/image`
-- [ ] Update homepage image to use `<Image>` component
-- [ ] Update blog post images to use `<Image>` component
+- [ ] Set up `astro:assets` image optimization (built-in, no install needed)
+- [ ] Move images from `/public/` to `/src/assets/`
+- [ ] Update homepage image to use `<Image>` component from `astro:assets`
+- [ ] Update blog post images to use `<Image>` component from `astro:assets`
 - [ ] Delete unused font directories
 - [ ] Test font rendering after cleanup
 - [ ] Run build and verify output
