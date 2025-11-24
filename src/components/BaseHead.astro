@@ -29,9 +29,9 @@ const resolvedImage = image?.src
 const canonicalURL = new URL(Astro.request.url, Astro.site)
 
 function formatCanonicalURL(url: string | URL) {
-  const path = url.toString()
+  let path = url.toString()
   const hasQueryParams = path.includes('?')
-  if (hasQueryParams) path.replace(/\/?$/, '')
+  if (hasQueryParams) path = path.replace(/\/?$/, '')
   return path.replace(/\/?$/, hasQueryParams ? '' : '/')
 }
 ---

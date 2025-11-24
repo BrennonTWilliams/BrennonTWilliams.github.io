@@ -2,6 +2,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import { type CollectionPosts } from '@/types'
 import { getPosts } from '@/utils/posts'
+import { getDate } from '@/utils/date'
 
 export async function getStaticPaths() {
   const posts = await getPosts()
@@ -21,10 +22,6 @@ const { post } = Astro.props
 const { title, image, description, date, duration, tag } = post.data
 
 const { Content } = await post.render()
-
-function getDate(date: string) {
-  return new Date(date).toISOString()
-}
 ---
 
 <BaseLayout title={title} description={description} pageType="article">

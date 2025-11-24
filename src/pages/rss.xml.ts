@@ -13,7 +13,7 @@ export async function GET(context: Context) {
     title: siteConfig.title,
     description: siteConfig.description,
     site: context.site,
-    items: posts!.map((item) => {
+    items: posts.map((item) => {
       return {
         ...item.data,
         link: `${context.site}/posts/${item.slug}/`,

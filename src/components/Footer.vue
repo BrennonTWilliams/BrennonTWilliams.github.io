@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import siteConfig from '@/site-config'
-import { getLinkTarget } from '@/utils/link'
 </script>
 
 <template>

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { PostData } from '@/types'
+import { getDate } from '@/utils/date'
 
 interface Post {
   id: string
@@ -14,10 +15,6 @@ withDefaults(defineProps<{
 }>(), {
   list: () => [],
 })
-
-function getDate(date: string) {
-  return new Date(date).toISOString()
-}
 
 function getHref(post: Post) {
   if (post.data.redirect)

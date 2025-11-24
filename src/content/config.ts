@@ -32,9 +32,10 @@ const blog = defineCollection({
       })),
     draft: z.boolean().default(false).optional(),
     lang: z.string().default('en-US').optional(),
-    tag: z.string().optional().optional(),
+    tag: z.string().optional(),
     redirect: z.string().optional(),
     video: z.boolean().default(false).optional(),
+    recording: z.boolean().default(false).optional(),
   }),
 })
 

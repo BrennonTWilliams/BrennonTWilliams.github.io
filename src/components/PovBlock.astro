@@ -9,29 +9,24 @@ const povItems = [
   { top: 'LOCAL', bottom: 'CLOUD' },
   { top: 'DEPTH', bottom: 'BREADTH' },
 ]
-
-// Placeholder for item width - will need adjustment based on styling
-const itemWidth = 200 // Example width, adjust as needed
 ---
 
 <div
   id="pov-block-carousel"
   class="pov-block-container relative overflow-hidden select-none cursor-grab"
 >
-  <ul class="carousel flex absolute top-0 left-0 h-full will-change-transform">
+  <ul class="carousel flex absolute top-0 left-0 h-full will-change-transform gap-2.5">
     {
-      povItems.map((item, index) => (
+      povItems.map((item) => (
         <li
-          class={`carousel-item flex flex-col items-center justify-center p-2 ${index !== povItems.length - 1 ? 'mr-2.5' : ''}`}
-          style={`width: ${itemWidth}px; flex-shrink: 0;`}
+          class="carousel-item flex flex-col items-center justify-center px-3 py-2"
+          style="width: 240px; flex-shrink: 0;"
         >
-          {' '}
-          {/* Removed h-full */}
-          <span class="font-valkyrie-b-caps text-xl leading-tight text-center">
+          <span class="font-valkyrie-a-caps text-lg leading-tight text-center block" style="max-width: 100%; word-wrap: break-word;">
             {item.top}
           </span>
-          <div class="divider w-1/3 my-2" /> {/* Replaced hr with a div */}
-          <span class="font-valkyrie-b-caps text-xl leading-tight text-center">
+          <div class="divider w-1/3 my-2" />
+          <span class="font-valkyrie-a-caps text-lg leading-tight text-center block" style="max-width: 100%; word-wrap: break-word;">
             {item.bottom}
           </span>
         </li>
@@ -54,13 +49,12 @@ const itemWidth = 200 // Example width, adjust as needed
 <style>
   .pov-block-container {
     /* Set initial dimensions - adjust based on index.astro layout */
-    width: 200px; /* Match itemWidth for single item view */
-    height: 12rem; /* Increased relative height */
-    /* border: 1px dashed gray; /* For debugging layout */
+    width: 240px; /* Match itemWidth for single item view */
+    height: 10rem; /* Adjusted height for better proportions */
   }
 
-  /* Font is applied via UnoCSS class 'font-valkyrie-b-caps' */
-  .font-valkyrie-b-caps {
+  /* Font is applied via UnoCSS class 'font-valkyrie-a-caps' */
+  .font-valkyrie-a-caps {
     font-family: 'Valkyrie B Caps', sans-serif; /* Already defined in global.css */
   }
 
@@ -68,7 +62,17 @@ const itemWidth = 200 // Example width, adjust as needed
   .carousel-item .divider {
     height: 1px; /* Set explicit height */
     background-color: currentColor; /* Use text color for background */
-    /* margin: 0.5rem auto; /* Use UnoCSS my-2 */
+  }
+
+  /* Ensure text is properly contained and centered */
+  .carousel-item span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Ensure carousel list doesn't overflow its container */
+  .carousel {
+    box-sizing: border-box;
   }
 </style>
 
@@ -99,86 +103,97 @@ const itemWidth = 200 // Example width, adjust as needed
 
     const originalItemCount = povItemsOriginal.length
     // Recalculate itemWidth based on actual rendered element
-    const itemWidth = povItemsOriginal[0].offsetWidth
-    if (itemWidth === 0) {
+    const baseItemWidth = povItemsOriginal[0].offsetWidth
+    if (baseItemWidth === 0) {
       if (import.meta.env.DEV) {
         console.error('PovBlock item width is 0, cannot initialize carousel.')
       }
       return
     }
-    const containerWidth = povBlockContainer.offsetWidth
-    const itemsToClone =
-      Math.ceil(containerWidth / itemWidth) + originalItemCount // Ensure enough clones
 
-    // Clone items for seamless looping
-    for (let i = 0; i < itemsToClone; i++) {
-      const clone = povItemsOriginal[i % originalItemCount].cloneNode(
-        true,
-      ) as HTMLElement
+    // Account for gap between items (gap-2.5 = 10px)
+    const gapSize = 10
+    const itemWidth = baseItemWidth + gapSize
+
+    // Create bidirectional clones for seamless infinite scrolling
+    const leadingClones = originalItemCount
+    const trailingClones = originalItemCount
+
+    // Add leading clones (before original items) for backward scrolling
+    for (let i = originalItemCount - 1; i >= 0; i--) {
+      const clone = povItemsOriginal[i].cloneNode(true) as HTMLElement
+      clone.setAttribute('aria-hidden', 'true') // Hide clones from accessibility tree
+      povBlockList.insertBefore(clone, povBlockList.firstChild)
+    }
+
+    // Add trailing clones (after original items) for forward scrolling
+    for (let i = 0; i < trailingClones; i++) {
+      const clone = povItemsOriginal[i].cloneNode(true) as HTMLElement
       clone.setAttribute('aria-hidden', 'true') // Hide clones from accessibility tree
       povBlockList.appendChild(clone)
     }
 
-    const totalItems = povBlockList.children.length // Update total items count after cloning
-    const fullScrollWidth = itemWidth * originalItemCount // Width of the original set of items
+    // Calculate initial position offset (accounting for leading clones)
+    const startOffset = -(leadingClones * itemWidth)
 
     let isDragging = false
     let startX = 0
-    let currentTranslate = 0
+    let currentTranslate = startOffset // Start at offset position
     let dragOffset = 0
-    let currentIndex = 0 // Track the current item index
-    let autoPlayTimer: ReturnType<typeof setTimeout> | null = null // Timer for auto-play
+    let currentIndex = 0 // Track the current logical item index (0 to originalItemCount - 1)
+    let autoPlayTimer: number | null = null // Timer for auto-play (fixed type for browser)
     const autoPlayDelay = 3000 // Delay between automatic transitions
     const animationDuration = 500 // Duration for slide animation
     const snapDuration = 300 // Duration for snap animation
+
+    // Set initial transform to offset position
+    povBlockList.style.transform = `translateX(${startOffset}px)`
 
     // Function to animate to a specific item index
     function animateToItem(index: number, duration = animationDuration) {
       if (!povBlockList) return
 
       const targetIndex = index % originalItemCount // The logical target index (0 to originalItemCount - 1)
-      let targetTranslateForAnimation: number
-      let isLoopingFromEndToStart = false
+      const currentLogicalIndex = currentIndex % originalItemCount
 
-      // Check if we are looping from the last item back to the first
-      if (currentIndex === originalItemCount - 1 && targetIndex === 0) {
-        // Animate to the first *cloned* item (visually same as the first original)
-        targetTranslateForAnimation = -(originalItemCount * itemWidth)
-        isLoopingFromEndToStart = true
-        // console.log(`Looping: Animating from ${currentIndex} to clone of 0 at ${targetTranslateForAnimation}`)
-      } else {
-        // Normal animation to the target index's position
-        targetTranslateForAnimation = -(targetIndex * itemWidth)
-        // console.log(`Normal: Animating from ${currentIndex} to ${targetIndex} at ${targetTranslateForAnimation}`)
+      // Calculate physical positions considering clone offset
+      const targetPhysicalPos = -(leadingClones + targetIndex) * itemWidth
+
+      let targetTranslate = targetPhysicalPos
+      let needsReset = false
+
+      // Detect loop scenarios for seamless wrapping
+      const isForwardLoop = currentLogicalIndex === originalItemCount - 1 && targetIndex === 0
+      const isBackwardLoop = currentLogicalIndex === 0 && targetIndex === originalItemCount - 1
+
+      if (isForwardLoop) {
+        // Animate to trailing clone of item 0 (seamless forward wrap)
+        targetTranslate = -(leadingClones + originalItemCount) * itemWidth
+        needsReset = true
+      } else if (isBackwardLoop) {
+        // Animate to leading clone of last item (seamless backward wrap)
+        targetTranslate = -(leadingClones - 1) * itemWidth
+        needsReset = true
       }
 
-      animate(povBlockList, {
-        // targets property removed as it's now the first argument
-        translateX: targetTranslateForAnimation,
+      // Use anime.js to animate the translateX transform
+      const animation = animate(povBlockList, {
+        translateX: [currentTranslate, targetTranslate], // Specify both start and end values
         duration: duration,
-        easing: 'easeOutExpo', // Smooth easing
+        easing: 'easeOutExpo',
         complete: () => {
-          // console.log(`Animation complete. Looping flag: ${isLoopingFromEndToStart}, Target Translate: ${targetTranslateForAnimation}`)
-          if (isLoopingFromEndToStart) {
-            // We just finished animating smoothly to the *clone* of the first item.
-            // NOW, instantly reset the transform to the *actual* first item's position (0px)
-            // without animation, so the next slide (0 -> 1) starts from the correct base.
-            povBlockList.style.transition = 'none' // Disable transitions for the reset
-            povBlockList.style.transform = 'translateX(0px)'
-            // Force reflow might not be needed, but uncomment if visual glitches occur
-            // povBlockList.offsetHeight;
-            povBlockList.style.transition = '' // Re-enable transitions for subsequent animations
-
-            currentTranslate = 0 // Reset internal tracking to 0
-            currentIndex = 0     // Reset internal tracking to 0
-            // console.log('Reset to start position (0px) after loop animation.')
-          } else {
-            // Update position and index normally for non-looping slides
-            currentTranslate = targetTranslateForAnimation // Use the value we animated to
-            currentIndex = targetIndex
-            // console.log(`Normal animation complete. New index: ${currentIndex}, New translate: ${currentTranslate}`)
+          if (needsReset) {
+            // Instantly reset to actual position without animation for seamless loop
+            povBlockList.style.transform = `translateX(${targetPhysicalPos}px)`
+            // Force a reflow to ensure the transform is applied immediately
+            void povBlockList.offsetHeight
           }
-          // Reschedule the next automatic slide AFTER state is fully updated
+
+          // Update state
+          currentTranslate = targetPhysicalPos
+          currentIndex = targetIndex
+
+          // Reschedule the next automatic slide
           scheduleNextAutoPlay()
         },
       })
@@ -186,27 +201,27 @@ const itemWidth = 200 // Example width, adjust as needed
 
     // Function to schedule the next automatic slide
     function scheduleNextAutoPlay() {
-      if (autoPlayTimer) clearTimeout(autoPlayTimer) // Clear existing timer
+      if (autoPlayTimer) clearTimeout(autoPlayTimer)
 
-      autoPlayTimer = setTimeout(() => {
+      autoPlayTimer = window.setTimeout(() => {
         const nextIndex = (currentIndex + 1) % originalItemCount
         animateToItem(nextIndex)
-        // Note: The next call to scheduleNextAutoPlay happens inside animateToItem's complete callback
       }, autoPlayDelay)
     }
 
     function handleDragStart(e: MouseEvent | TouchEvent) {
-      if (autoPlayTimer) clearTimeout(autoPlayTimer) // Stop auto-play on drag start
+      if (autoPlayTimer) clearTimeout(autoPlayTimer)
       isDragging = true
       povBlockContainer?.classList.add('is-dragging')
-      document.body.classList.add('is-dragging') // Add class to body
+      document.body.classList.add('is-dragging')
       startX = e instanceof MouseEvent ? e.pageX : e.touches[0].clientX
-      povBlockList!.style.transition = 'none' // Disable transition during drag
+      povBlockList!.style.transition = 'none'
+      dragOffset = 0 // Reset drag offset
     }
 
     function handleDragMove(e: MouseEvent | TouchEvent) {
       if (!isDragging) return
-      e.preventDefault() // Prevent page scroll on touch devices
+      e.preventDefault()
       const currentX = e instanceof MouseEvent ? e.pageX : e.touches[0].clientX
       dragOffset = currentX - startX
       const newTranslate = currentTranslate + dragOffset
@@ -217,34 +232,32 @@ const itemWidth = 200 // Example width, adjust as needed
       if (!isDragging) return
       isDragging = false
       povBlockContainer?.classList.remove('is-dragging')
-      document.body.classList.remove('is-dragging') // Remove class from body
-      currentTranslate += dragOffset // Update current position based on drag
+      document.body.classList.remove('is-dragging')
 
-      // Calculate the target index based on the drag distance
-      // We use the currentTranslate + dragOffset to get the final position if the drag ended now
+      // Calculate final position (FIXED: don't double-count dragOffset)
       const finalTranslate = currentTranslate + dragOffset
-      // Normalize to handle looping correctly when calculating the nearest index
-      const normalizedTranslate = finalTranslate % fullScrollWidth
-      // Find the nearest original item index
-      let nearestIndex = Math.round(normalizedTranslate / itemWidth)
+      currentTranslate = finalTranslate
 
-      // Ensure the index is within the bounds of original items and negative
-      nearestIndex = Math.abs(nearestIndex) % originalItemCount
+      // Calculate nearest index accounting for clone offset
+      const normalizedPosition = finalTranslate + (leadingClones * itemWidth)
+      let nearestIndex = Math.round(-normalizedPosition / itemWidth)
 
-      const targetTranslate = -(nearestIndex * itemWidth)
+      // Ensure index is within bounds using modulo
+      nearestIndex = ((nearestIndex % originalItemCount) + originalItemCount) % originalItemCount
 
-      // Use anime for snapping animation
-      // Note: Removed anime.remove call
-      if (!povBlockList) return // Add null check before animating
+      // Calculate target position
+      const targetTranslate = -(leadingClones + nearestIndex) * itemWidth
+
+      if (!povBlockList) return
       animate(povBlockList, {
-        // targets property removed as it's now the first argument
         translateX: targetTranslate,
-        duration: snapDuration, // Use snap duration
-        easing: 'easeOutCubic', // Snappy easing
+        duration: snapDuration,
+        easing: 'easeOutCubic',
         complete: () => {
-          currentTranslate = targetTranslate // Update position after snap
-          currentIndex = nearestIndex // Update index after snap
-          // Restart auto-play only after snapping is complete and if not dragging
+          currentTranslate = targetTranslate
+          currentIndex = nearestIndex
+          dragOffset = 0
+
           if (!isDragging) {
             scheduleNextAutoPlay()
           }
@@ -261,19 +274,15 @@ const itemWidth = 200 // Example width, adjust as needed
     })
 
     document.addEventListener('mousemove', handleDragMove)
-    document.addEventListener('touchmove', handleDragMove, { passive: false }) // Need passive: false to prevent scroll
+    document.addEventListener('touchmove', handleDragMove, { passive: false })
 
     document.addEventListener('mouseup', handleDragEnd)
     document.addEventListener('touchend', handleDragEnd)
     document.addEventListener('mouseleave', (e) => {
-      // Handle mouse leaving the container
       if (isDragging) {
         handleDragEnd()
       }
     })
-
-    // Initial setup: Animate to the first item (optional, for consistency)
-    // povBlockList!.style.transform = `translateX(0px)` // Set initial position if needed
 
     // Start the automatic playback cycle
     scheduleNextAutoPlay()

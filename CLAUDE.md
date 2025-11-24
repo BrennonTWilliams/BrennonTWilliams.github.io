@@ -41,7 +41,18 @@ npm run release
 - **blog**: Blog posts with frontmatter (title, date, description, duration, tag, draft status)
 - **pages**: Static pages like "Markdown Style" and "Posts Props"
 
-Blog posts are organized in `/src/content/blog/` with subdirectories (e.g., `writing/`, `notes/`, `talks/`).
+**Blog Organization**:
+Blog posts are organized in `/src/content/blog/` with subdirectory support.
+
+Currently implemented:
+- `writing/` - Blog posts and articles
+
+Configured blog categories (src/site-config.ts):
+- Writing (`/blog`)
+- Notes (`/blog/notes`)
+- Talks (`/blog/talks`)
+
+Note: Category routes exist even if directories are empty.
 
 **Content Schema**:
 - `date`: Auto-transformed to formatted string (e.g., "Jan 15, 2025")
@@ -69,9 +80,12 @@ Blog posts are organized in `/src/content/blog/` with subdirectories (e.g., `wri
 - **Custom Shortcuts**: Semantic class names for common patterns
   - `bg-main`: Background color (light/dark mode aware)
   - `text-main`: Text color (light/dark mode aware)
-  - `text-link`: Link text color
+  - `text-link`: Link text color (dark mode aware)
+  - `text-title`: Title styling (text-link text-4xl font-800)
+  - `border-main`: Border color theming (truegray-300/truegray-600)
   - `nav-link`: Navigation link styling with hover effects
   - `prose-link`: Prose content link styling
+  - `container-link`: Container link with background hover effects
   - `hr-line`: Horizontal rule styling
 
 - **Font Configuration**:
@@ -112,29 +126,61 @@ Blog posts are organized in `/src/content/blog/` with subdirectories (e.g., `wri
 - Navigation structure (header, footer)
 - Blog category links
 
+**Projects Data** (`src/data/projects.ts`):
+- Project listings organized by category groups
+- Structure: Array of project groups, each containing projects array
+- Each project has: text, description, icon, href
+- Used by: `src/pages/projects/index.astro`
+
 **Utilities** (`src/utils/`):
 - `posts.ts`: Content collection queries
   - `getPosts(path?, collection?)`: Get posts with optional path filtering, sorted by date
   - `sortPostsByDate()`: Date-based sorting function
   - Draft posts excluded in production builds
-- `link.ts`: Link utilities (not examined in detail)
+- `link.ts`: Link utilities
+  - `getLinkTarget(link)`: Returns '_blank' for external links, '_self' for internal
+  - `isExternalLink(link)`: Boolean check for http/https URLs
 
 ## Development Guidelines
 
 ### Adding Blog Posts
 
 1. Create markdown/MDX file in `src/content/blog/[category]/`
-2. Include required frontmatter:
-   ```yaml
-   ---
-   title: "Post Title"
-   date: "2025-01-15"
-   description: "Brief description"
-   duration: "5 min read"
-   tag: "Category"
-   draft: false  # Set to true to hide from production
-   ---
-   ```
+2. Include frontmatter with required and optional fields:
+
+**Content Schema**:
+
+**Required Fields**:
+- `title`: Post title (string)
+- `date`: Publication date (string or Date, auto-formatted to "Jan 15, 2025")
+
+**Optional Fields**:
+- `description`: Brief description (string)
+- `duration`: Reading time estimate (string, e.g., "5 min read")
+- `tag`: Category/topic tag (string)
+- `draft`: Hide from production when true (boolean, default: false)
+- `redirect`: Redirect URL (string)
+- `lang`: Language code (string, default: 'en-US')
+- `video`: Video content flag (boolean, default: false)
+- `image`: Image object with `src` and `alt` properties
+
+**Example Frontmatter**:
+```yaml
+---
+title: "Post Title"
+date: "2025-01-15"
+description: "Brief description"
+duration: "5 min read"
+tag: "Category"
+draft: false
+lang: "en-US"
+video: false
+image:
+  src: "/images/post-image.jpg"
+  alt: "Post image description"
+---
+```
+
 3. Posts are automatically sorted by date (newest first)
 4. Path-based filtering available via blog category routes
 
@@ -147,7 +193,17 @@ Blog posts are organized in `/src/content/blog/` with subdirectories (e.g., `wri
 
 ### Vue Component Integration
 
-- All Vue components use `client:idle` directive in Astro for optimal performance
+**Astro-Level Component Hydration**:
+- Interactive components use `client:idle` directive for optimal performance
+  - `Header` (src/layouts/BaseLayout.astro:19) - includes nested NavDrawer and ThemeToggle
+  - `ScrollToTop` (src/layouts/BaseLayout.astro:25)
+- Static components are rendered server-side without client directives
+  - `Footer` (src/layouts/BaseLayout.astro:26)
+  - `ListPosts` (src/pages/blog/[...path].astro:47)
+  - `ListProjects` (src/pages/projects/index.astro:20)
+
+**Component Architecture**:
+- `NavDrawer` and `ThemeToggle` are Vue subcomponents nested within `Header.vue`, not standalone Astro imports
 - Follow composables pattern for shared logic (see `useHeaderScroll.ts`)
 - Use TypeScript for type safety
 
