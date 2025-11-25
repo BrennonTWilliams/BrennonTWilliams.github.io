@@ -35,7 +35,14 @@ const { Content } = await post.render()
     {
       image && (
         <p>
-          <img width="640" height="360" src={image.src} alt={image.alt || ''} />
+          <img
+            width="640"
+            height="360"
+            src={image.src}
+            alt={image.alt || ''}
+            loading="lazy"
+            decoding="async"
+          />
         </p>
       )
     }

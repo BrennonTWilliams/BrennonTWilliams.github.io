@@ -47,6 +47,22 @@ function formatCanonicalURL(url: string | URL) {
 <link rel="sitemap" href="/sitemap-index.xml" />
 <link rel="alternate" type="application/rss+xml" href="/rss.xml" title="RSS" />
 
+<!-- Preload Critical Fonts -->
+<link
+  rel="preload"
+  href="/fonts/WOFF2/Valkyrie B/valkyrie_b_regular.woff2"
+  as="font"
+  type="font/woff2"
+  crossorigin
+/>
+<link
+  rel="preload"
+  href="/fonts/WOFF2/Valkyrie B/valkyrie_b_bold.woff2"
+  as="font"
+  type="font/woff2"
+  crossorigin
+/>
+
 <!-- Page Metadata -->
 <link rel="canonical" href={formatCanonicalURL(canonicalURL)} />
 <meta name="description" content={description} />
@@ -78,15 +94,3 @@ function formatCanonicalURL(url: string | URL) {
     <meta name="twitter:image:alt" content={resolvedImage?.alt} />
   )
 }
-
-<script>
-  import nprogress from 'nprogress'
-
-  document.addEventListener('astro:before-preparation', () => {
-    nprogress.start()
-  })
-
-  document.addEventListener('astro:page-load', () => {
-    nprogress.done()
-  })
-</script>

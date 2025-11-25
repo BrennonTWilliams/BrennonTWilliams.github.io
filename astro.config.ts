@@ -9,6 +9,10 @@ export default defineConfig({
   server: {
     port: 1977,
   },
+  image: {
+    // Use Sharp for better image optimization
+    service: { entrypoint: 'astro/assets/services/sharp' },
+  },
   integrations: [
     mdx(),
     sitemap(),

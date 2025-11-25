@@ -1,7 +1,9 @@
 ---
+import { Image } from 'astro:assets'
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import siteConfig from '@/site-config'
-import PovBlock from '@/components/PovBlock.astro' // Import the new component
+import PovBlock from '@/components/PovBlock.astro'
+import headshotImage from '@/assets/images/profile/brennon-headshot-bw-stylized.png'
 ---
 
 <BaseLayout description={siteConfig.description}>
@@ -16,9 +18,13 @@ import PovBlock from '@/components/PovBlock.astro' // Import the new component
         <!-- Image and Text Block -->
         <div class="flex flex-col sm:flex-row sm:items-start mb-1 flex-shrink-0">
           <!-- Aligned items-start -->
-          <img
-            src="/brennon-headshot-bw-stylized.png"
+          <Image
+            src={headshotImage}
             alt="Brennon Williams headshot"
+            width={368}
+            height={368}
+            format="webp"
+            quality={85}
             class="w-92 h-92 rounded-full mr-4 flex-shrink-0"
           />
           <!-- Added margin-right and ensure no shrink -->
