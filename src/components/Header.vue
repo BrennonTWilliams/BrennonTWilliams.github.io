@@ -41,7 +41,7 @@ useHeaderScroll()
 <template>
   <header
     id="header"
-    class="!fixed bg-transparent z-899 w-screen h-20 px-6 flex justify-between items-center relative"
+    class="!fixed glass z-899 w-screen h-16 px-6 sm:px-8 flex justify-between items-center border-b border-subtle"
   >
     <div class="flex items-center h-full">
       <a href="/" mr-6 aria-label="Header Logo Image">
@@ -79,11 +79,12 @@ useHeaderScroll()
 <style scoped>
 .header-hide {
   transform: translateY(-100%);
-  transition: transform 0.4s ease;
+  transition: transform 0.3s ease;
 }
 
-.header-bg-blur {
-  --at-apply: backdrop-blur-sm;
+.header-show {
+  transform: translateY(0);
+  transition: transform 0.3s ease;
 }
 
 </style>

@@ -1,0 +1,103 @@
+---
+import { Image } from 'astro:assets'
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import siteConfig from '@/site-config'
+import PovBlock from '@/components/PovBlock.astro'
+import headshotImage from '@/assets/images/profile/brennon-headshot-bw-stylized.png'
+---
+
+<BaseLayout description={siteConfig.description}>
+  <article class="prose relative">  {/* Add 'relative' here */}
+    <h1 class="text-title">I wonder what the machines think</h1>
+
+    <!-- Adjusted flex container: align start, add gap -->
+    <div class="flex flex-col">
+      <!-- Outer container: always column -->
+      <!-- Inner container for Image/Text/PovBlock row layout on sm+ screens -->
+      <div class="flex flex-col sm:flex-row justify-start items-start gap-8">
+        <!-- Image and Text Block -->
+        <div class="flex flex-col sm:flex-row sm:items-start mb-1 flex-shrink-0">
+          <!-- Aligned items-start -->
+          <Image
+            src={headshotImage}
+            alt="Brennon Williams headshot"
+            width={368}
+            height={368}
+            format="webp"
+            quality={85}
+            class="w-92 h-92 rounded-full mr-4 flex-shrink-0"
+          />
+          <!-- Added margin-right and ensure no shrink -->
+          <div>
+            <br />
+            <br />
+            <br />
+            <p>Hi, I'm <b>Brennon</b>.</p>
+            <p>I build software (and sometimes hardware).</p>
+            <p>
+              Some things I'm interested in:
+              <ul>
+                <li>Machine Reasoning</li>
+                <li>Local-First Software</li>
+                <li>Physical Computing</li>
+                <li>Rapid Prototyping</li>
+              </ul>
+            </p>
+            <p>
+              <b>Software Architect</b><br />
+              <i>Hiker, reader, tinkerer, dog dad.</i>
+            </p>
+          </div>
+        </div>
+      </div>
+      <hr class="hr-line mb-0" />
+      {/* PovBlock moved below image/text */}
+      {
+        /* Removed 'hidden sm:flex' as it's now always visible in the column flow */
+      }
+
+      {
+        /* Contact Info Section - Now correctly placed below the above content */
+      }
+      {/* Container for Contact Info and PovBlock */}
+      <div class="flex flex-col sm:flex-row items-center gap-2">
+        {/* Changed items-start to items-center */}
+        {/* Contact Info Block */}
+        <div>
+          <p class="flex gap-x-4 flex-wrap">
+            Find me on
+            {
+              siteConfig.socialLinks.map((link) => (
+                <a
+                  aria-label={link.text}
+                  href={link.href}
+                  target="_blank"
+                  class="prose-link"
+                >
+                  <i class:list={[link.icon]} />
+                  {link.text}
+                </a>
+              ))
+            }
+          </p>
+          <p>
+            Or, drop me a line at
+            <a
+              prose-link
+              aria-label={siteConfig.email}
+              href={`mailto:${siteConfig.email}`}
+            >
+              {siteConfig.email}
+            </a>
+          </p>
+        </div>
+
+        {/* PovBlock - Placed to the right on sm+ screens */}
+        <div class="mt-4 sm:mt-0 mx-auto flex-shrink-0">
+          {/* Add margin top on small screens, prevent shrinking */}
+          <PovBlock />
+        </div>
+      </div>
+    </div>
+  </article>
+</BaseLayout>

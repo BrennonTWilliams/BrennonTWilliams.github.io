@@ -26,15 +26,26 @@ const { Content } = await post.render()
 
 <BaseLayout title={title} description={description} pageType="article">
   <article class="prose">
-    <h1>{title}</h1>
-    <p op-50>
-      {date && <time datetime={getDate(date)}>{date.split(',')}</time>}
-      {duration && <span>· {duration}</span>}
-      {tag && <span>· {tag}</span>}
-    </p>
+    <header class="mb-10">
+      <h1 class="!mb-4">{title}</h1>
+      <div class="flex items-center gap-3 text-sm text-secondary not-prose">
+        {date && <time datetime={getDate(date)}>{date}</time>}
+        {duration && (
+          <>
+            <span class="text-muted">·</span>
+            <span>{duration}</span>
+          </>
+        )}
+        {tag && (
+          <span class="px-2 py-0.5 bg-hex-5f9b65/10 dark:bg-hex-7ab882/10 text-accent rounded text-xs font-500">
+            {tag}
+          </span>
+        )}
+      </div>
+    </header>
     {
       image && (
-        <p>
+        <figure class="!mt-0">
           <img
             width="640"
             height="360"
@@ -43,7 +54,7 @@ const { Content } = await post.render()
             loading="lazy"
             decoding="async"
           />
-        </p>
+        </figure>
       )
     }
     <Content />

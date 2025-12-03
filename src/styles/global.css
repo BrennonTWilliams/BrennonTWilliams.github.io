@@ -73,7 +73,15 @@ html:not(.dark) {
 }
 
 html {
-  --color-divider: #bbb; /* Define divider color */
+  --color-divider: rgba(0, 0, 0, 0.12);
+  --color-accent: #5f9b65;
+  --color-accent-hover: #426c46;
+}
+
+html.dark {
+  --color-divider: rgba(255, 255, 255, 0.12);
+  --color-accent: #7ab882;
+  --color-accent-hover: #5f9b65;
 }
 
 img {
