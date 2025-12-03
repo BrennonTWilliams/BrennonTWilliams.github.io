@@ -58,7 +58,7 @@ export default defineConfig({
     {
       'text-title': 'text-link text-4xl font-500',
       'nav-link': 'text-link opacity-70 hover:opacity-100 transition-opacity duration-200 cursor-pointer',
-      'prose-link': 'text-accent cursor-pointer underline decoration-current/40 underline-offset-2 hover:text-accent-hover hover:decoration-current/70 transition-colors duration-200',
+      'prose-link': 'text-accent cursor-pointer underline decoration-current/40 underline-offset-2 hover:text-accent-hover hover:decoration-current/70 active:opacity-70 transition-colors transition-opacity duration-200',
       'container-link': 'p-2 opacity-60 hover:opacity-100 cursor-pointer hover:bg-black/4 dark:hover:bg-white/4 transition-colors transition-opacity duration-200',
       'shadow-soft': 'shadow-[0_1px_2px_rgba(0,0,0,0.04),0_4px_8px_rgba(0,0,0,0.04)]',
       'shadow-elevated': 'shadow-[0_2px_4px_rgba(0,0,0,0.06),0_8px_16px_rgba(0,0,0,0.08)]',

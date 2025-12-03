@@ -3,6 +3,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro'
 import { type CollectionPosts } from '@/types'
 import { getPosts } from '@/utils/posts'
 import { getDate } from '@/utils/date'
+import { siteConfig } from '@/site-config'
 
 export async function getStaticPaths() {
   const posts = await getPosts()
@@ -21,42 +22,275 @@ type Props = { post: CollectionPosts }
 const { post } = Astro.props
 const { title, image, description, date, duration, tag } = post.data
 
-const { Content } = await post.render()
+const { Content, headings } = await post.render()
+
+// Filter headings for TOC (h2 and h3 only)
+const tocHeadings = headings.filter(h => h.depth === 2 || h.depth === 3)
+const showToc = tocHeadings.length >= 3
 ---
 
 <BaseLayout title={title} description={description} pageType="article">
-  <article class="prose">
-    <header class="mb-10">
-      <h1 class="!mb-4">{title}</h1>
-      <div class="flex items-center gap-3 text-sm text-secondary not-prose">
-        {date && <time datetime={getDate(date)}>{date}</time>}
-        {duration && (
-          <>
-            <span class="text-muted">·</span>
-            <span>{duration}</span>
-          </>
-        )}
+  <div class="article-layout">
+    {showToc && (
+      <aside class="toc-sidebar">
+        <nav class="toc-nav" aria-label="Table of contents">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            {tocHeadings.map((heading) => (
+              <li class={`toc-item toc-depth-${heading.depth}`}>
+                <a href={`#${heading.slug}`} class="toc-link">
+                  {heading.text}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </aside>
+    )}
+    <article class="prose article-content">
+      <header class="article-header">
         {tag && (
-          <span class="px-2 py-0.5 bg-hex-5f9b65/10 dark:bg-hex-7ab882/10 text-accent rounded text-xs font-500">
+          <span class="article-tag">
             {tag}
           </span>
         )}
+        <h1 class="article-title">{title}</h1>
+        {description && (
+          <p class="article-description">{description}</p>
+        )}
+        <div class="article-meta">
+          <span class="article-author">
+            {siteConfig.author}
+          </span>
+          {date && (
+            <>
+              <span class="meta-separator" aria-hidden="true">·</span>
+              <time datetime={getDate(date)} class="article-date">{date}</time>
+            </>
+          )}
+          {duration && (
+            <>
+              <span class="meta-separator" aria-hidden="true">·</span>
+              <span class="article-duration">{duration}</span>
+            </>
+          )}
+        </div>
+      </header>
+      {
+        image && (
+          <figure class="article-hero">
+            <img
+              width="640"
+              height="360"
+              src={image.src}
+              alt={image.alt || ''}
+              loading="lazy"
+              decoding="async"
+            />
+          </figure>
+        )
+      }
+      <div class="article-body">
+        <Content />
       </div>
-    </header>
-    {
-      image && (
-        <figure class="!mt-0">
-          <img
-            width="640"
-            height="360"
-            src={image.src}
-            alt={image.alt || ''}
-            loading="lazy"
-            decoding="async"
-          />
-        </figure>
-      )
-    }
-    <Content />
-  </article>
+    </article>
+  </div>
 </BaseLayout>
+
+<style>
+  /* Article Layout with TOC */
+  .article-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    max-width: 100%;
+  }
+
+  @media (min-width: 1024px) {
+    .article-layout:has(.toc-sidebar) {
+      grid-template-columns: 200px 1fr;
+      gap: 3rem;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .article-layout:has(.toc-sidebar) {
+      grid-template-columns: 220px 1fr;
+      gap: 4rem;
+    }
+  }
+
+  /* Table of Contents */
+  .toc-sidebar {
+    display: none;
+  }
+
+  @media (min-width: 1024px) {
+    .toc-sidebar {
+      display: block;
+    }
+  }
+
+  .toc-nav {
+    position: sticky;
+    top: 6rem;
+    max-height: calc(100vh - 8rem);
+    overflow-y: auto;
+    padding-right: 1rem;
+  }
+
+  .toc-title {
+    font-family: 'Valkyrie B Caps', 'Valkyrie B', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: rgba(0, 0, 0, 0.4);
+    margin-bottom: 0.75rem;
+    padding-left: 0.75rem;
+  }
+
+  :global(.dark) .toc-title {
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-left: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  :global(.dark) .toc-list {
+    border-left-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .toc-item {
+    margin: 0;
+  }
+
+  .toc-link {
+    display: block;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    color: rgba(0, 0, 0, 0.54);
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    margin-left: -1px;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+
+  :global(.dark) .toc-link {
+    color: rgba(255, 255, 255, 0.54);
+  }
+
+  .toc-link:hover {
+    color: rgba(0, 0, 0, 0.87);
+    border-left-color: var(--color-accent);
+  }
+
+  :global(.dark) .toc-link:hover {
+    color: rgba(255, 255, 255, 0.87);
+  }
+
+  .toc-depth-3 {
+    padding-left: 0.5rem;
+  }
+
+  .toc-depth-3 .toc-link {
+    font-size: 0.75rem;
+    color: rgba(0, 0, 0, 0.4);
+  }
+
+  :global(.dark) .toc-depth-3 .toc-link {
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  /* Article Header */
+  .article-header {
+    margin-bottom: 2.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
+  :global(.dark) .article-header {
+    border-bottom-color: rgba(255, 255, 255, 0.06);
+  }
+
+  .article-tag {
+    display: inline-block;
+    font-family: 'Valkyrie B Caps', 'Valkyrie B', sans-serif;
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin-bottom: 0.75rem;
+  }
+
+  .article-title {
+    font-family: 'Valkyrie B', sans-serif;
+    font-weight: 400;
+    font-size: 2.25rem;
+    line-height: 1.15;
+    margin: 0 0 0.75rem 0 !important;
+    letter-spacing: -0.01em;
+  }
+
+  .article-description {
+    font-size: 1.125rem;
+    line-height: 1.5;
+    color: rgba(0, 0, 0, 0.6);
+    margin: 0 0 1.25rem 0;
+    font-style: italic;
+  }
+
+  :global(.dark) .article-description {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .article-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: rgba(0, 0, 0, 0.54);
+  }
+
+  :global(.dark) .article-meta {
+    color: rgba(255, 255, 255, 0.54);
+  }
+
+  .article-author {
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.7);
+  }
+
+  :global(.dark) .article-author {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .meta-separator {
+    color: rgba(0, 0, 0, 0.26);
+  }
+
+  :global(.dark) .meta-separator {
+    color: rgba(255, 255, 255, 0.26);
+  }
+
+  /* Article Hero Image */
+  .article-hero {
+    margin: 0 0 2.5rem 0 !important;
+  }
+
+  .article-hero img {
+    width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+  }
+
+  /* Article Body */
+  .article-body {
+    /* Content flows naturally */
+  }
+</style>
