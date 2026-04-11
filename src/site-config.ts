@@ -1,7 +1,7 @@
 export const siteConfig = {
   author: 'Brennon Williams',
   title: 'Brennon Williams AI/ML Software Architect',
-  subtitle: 'Explorations in code and language.',
+  subtitle: 'Building intelligent systems that reason and act.',
   description: 'Personal website for Brennon Williams, AI/ML software architect.',
   image: {
     src: '/hero.jpg',
