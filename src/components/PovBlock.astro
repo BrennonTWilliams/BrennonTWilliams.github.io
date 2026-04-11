@@ -8,6 +8,7 @@ const povItems = [
   { top: 'PROTOTYPE', bottom: 'POLISH' },
   { top: 'LOCAL', bottom: 'CLOUD' },
   { top: 'DEPTH', bottom: 'BREADTH' },
+  { top: 'TACTILITY', bottom: 'TOUCH' },
 ]
 
 // Duplicate items for seamless infinite loop
@@ -45,7 +46,7 @@ const allItems = [...povItems, ...povItems]
   }
 
   .carousel {
-    animation: scroll 16.5s ease-in-out infinite;
+    animation: scroll 19.8s ease-in-out infinite;
   }
 
   .pov-block-container:hover .carousel {
@@ -78,15 +79,15 @@ const allItems = [...povItems, ...povItems]
 
   /*
    * Stepped animation: pause at each item, then move to next
-   * 5 items × (3s pause + 0.3s transition) = 16.5s total
+   * 6 items × (3s pause + 0.3s transition) = 19.8s total
    * Each item: 240px width + 10px gap = 250px
    */
   @keyframes scroll {
-    0%, 18% { transform: translateX(0); }
-    20%, 38% { transform: translateX(-250px); }
-    40%, 58% { transform: translateX(-500px); }
-    60%, 78% { transform: translateX(-750px); }
-    80%, 98% { transform: translateX(-1000px); }
-    100% { transform: translateX(-1250px); }
+    0%, 15% { transform: translateX(0); }
+    17%, 32% { transform: translateX(-250px); }
+    34%, 49% { transform: translateX(-500px); }
+    51%, 66% { transform: translateX(-750px); }
+    68%, 83% { transform: translateX(-1000px); }
+    85%, 100% { transform: translateX(-1250px); }
   }
 </style>
