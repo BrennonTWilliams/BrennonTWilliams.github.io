@@ -5,7 +5,12 @@ import BaseHead from '@/components/BaseHead.astro'
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
 import ScrollToTop from '@/components/ScrollToTop.vue'
-const { ...head } = Astro.props
+interface Props {
+  width?: 'prose' | 'wide' | 'wider' | 'full'
+  [key: string]: unknown
+}
+const { width = 'prose', ...head } = Astro.props
+const widthClass = { prose: 'main-prose', wide: 'main-wide', wider: 'main-wider', full: 'main-full' }[width]
 ---
 
 <!doctype html>
@@ -17,7 +22,7 @@ const { ...head } = Astro.props
   <body class="bg-dot">
     <Header client:idle />
     <main
-      class="grow max-w-[42rem] mx-auto sm:pt-16 pt-12 px-6 sm:px-8 relative"
+      class:list={['grow', widthClass, 'mx-auto sm:pt-16 pt-12 px-6 sm:px-8 relative']}
       transition:animate={fade({ duration: '0.4s' })}
     >
       <slot />

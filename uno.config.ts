@@ -71,6 +71,13 @@ export default defineConfig({
     {
       'hr-line': 'w-14 mx-auto my-8 border-solid border-1px border-black/8 dark:border-white/8',
     },
+    // Page-width tiers for BaseLayout's <main>
+    {
+      'main-prose': 'max-w-[48rem]',
+      'main-wide': 'max-w-[64rem]',
+      'main-wider': 'max-w-[75rem]',
+      'main-full': 'max-w-none',
+    },
   ],
   presets: [
     presetUno(),

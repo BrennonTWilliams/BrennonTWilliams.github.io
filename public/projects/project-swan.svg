@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <!-- Background -->
+  <rect width="100" height="100" fill="#000000" />
+
+  <!-- Geometric Swan -->
+  <g fill="#FFFFFF" stroke="#000000" stroke-width="1.2" stroke-linejoin="miter" stroke-miterlimit="10">
+    <!-- Beak -->
+    <polygon points="15,26 25,20 33,28" />
+    
+    <!-- Head -->
+    <polygon points="25,20 37,16 45,22 33,28" />
+    
+    <!-- Upper Neck -->
+    <polygon points="33,28 45,22 49,34 41,38" />
+    
+    <!-- Mid Neck Pivot -->
+    <polygon points="41,38 49,34 43,46 29,48" />
+    
+    <!-- Lower Neck / Chest -->
+    <polygon points="29,48 43,46 43,60 23,58" />
+    
+    <!-- Chest Base -->
+    <polygon points="23,58 43,60 43,70 25,70" />
+    
+    <!-- Wing Leading Edge -->
+    <polygon points="43,46 59,26 53,46" />
+    <polygon points="53,46 59,26 63,40" />
+    <polygon points="53,46 63,40 57,56" />
+    
+    <!-- Wing Mid Section -->
+    <polygon points="63,40 71,32 73,44" />
+    <polygon points="63,40 73,44 57,56" />
+    
+    <!-- Wing Trailing Edge & Tail -->
+    <polygon points="73,44 83,38 85,54" />
+    <polygon points="73,44 85,54 57,56" />
+    
+    <!-- Tail Base -->
+    <polygon points="57,56 85,54 75,70" />
+    <polygon points="57,56 75,70 59,70" />
+    
+    <!-- Core Body -->
+    <polygon points="43,60 43,46 53,46 57,56" />
+    <polygon points="43,60 57,56 59,70 43,70" />
+  </g>
+
+  <!-- Eye Cutout -->
+  <polygon points="33,20 35,19 37,21 35,22" fill="#000000" />
+
+  <!-- Geometric Water Reflections -->
+  <g fill="#FFFFFF">
+    <polygon points="25,75 75,75 73.5,76.5 26.5,76.5" />
+    <polygon points="33,79 67,79 65.5,80.5 34.5,80.5" />
+    <polygon points="43,83 57,83 55.5,84.5 44.5,84.5" />
+  </g>
+</svg>

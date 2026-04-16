@@ -1,27 +1,425 @@
 ---
-import { projectData } from '@/data/projects'
 import BaseLayout from '@/layouts/BaseLayout.astro'
-import ListProjects from '@/components/ListProjects.vue'
+import { getProjects, groupProjectsByCategory, partitionFlagship } from '@/utils/projects'
+
+const all = await getProjects()
+const { flagship, rest } = partitionFlagship(all)
+const groups = groupProjectsByCategory(rest)
 ---
 
-<BaseLayout title="Projects" description="List of projects that I am proud of">
-  <h1 class="mb-10 text-title">Projects</h1>
-  <div mb-16 sm:mb-24>
-    {
-      projectData.length > 0 && (
-        <div>
-          {projectData.map((i) => (
-            <div mb-10>
-              <h2 class="select-none relative h20 pointer-events-none">
-                <span class="text-3.2em color-transparent font-bold text-stroke-1.5 text-stroke-hex-aaa op35 dark:op20 absolute top-0">
-                  {i.title}
-                </span>
-              </h2>
-              <ListProjects list={i.projects} />
-            </div>
-          ))}
+<BaseLayout title="Projects" description="Selected work in AI agents, dev tooling, voice systems, infrastructure, hardware, and game AI." width="wider">
+  <h1 class="mb-2 text-title">Projects</h1>
+  <p class="mb-12 text-secondary text-base lh-snug">
+    Things I've built — agents, frameworks, tools, hardware. Click any project for the long version.
+  </p>
+
+  {flagship && (
+    <section class="flagship mb-16">
+      <div class="flagship-card">
+        <div class="flagship-icon">
+          {flagship.data.svg
+            ? <img src={`/projects/${flagship.data.svg}`} alt="" loading="eager" decoding="async" />
+            : <i class={`text-8xl ${flagship.data.icon || 'i-lucide-folder'}`} />
+          }
         </div>
-      )
-    }
+        <div class="flagship-body">
+          <span class="flagship-eyebrow">Flagship</span>
+          <div class="flagship-heading">
+            <a href={`/projects/${flagship.slug}`} class="flagship-title-link">
+              <h2 class="flagship-title">{flagship.data.title}</h2>
+            </a>
+            {flagship.data.status && (
+              <span class={`flagship-status status-${flagship.data.status.toLowerCase().replace(/\s+/g, '-')}`}>
+                {flagship.data.status}
+              </span>
+            )}
+          </div>
+          <p class="flagship-summary">{flagship.data.summary}</p>
+          <div class="flagship-actions">
+            {flagship.data.website && (
+              <a href={flagship.data.website} class="flagship-link flagship-link-primary" target="_blank" rel="noopener">
+                <i class="i-lucide-external-link align-middle" /> Visit {flagship.data.website.replace(/^https?:\/\//, '').replace(/\/$/, '')}
+              </a>
+            )}
+            <a href={`/projects/${flagship.slug}`} class="flagship-link">
+              Read more <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <div class="projects-page mb-16 sm:mb-24">
+    {groups.map(group => (
+      <section class="project-group">
+        <h2 class="project-group-title">{group.category}</h2>
+        <ul class="project-list">
+          {group.projects.map(project => (
+            <li class="project-item">
+              <a href={`/projects/${project.slug}`} class="project-card">
+                <div class="project-icon">
+                  {project.data.svg
+                    ? <img src={`/projects/${project.data.svg}`} alt="" loading="lazy" decoding="async" />
+                    : <i class={`text-8xl ${project.data.icon || 'i-lucide-folder'}`} />
+                  }
+                </div>
+                <div class="project-body">
+                  <div class="project-heading">
+                    <h3 class="project-title">{project.data.title}</h3>
+                    {project.data.status && (
+                      <span class={`project-status status-${project.data.status.toLowerCase().replace(/\s+/g, '-')}`}>
+                        {project.data.status}
+                      </span>
+                    )}
+                  </div>
+                  <p class="project-summary">{project.data.summary}</p>
+                </div>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
   </div>
 </BaseLayout>
+
+<style>
+  .flagship-card {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem;
+    border-radius: 0.75rem;
+    background: rgba(95, 155, 101, 0.04);
+    border: 1px solid rgba(95, 155, 101, 0.18);
+  }
+
+  :global(.dark) .flagship-card {
+    background: rgba(122, 184, 130, 0.06);
+    border-color: rgba(122, 184, 130, 0.22);
+  }
+
+  .flagship-icon {
+    flex-shrink: 0;
+    width: 10.5rem;
+    height: 10.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000000;
+  }
+
+  :global(.dark) .flagship-icon {
+    color: #ffffff;
+  }
+
+  .flagship-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .flagship-body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .flagship-eyebrow {
+    display: inline-block;
+    font-family: 'Valkyrie B Caps', 'Valkyrie B', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin-bottom: 0.5rem;
+  }
+
+  .flagship-heading {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+  }
+
+  .flagship-title-link {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .flagship-title {
+    font-family: 'Valkyrie B', sans-serif;
+    font-weight: 500;
+    font-size: 2rem;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin: 0;
+    color: rgba(0, 0, 0, 0.9);
+    transition: color 0.15s ease;
+  }
+
+  :global(.dark) .flagship-title {
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .flagship-title-link:hover .flagship-title {
+    color: var(--color-accent);
+  }
+
+  .flagship-status {
+    font-family: 'Valkyrie B Caps', 'Valkyrie B', sans-serif;
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.125rem 0.45rem;
+    border-radius: 0.25rem;
+    background: rgba(0, 0, 0, 0.05);
+    color: rgba(0, 0, 0, 0.55);
+  }
+
+  :global(.dark) .flagship-status {
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.55);
+  }
+
+  .flagship-status.status-active {
+    color: var(--color-accent);
+    background: rgba(95, 155, 101, 0.1);
+  }
+
+  :global(.dark) .flagship-status.status-active {
+    color: #7ab882;
+    background: rgba(122, 184, 130, 0.14);
+  }
+
+  .flagship-summary {
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    color: rgba(0, 0, 0, 0.7);
+    margin: 0 0 1.25rem 0;
+  }
+
+  :global(.dark) .flagship-summary {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .flagship-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    font-size: 0.9375rem;
+  }
+
+  .flagship-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: rgba(0, 0, 0, 0.7);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .flagship-link:hover {
+    color: var(--color-accent);
+  }
+
+  :global(.dark) .flagship-link {
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  .flagship-link-primary {
+    color: var(--color-accent);
+    font-weight: 500;
+  }
+
+  :global(.dark) .flagship-link-primary {
+    color: #7ab882;
+  }
+
+  @media (max-width: 640px) {
+    .flagship-card {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.25rem;
+      padding: 1.5rem;
+    }
+
+    .flagship-icon {
+      width: 7rem;
+      height: 7rem;
+    }
+
+    .flagship-title {
+      font-size: 1.625rem;
+    }
+
+    .flagship-summary {
+      font-size: 1rem;
+    }
+  }
+
+  .projects-page {
+    display: flex;
+    flex-direction: column;
+    gap: 6rem;
+  }
+
+  .project-group-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: 'Valkyrie B Caps', 'Valkyrie B', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(0, 0, 0, 0.4);
+    margin: 0 0 1.5rem 0;
+    padding-bottom: 0;
+    border-bottom: none;
+    white-space: nowrap;
+  }
+
+  .project-group-title::after {
+    content: '';
+    flex: 1 1 auto;
+    height: 1px;
+    background-color: rgba(0, 0, 0, 0.08);
+  }
+
+  :global(.dark) .project-group-title {
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  :global(.dark) .project-group-title::after {
+    background-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .project-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .project-item {
+    margin: 0;
+    transition: margin-left 0.2s ease;
+  }
+
+  .project-item:nth-child(even) {
+    margin-left: 3rem;
+  }
+
+  @media (max-width: 640px) {
+    .project-item:nth-child(even) {
+      margin-left: 1.25rem;
+    }
+  }
+
+  .project-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 0.875rem 1rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    color: inherit;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .project-card:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+    transform: translateX(2px);
+  }
+
+  :global(.dark) .project-card:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+  }
+
+  .project-icon {
+    flex-shrink: 0;
+    width: 7.5rem;
+    height: 7.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000000;
+  }
+
+  :global(.dark) .project-icon {
+    color: #ffffff;
+  }
+
+  .project-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .project-body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .project-heading {
+    display: flex;
+    align-items: baseline;
+    gap: 0.625rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.25rem;
+  }
+
+  .project-title {
+    font-family: 'Valkyrie B', sans-serif;
+    font-size: 1.375rem;
+    font-weight: 500;
+    line-height: 1.3;
+    margin: 0;
+    color: rgba(0, 0, 0, 0.9);
+  }
+
+  :global(.dark) .project-title {
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .project-status {
+    font-family: 'Valkyrie B Caps', 'Valkyrie B', sans-serif;
+    font-size: 0.625rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.125rem 0.4rem;
+    border-radius: 0.25rem;
+    background: rgba(0, 0, 0, 0.05);
+    color: rgba(0, 0, 0, 0.5);
+  }
+
+  :global(.dark) .project-status {
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .project-status.status-active {
+    color: var(--color-accent);
+    background: rgba(95, 155, 101, 0.08);
+  }
+
+  :global(.dark) .project-status.status-active {
+    color: #7ab882;
+    background: rgba(122, 184, 130, 0.1);
+  }
+
+  .project-summary {
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: rgba(0, 0, 0, 0.6);
+    margin: 0;
+  }
+
+  :global(.dark) .project-summary {
+    color: rgba(255, 255, 255, 0.6);
+  }
+</style>

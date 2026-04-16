@@ -1,42 +1,37 @@
 ---
+import { getCollection } from 'astro:content'
 import BaseLayout from '@/layouts/BaseLayout.astro'
-import { type CollectionPosts } from '@/types'
-import { getPosts } from '@/utils/posts'
-import { getDate } from '@/utils/date'
-import { siteConfig } from '@/site-config'
+import type { CollectionProjects } from '@/types'
 
 export async function getStaticPaths() {
-  const posts = await getPosts()
-  return posts.map((post) => {
-    return {
-      params: { slug: post.slug },
-      props: {
-        post,
-      },
-    }
-  })
+  const projects = await getCollection('projects')
+  return projects.map(project => ({
+    params: { slug: project.slug },
+    props: { project },
+  }))
 }
 
-type Props = { post: CollectionPosts }
+type Props = { project: CollectionProjects }
 
-const { post } = Astro.props
-const { title, image, description, date, duration, tag } = post.data
+const { project } = Astro.props
+const { title, category, status, repo, website, summary, icon, svg } = project.data
 
-const { Content, headings } = await post.render()
+const { Content, headings } = await project.render()
 
-// Filter headings for TOC (h2 and h3 only)
 const tocHeadings = headings.filter(h => h.depth === 2 || h.depth === 3)
 const showToc = tocHeadings.length >= 3
+
+const repoLink = repo && repo !== 'TBD' && repo !== 'private' ? repo : null
 ---
 
-<BaseLayout title={title} description={description} pageType="article" width="wider">
+<BaseLayout title={title} description={summary} pageType="article" width="wider">
   <div class="article-layout">
     {showToc && (
       <aside class="toc-sidebar">
         <nav class="toc-nav" aria-label="Table of contents">
           <div class="toc-title">Contents</div>
           <ul class="toc-list">
-            {tocHeadings.map((heading) => (
+            {tocHeadings.map(heading => (
               <li class={`toc-item toc-depth-${heading.depth}`}>
                 <a href={`#${heading.slug}`} class="toc-link">
                   {heading.text}
@@ -49,47 +44,39 @@ const showToc = tocHeadings.length >= 3
     )}
     <article class="prose article-content">
       <header class="article-header">
-        {tag && (
-          <span class="article-tag">
-            {tag}
-          </span>
-        )}
-        <h1 class="article-title">{title}</h1>
-        {description && (
-          <p class="article-description">{description}</p>
-        )}
+        <div class="project-header-row">
+          <div class="project-hero-icon">
+            {svg
+              ? <img src={`/projects/${svg}`} alt="" loading="eager" decoding="async" />
+              : <i class={`text-5xl ${icon || 'i-lucide-folder'}`} />
+            }
+          </div>
+          <div class="project-header-text">
+            <span class="article-tag">{category}</span>
+            <h1 class="article-title">{title}</h1>
+          </div>
+        </div>
+        {summary && <p class="article-description">{summary}</p>}
         <div class="article-meta">
-          <span class="article-author">
-            {siteConfig.author}
-          </span>
-          {date && (
+          {status && <span class={`meta-status status-${status.toLowerCase().replace(/\s+/g, '-')}`}>{status}</span>}
+          {repoLink && (
             <>
-              <span class="meta-separator" aria-hidden="true">·</span>
-              <time datetime={getDate(date)} class="article-date">{date}</time>
+              {status && <span class="meta-separator" aria-hidden="true">·</span>}
+              <a href={repoLink} class="meta-link" target="_blank" rel="noopener">
+                <i class="i-lucide-github align-middle" /> Source
+              </a>
             </>
           )}
-          {duration && (
+          {website && (
             <>
               <span class="meta-separator" aria-hidden="true">·</span>
-              <span class="article-duration">{duration}</span>
+              <a href={website} class="meta-link" target="_blank" rel="noopener">
+                <i class="i-lucide-external-link align-middle" /> Website
+              </a>
             </>
           )}
         </div>
       </header>
-      {
-        image && (
-          <figure class="article-hero">
-            <img
-              width="640"
-              height="360"
-              src={image.src}
-              alt={image.alt || ''}
-              loading="lazy"
-              decoding="async"
-            />
-          </figure>
-        )
-      }
       <div class="article-body">
         <Content />
       </div>
@@ -98,7 +85,6 @@ const showToc = tocHeadings.length >= 3
 </BaseLayout>
 
 <style>
-  /* Article Layout with TOC */
   .article-layout {
     display: grid;
     grid-template-columns: 1fr;
@@ -120,7 +106,6 @@ const showToc = tocHeadings.length >= 3
     }
   }
 
-  /* Table of Contents */
   .toc-sidebar {
     display: none;
   }
@@ -217,6 +202,38 @@ const showToc = tocHeadings.length >= 3
     border-bottom-color: rgba(255, 255, 255, 0.06);
   }
 
+  .project-header-row {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .project-hero-icon {
+    flex-shrink: 0;
+    width: 4rem;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(0, 0, 0, 0.85);
+  }
+
+  :global(.dark) .project-hero-icon {
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .project-hero-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .project-header-text {
+    flex: 1;
+    min-width: 0;
+  }
+
   .article-tag {
     display: inline-block;
     font-family: 'Valkyrie B Caps', 'Valkyrie B', sans-serif;
@@ -224,7 +241,7 @@ const showToc = tocHeadings.length >= 3
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--color-accent);
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
   }
 
   .article-title {
@@ -232,7 +249,7 @@ const showToc = tocHeadings.length >= 3
     font-weight: 400;
     font-size: 2.25rem;
     line-height: 1.15;
-    margin: 0 0 0.75rem 0 !important;
+    margin: 0 !important;
     letter-spacing: -0.01em;
   }
 
@@ -261,13 +278,30 @@ const showToc = tocHeadings.length >= 3
     color: rgba(255, 255, 255, 0.54);
   }
 
-  .article-author {
-    font-weight: 500;
-    color: rgba(0, 0, 0, 0.7);
+  .meta-status {
+    font-family: 'Valkyrie B Caps', 'Valkyrie B', sans-serif;
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.125rem 0.45rem;
+    border-radius: 0.25rem;
+    background: rgba(0, 0, 0, 0.05);
+    color: rgba(0, 0, 0, 0.55);
   }
 
-  :global(.dark) .article-author {
-    color: rgba(255, 255, 255, 0.7);
+  :global(.dark) .meta-status {
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.55);
+  }
+
+  .meta-status.status-active {
+    color: var(--color-accent);
+    background: rgba(95, 155, 101, 0.08);
+  }
+
+  :global(.dark) .meta-status.status-active {
+    color: #7ab882;
+    background: rgba(122, 184, 130, 0.1);
   }
 
   .meta-separator {
@@ -278,15 +312,21 @@ const showToc = tocHeadings.length >= 3
     color: rgba(255, 255, 255, 0.26);
   }
 
-  /* Article Hero Image */
-  .article-hero {
-    margin: 0 0 2.5rem 0 !important;
+  .meta-link {
+    color: rgba(0, 0, 0, 0.7);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    transition: color 0.15s ease;
   }
 
-  .article-hero img {
-    width: 100%;
-    height: auto;
-    border-radius: 0.5rem;
+  .meta-link:hover {
+    color: var(--color-accent);
+  }
+
+  :global(.dark) .meta-link {
+    color: rgba(255, 255, 255, 0.7);
   }
 
   /* Article Body */

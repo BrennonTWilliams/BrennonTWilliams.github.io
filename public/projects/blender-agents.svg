@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Blueprint Sheet Base (Solid Black) -->
+  <path d="M22,10 H70 L85,25 V85 Q85,90 80,90 H20 Q15,90 15,85 V15 Q15,10 20,10 Z" fill="#000000"/>
+  
+  <!-- Dog-ear fold on corner (Dark Gray for subtle depth) -->
+  <path d="M70,10 V25 H85 Z" fill="#333333"/>
+  
+  <!-- Isometric 3D Cube -->
+  <!-- Top Face (Brightest) -->
+  <path d="M50,32 L68,42 L50,52 L32,42 Z" fill="#FFFFFF"/>
+  <!-- Left Face (Medium Light) -->
+  <path d="M32,46 L50,56 V76 L32,66 Z" fill="#E0E0E0"/>
+  <!-- Right Face (Medium) -->
+  <path d="M68,46 L50,56 V76 L68,66 Z" fill="#BDBDBD"/>
+  
+  <!-- CAD Blueprint Corner Markers (White) -->
+  <g stroke="#FFFFFF" stroke-width="2" fill="none" stroke-linecap="round">
+    <!-- Top Left Mark -->
+    <path d="M25,22 V18 H32"/>
+    <!-- Bottom Left Mark -->
+    <path d="M25,78 V82 H32"/>
+    <!-- Bottom Right Mark -->
+    <path d="M75,78 V82 H68"/>
+  </g>
+</svg>
