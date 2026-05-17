@@ -8,37 +8,37 @@
  *   (scraper-volume not a problem; predictability matters more).
  */
 export const siteConfig = {
-  author: 'Brennon Williams',
-  title: 'Brennon Williams — Software Architect',
-  subtitle: 'I wonder what the machines think.',
+  author: "Brennon Williams",
+  title: "Brennon Williams — Software Architect",
+  subtitle: "I wonder what the machines think.",
   description:
-    'Personal site of Brennon Williams — AI/ML software architect. Notes on machine reasoning, local-first software, physical computing, and rapid prototyping.',
+    "Personal site of Brennon Williams — AI/ML software architect. Notes on machine reasoning, local-first software, physical computing, and rapid prototyping.",
   image: {
-    src: '/og-image.png',
-    alt: 'Brennon Williams — I wonder what the machines think.',
+    src: "/og-image.png",
+    alt: "Brennon Williams — I wonder what the machines think.",
   },
-  email: 'brennon@brennonw.com',
+  email: "brennon@brennonw.com",
 
   socialLinks: [
     {
-      text: 'GitHub',
-      href: 'https://github.com/BrennonTWilliams',
-      icon: 'i-simple-icons-github',
-      header: 'i-ri-github-line',
+      text: "GitHub",
+      href: "https://github.com/BrennonTWilliams",
+      icon: "i-simple-icons-github",
+      header: "i-ri-github-line",
     },
     {
-      text: 'LinkedIn',
-      href: 'https://www.linkedin.com/in/brennon-williams-ai/',
-      icon: 'i-simple-icons-linkedin',
+      text: "LinkedIn",
+      href: "https://www.linkedin.com/in/brennon-williams-ai/",
+      icon: "i-simple-icons-linkedin",
     },
   ],
 
   header: {
     navLinks: [
-      { text: 'Work',    href: '/#work'    },
-      { text: 'Writing', href: '/blog/'    },
-      { text: 'Now',     href: '/now/'     },
-      { text: 'Contact', href: '/#contact' },
+      { text: "Work", href: "/#work" },
+      { text: "Writing", href: "/blog/" },
+      { text: "Now", href: "/now/" },
+      { text: "Projects", href: "/projects/" },
     ],
   },
 
@@ -47,16 +47,16 @@ export const siteConfig = {
    * dispatch table) reads from here. Bump issue / volume in one place.
    */
   editorial: {
-    volume:    'Vol. 01',
-    issue:     'Nº 03',
-    series:    'Notes from the workshop · Nº 03',
-    filedUnder: 'Code · Intelligence',
-    location:  'Berlin, VA · Made on Earth',
-    coords:    '38.89° N · 77.03° W',
-    liveStatus: 'shipping little-loops v0.4',
+    volume: "Vol. 01",
+    issue: "Nº 03",
+    series: "Notes from the lab · Nº 03",
+    filedUnder: "Code · Intelligence",
+    location: "Berlin, VA · Made on Earth",
+    coords: "38.89° N · 77.03° W",
+    liveStatus: "shipping little-loops v0.4",
     sideRails: {
-      left:  'Reasoning · Local-first · Physical computing · Prototyping',
-      right: 'BW — Vol. 01 · Issue Nº 03 · 2026 · MIT',
+      left: "Reasoning · Local-first · Physical computing · Prototyping",
+      right: "BW — Vol. 01 · Issue Nº 03 · 2026 · MIT",
     },
   },
 
@@ -65,38 +65,41 @@ export const siteConfig = {
    * change, not on every release.
    */
   now: {
-    lastUpdated: '2026-05-16',
+    lastUpdated: "2026-05-16",
     entries: [
       {
-        kind: 'Building',
-        title: '<em>little-loops</em> v0.4 — sprint planning + handoff',
-        meta: 'PyPI · 21 cmds · 8 agents',
+        kind: "Building",
+        title: "<em>little-loops</em> v0.4 — sprint planning + handoff",
+        meta: "PyPI · 21 cmds · 8 agents",
       },
       {
-        kind: 'Reading',
-        title: 'Cognitive Behaviors that Enable <em>Self-Improving Reasoners</em>',
-        meta: 'Gandhi et al · Stanford · 2025',
+        kind: "Reading",
+        title:
+          "Cognitive Behaviors that Enable <em>Self-Improving Reasoners</em>",
+        meta: "Gandhi et al · Stanford · 2025",
       },
       {
-        kind: 'Listening',
-        title: '<em>Long</em> ambient sets while soldering',
-        meta: 'Brian Eno · Jon Hopkins · Hania Rani',
+        kind: "Listening",
+        title: "<em>Long</em> ambient sets while soldering",
+        meta: "Brian Eno · Jon Hopkins · Hania Rani",
       },
       {
-        kind: 'Off-screen',
-        title: 'Trails with the <em>dog</em> &amp; the Blue Ridge mountains',
-        meta: '38.89° N · 77.03° W',
+        kind: "Off-screen",
+        title: "Trails with the <em>dog</em> &amp; the Blue Ridge mountains",
+        meta: "38.89° N · 77.03° W",
       },
     ],
   },
 
-  favicon: '/favicon.svg',
+  favicon: "/favicon.svg",
 
   page: {
     get blogLinks() {
-      return siteConfig.header.navLinks.filter(link => link.href.startsWith('/blog'))
+      return siteConfig.header.navLinks.filter((link) =>
+        link.href.startsWith("/blog"),
+      );
     },
   },
-}
+};
 
-export default siteConfig
+export default siteConfig;

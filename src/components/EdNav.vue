@@ -38,7 +38,7 @@ onBeforeUnmount(() => {
 function isCurrent(href: string): boolean {
   if (href.startsWith('/#')) {
     // Anchor on home — current only when on /.
-    return currentPath.value === '/' && href !== '/#contact'
+    return currentPath.value === '/'
   }
   if (href === '/blog/') {
     return currentPath.value.startsWith('/blog') || currentPath.value.startsWith('/posts')
@@ -46,12 +46,16 @@ function isCurrent(href: string): boolean {
   if (href === '/now/') {
     return currentPath.value.startsWith('/now')
   }
+  if (href === '/projects/') {
+    return currentPath.value.startsWith('/projects')
+  }
   return currentPath.value === href
 }
 
 function countFor(text: string): number | undefined {
   if (text === 'Work') return props.workCount
   if (text === 'Writing') return props.writingCount
+  if (text === 'Projects') return props.workCount
   return undefined
 }
 
@@ -105,7 +109,7 @@ const githubLink = computed(() =>
 
       <div class="nav-side">
         <a class="nav-cta ghost" :href="githubLink" target="_blank" rel="noreferrer noopener">GitHub</a>
-        <a class="nav-cta" :href="`mailto:${siteConfig.email}`">Get in touch</a>
+        <a class="nav-cta" href="/#contact" @click="onHashClick">Get in touch</a>
         <span class="status-dot" title="Available for select collaboration" aria-hidden="true"></span>
         <ThemeToggle />
         <button

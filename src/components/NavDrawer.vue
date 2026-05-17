@@ -20,11 +20,13 @@ const savedOverflow = ref<string>('')
 
 function isCurrent(href: string): boolean {
   if (href.startsWith('/#'))
-    return props.currentPath === '/' && href !== '/#contact'
+    return props.currentPath === '/'
   if (href === '/blog/')
     return props.currentPath.startsWith('/blog') || props.currentPath.startsWith('/posts')
   if (href === '/now/')
     return props.currentPath.startsWith('/now')
+  if (href === '/projects/')
+    return props.currentPath.startsWith('/projects')
   return props.currentPath === href
 }
 
