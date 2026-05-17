@@ -8,6 +8,8 @@ node_modules
 .specstory/
 
 .notes/
+.ll/
+*.png
 public/fonts/**/READ*.txt
 public/fonts/**/sample.css
 public/fonts/**/sample.html

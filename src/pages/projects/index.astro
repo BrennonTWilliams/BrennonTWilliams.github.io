@@ -1,19 +1,24 @@
 ---
 import EditorialLayout from '@/layouts/EditorialLayout.astro'
 import EdSectionHeader from '@/components/EdSectionHeader.astro'
-import WorkCard from '@/components/WorkCard.vue'
+import ProjectCard from '@/components/ProjectCard.vue'
 import { getProjects } from '@/utils/projects'
 
 const all = await getProjects()
 const pad = (n: number) => String(n).padStart(2, '0')
+const year = new Date().getFullYear()
 
-// Find the index of the first archive entry so we can splice in a divider row.
-// Suppress the divider when the list is all-one-status.
-const firstArchiveIdx = all.findIndex(p => p.data.status === 'archive')
-const hasActive = all.some(p => p.data.status === 'active')
-const showDivider = firstArchiveIdx > 0 && hasActive
 const activeCount = all.filter(p => p.data.status === 'active').length
 const archiveCount = all.length - activeCount
+
+// Group by category, preserving sort order within each group
+const categoryMap = new Map<string, Array<{ project: (typeof all)[0]; globalIdx: number }>>()
+all.forEach((project, i) => {
+  const cat = project.data.category ?? 'Other'
+  if (!categoryMap.has(cat)) categoryMap.set(cat, [])
+  categoryMap.get(cat)!.push({ project, globalIdx: i + 1 })
+})
+const categories = [...categoryMap.entries()]
 ---
 
 <EditorialLayout
@@ -23,64 +28,98 @@ const archiveCount = all.length - activeCount
 >
   <EdSectionHeader
     numeral="II"
-    title="<em>Work</em>, indexed."
+    title="<em>Work</em>, curated."
     eyebrow="Projects — Nº 02"
     coord={`${all.length} entries · ${activeCount} active · ${archiveCount} archive`}
     level={1}
   />
 
-  <div class="work-grid">
-    {all.map((project, i) => {
-      const href = project.data.link?.href ?? project.data.website ?? project.data.repo ?? `/projects/${project.slug}/`
-      const external = Boolean(project.data.link?.href ?? project.data.website ?? project.data.repo)
-      return (
-        <>
-          {showDivider && i === firstArchiveIdx && (
-            <div class="archive-divider" aria-hidden="true">
-              <span class="roman">Archive</span>
-              <span class="coord">— {archiveCount} entries</span>
-            </div>
-          )}
-          <WorkCard
-            client:visible
-            idx={pad(i + 1)}
-            category={project.data.category}
-            name={project.data.title}
-            stack={project.data.stack}
-            blurb={project.data.summary}
-            status={project.data.status}
-            href={href}
-            external={external}
-          />
-        </>
-      )
-    })}
-  </div>
+  {categories.map(([cat, items]) => (
+    <div class="category-section">
+      <div class="category-header">
+        <span class="category-name">{cat}</span>
+        <span class="category-count">{items.length}</span>
+      </div>
+      <div class="card-strip-outer">
+        <div class="card-strip" role="list">
+          {items.map(({ project, globalIdx }) => {
+            const href = project.data.link?.href ?? project.data.website ?? project.data.repo ?? `/projects/${project.slug}/`
+            const external = Boolean(project.data.link?.href ?? project.data.website ?? project.data.repo)
+            const image = project.data.svg ? `/projects/${project.data.svg}` : undefined
+            return (
+              <ProjectCard
+                client:visible
+                idx={pad(globalIdx)}
+                category={project.data.category}
+                name={project.data.title}
+                blurb={project.data.summary}
+                status={project.data.status}
+                href={href}
+                external={external}
+                image={image}
+                year={year}
+              />
+            )
+          })}
+        </div>
+      </div>
+    </div>
+  ))}
 </EditorialLayout>
 
 <style>
-  .work-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0;
-    border-top: 1px solid var(--ink);
+  .category-section {
+    margin-bottom: 40px;
   }
-  .archive-divider {
+
+  .category-header {
     display: flex;
     align-items: baseline;
-    gap: 14px;
-    padding: 36px 0 12px;
-    border-bottom: 1px solid var(--line);
-    margin-bottom: 4px;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding-left: 2px;
   }
-  .archive-divider .roman {
-    font-family: var(--serif);
-    font-style: italic;
-    font-weight: 500;
-    font-size: 22px;
+
+  .category-name {
+    font-family: var(--caps);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
     color: var(--ink-mute);
   }
-  .archive-divider .coord {
+
+  .category-count {
+    font-family: var(--mono);
+    font-size: 10px;
     color: var(--ink-faint);
+  }
+
+  .card-strip-outer {
+    position: relative;
+  }
+  .card-strip-outer::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 80px;
+    background: linear-gradient(to right, transparent, var(--paper));
+    pointer-events: none;
+    z-index: 1;
+  }
+  .card-strip {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding: 16px 2px 24px;
+    scrollbar-width: none;
+  }
+  .card-strip::-webkit-scrollbar {
+    display: none;
   }
 </style>
