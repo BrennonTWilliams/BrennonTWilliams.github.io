@@ -1,7 +1,8 @@
 ---
 title: lmc-voice
 category: Voice & Agents
-status: Active
+status: active
+order: 3
 repo: https://github.com/BrennonTWilliams/lmc-voice
 summary: A production-grade, self-hosted real-time voice AI assistant. WebRTC audio in, streaming LLM, and tool execution across four provider categories — runs fully offline or against cloud providers, with enterprise monitoring across the stack.
 svg: lmc-voice.png

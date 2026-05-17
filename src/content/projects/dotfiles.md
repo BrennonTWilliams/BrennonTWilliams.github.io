@@ -1,7 +1,8 @@
 ---
 title: dotfiles
 category: Infrastructure & Dev Environment
-status: Active
+status: active
+order: 7
 repo: https://github.com/BrennonTWilliams/dotfiles
 summary: A cross-platform development environment framework managed with GNU Stow — every tool from terminal emulator to shell prompt is tuned together with a unified Gruvbox theme, conflict-resolving install, and a sub-50ms shell startup target.
 icon: i-lucide-terminal

@@ -1,33 +1,13 @@
 ---
-import { fade } from 'astro:transitions'
-import { ViewTransitions } from 'astro:transitions'
-import BaseHead from '@/components/BaseHead.astro'
-import Header from '@/components/Header.vue'
-import Footer from '@/components/Footer.vue'
-import ScrollToTop from '@/components/ScrollToTop.vue'
+import EditorialLayout from '@/layouts/EditorialLayout.astro'
+
 interface Props {
   width?: 'prose' | 'wide' | 'wider' | 'full'
   [key: string]: unknown
 }
-const { width = 'prose', ...head } = Astro.props
-const widthClass = { prose: 'main-prose', wide: 'main-wide', wider: 'main-wider', full: 'main-full' }[width]
+const { width, ...rest } = Astro.props
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <BaseHead {...head} />
-    <ViewTransitions />
-  </head>
-  <body class="bg-dot">
-    <Header client:idle />
-    <main
-      class:list={['grow', widthClass, 'mx-auto sm:pt-16 pt-12 px-6 sm:px-8 relative']}
-      transition:animate={fade({ duration: '0.4s' })}
-    >
-      <slot />
-      <ScrollToTop client:visible />
-      <Footer />
-    </main>
-  </body>
-</html>
+<EditorialLayout mainWidth={width} {...rest}>
+  <slot />
+</EditorialLayout>

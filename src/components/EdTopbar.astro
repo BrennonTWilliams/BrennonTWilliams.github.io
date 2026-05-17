@@ -1,0 +1,87 @@
+---
+import siteConfig from '@/site-config'
+const { volume, issue, filedUnder, location, liveStatus } = siteConfig.editorial
+---
+
+<div class="ed-topbar">
+  <div class="container topbar-inner">
+    <span><b>BW / 2026</b>&nbsp;·&nbsp;{volume} / Issue {issue}</span>
+    <span class="mid">
+      <span>Filed under <b class="coral">{filedUnder}</b></span>
+      <span>{location}</span>
+    </span>
+    <span class="right">
+      <a class="topbar-link" href="/#now">
+        <span class="pulse"></span>Live · <span>{liveStatus}</span>
+      </a>
+      <span class="locale-switch">
+        <b>EN</b>
+      </span>
+    </span>
+  </div>
+</div>
+
+<style>
+  .ed-topbar {
+    border-bottom: 1px solid var(--line);
+    padding: max(10px, var(--safe-top)) 0 10px;
+    background: var(--paper);
+    position: relative;
+    z-index: var(--z-topbar);
+  }
+  .topbar-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    font-family: var(--sans);
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    padding-left: max(0px, var(--safe-left));
+    padding-right: max(0px, var(--safe-right));
+  }
+  .topbar-inner b { color: var(--ink); font-weight: 600; }
+  .topbar-inner .coral { color: var(--coral); }
+  .topbar-inner .mid { display: inline-flex; gap: 26px; }
+  .topbar-inner .right { display: inline-flex; gap: 18px; align-items: center; }
+  .topbar-inner > span,
+  .topbar-inner .mid > span,
+  .topbar-inner .right > span,
+  .topbar-inner .right > a { white-space: nowrap; }
+
+  .topbar-link {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color var(--dur-base) var(--ease-standard),
+                border-color var(--dur-base) var(--ease-standard);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .topbar-link:hover {
+      color: var(--coral);
+      border-bottom-color: var(--coral);
+    }
+  }
+
+  .pulse {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--coral);
+    display: inline-block;
+    margin-right: 6px;
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pulse { animation: none; }
+  }
+
+  @media (max-width: 980px) {
+    .topbar-inner .mid { display: none; }
+  }
+  @media (max-width: 640px) {
+    .topbar-inner .locale-switch { display: none; }
+  }
+</style>

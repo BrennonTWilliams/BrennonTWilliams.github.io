@@ -1,64 +1,7 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   viewBox="0 0 60 38"
-   version="1.1"
-   id="svg6"
-   width="60"
-   height="38"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
-  <defs
-     id="defs6" />
-  <g
-     transform="translate(7.957952,1.014351)"
-     id="g6">
-    <!-- Morse code for "B" -->
-    <g
-       id="g3">
-      <path
-         d="m 3,8 c -1.1045695,0 -2,0.8954305 -2,2 0,1.10457 0.8954305,2 2,2 h 6 c 1.10457,0 2,-0.89543 2,-2 C 11,8.8954305 10.10457,8 9,8 Z M 3,7 h 6 c 1.656854,0 3,1.3431458 3,3 0,1.656854 -1.343146,3 -3,3 H 3 C 1.3431457,13 0,11.656854 0,10 0,8.3431458 1.3431457,7 3,7 Z"
-         fill="#000000"
-         fill-rule="nonzero"
-         id="path1" />
-      <circle
-         cx="20"
-         cy="10"
-         r="3"
-         fill="#000000"
-         id="circle1" />
-      <circle
-         cx="31"
-         cy="10"
-         r="3"
-         fill="#000000"
-         id="circle2" />
-      <circle
-         cx="42"
-         cy="10"
-         r="3"
-         fill="#000000"
-         id="circle3" />
-    </g>
-    <!-- Morse code for "W" -->
-    <g
-       transform="translate(0,16)"
-       id="g5">
-      <circle
-         cx="3"
-         cy="10"
-         r="3"
-         fill="#000000"
-         id="circle4" />
-      <path
-         d="m 19,8 c -1.10457,0 -2,0.8954305 -2,2 0,1.10457 0.89543,2 2,2 h 6 c 1.104569,0 2,-0.89543 2,-2 0,-1.1045695 -0.895431,-2 -2,-2 z m 0,-1 h 6 c 1.656854,0 3,1.3431458 3,3 0,1.656854 -1.343146,3 -3,3 h -6 c -1.656854,0 -3,-1.343146 -3,-3 0,-1.6568542 1.343146,-3 3,-3 z"
-         fill="#000000"
-         fill-rule="nonzero"
-         id="path4" />
-      <path
-         d="m 38,8 c -1.104569,0 -2,0.8954305 -2,2 0,1.10457 0.895431,2 2,2 h 6 c 1.104569,0 2,-0.89543 2,-2 0,-1.1045695 -0.895431,-2 -2,-2 z m 0,-1 h 6 c 1.656854,0 3,1.3431458 3,3 0,1.656854 -1.343146,3 -3,3 h -6 c -1.656854,0 -3,-1.343146 -3,-3 0,-1.6568542 1.343146,-3 3,-3 z"
-         fill="#000000"
-         fill-rule="nonzero"
-         id="path5" />
-    </g>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <circle cx="32" cy="32" r="30" fill="#15140f"/>
+  <text x="32" y="44" text-anchor="middle"
+        font-family="'Valkyrie B', 'Times New Roman', Georgia, serif"
+        font-style="italic" font-weight="500" font-size="40"
+        fill="#efe7d2">B</text>
 </svg>

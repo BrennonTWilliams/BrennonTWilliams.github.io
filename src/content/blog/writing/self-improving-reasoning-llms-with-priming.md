@@ -1,6 +1,7 @@
 ---
 title: "Self-Improving Reasoning LLMs through Priming: Why it Works for Some Models but Not Others"
 date: 2025-04-12
+dateRaw: 2025-04-12
 author: Brennon Williams
 description: Applying Cognitive Behaviors that Enable Self-Improving Reasoners, or, Four Habits of Highly Effective STaRs to LLM Development
 tags: ["LLM", "Machine Reasoning", "Machine Learning", "AI", "reasoning"]

@@ -1,0 +1,79 @@
+---
+interface NavCell { href: string; title: string; eyebrow: string }
+interface Props {
+  prev?: NavCell | null
+  next?: NavCell | null
+}
+const { prev = null, next = null } = Astro.props
+---
+
+{(prev || next) && (
+  <nav class="article-nav" aria-label="Article navigation">
+    {prev ? (
+      <a class="article-nav-cell" href={prev.href}>
+        <span class="eyebrow">← {prev.eyebrow}</span>
+        <span class="title">{prev.title}</span>
+      </a>
+    ) : (
+      <div class="article-nav-cell article-nav-empty" aria-hidden="true"></div>
+    )}
+    {next ? (
+      <a class="article-nav-cell article-nav-right" href={next.href}>
+        <span class="eyebrow">{next.eyebrow} →</span>
+        <span class="title">{next.title}</span>
+      </a>
+    ) : (
+      <div class="article-nav-cell article-nav-empty" aria-hidden="true"></div>
+    )}
+  </nav>
+)}
+
+<style>
+  .article-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    border-top: 1px solid var(--line);
+    margin-top: 3em;
+    padding-top: 1.5em;
+  }
+  .article-nav-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    text-decoration: none;
+    color: inherit;
+    transition: background var(--dur-base) var(--ease-standard);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .article-nav-cell:hover { background: var(--bone); }
+  }
+  .article-nav-right { text-align: right; align-items: flex-end; }
+  .article-nav-cell .eyebrow {
+    font-family: var(--sans);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .article-nav-cell .title {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 18px;
+    color: var(--ink);
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .article-nav-empty { /* keeps grid stable at ends */ }
+
+  @media (max-width: 640px) {
+    .article-nav { grid-template-columns: 1fr; }
+    .article-nav-right { text-align: left; align-items: flex-start; }
+  }
+</style>

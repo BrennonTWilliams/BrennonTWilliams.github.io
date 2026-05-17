@@ -1,7 +1,8 @@
 ---
 title: Blubry
 category: Hardware & Electronics
-status: Archive
+status: archive
+order: 12
 summary: A smartphone-to-hardware bridge that turns a standard 3.5mm TRRS headphone jack into a bidirectional communication channel between phones and custom electronics. The phone's own audio codec, FFT, and mic input replace Bluetooth or USB drivers for rapid hardware prototyping.
 icon: i-lucide-cable
 ---

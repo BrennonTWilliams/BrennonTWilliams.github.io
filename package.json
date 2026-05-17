@@ -47,6 +47,8 @@
     "eslint-plugin-format": "^0.1.2",
     "globals": "^16.0.0",
     "lint-staged": "^15.2.7",
+    "rehype-autolink-headings": "~7.1.0",
+    "rehype-slug": "~6.0.0",
     "simple-git-hooks": "^2.11.1",
     "typescript-eslint": "^8.29.1"
   },

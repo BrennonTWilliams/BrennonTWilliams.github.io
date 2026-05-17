@@ -1,336 +1,189 @@
 ---
 import { getCollection } from 'astro:content'
-import BaseLayout from '@/layouts/BaseLayout.astro'
+import EditorialLayout from '@/layouts/EditorialLayout.astro'
+import ArticleNav from '@/components/ArticleNav.astro'
+import { sortProjects } from '@/utils/projects'
 import type { CollectionProjects } from '@/types'
 
 export async function getStaticPaths() {
-  const projects = await getCollection('projects')
-  return projects.map(project => ({
+  const ordered = sortProjects(
+    (await getCollection('projects')).filter(p => !p.data.draft),
+  )
+  return ordered.map((project, i) => ({
     params: { slug: project.slug },
-    props: { project },
+    props: {
+      project,
+      prev: i > 0 ? ordered[i - 1] : null,
+      next: i < ordered.length - 1 ? ordered[i + 1] : null,
+    },
   }))
 }
 
-type Props = { project: CollectionProjects }
+type Props = {
+  project: CollectionProjects
+  prev: CollectionProjects | null
+  next: CollectionProjects | null
+}
 
-const { project } = Astro.props
-const { title, category, status, repo, website, summary, icon, svg } = project.data
+const { project, prev, next } = Astro.props
+const { title, category, status, repo, website, summary, stack, link } = project.data
+const { Content } = await project.render()
 
-const { Content, headings } = await project.render()
-
-const tocHeadings = headings.filter(h => h.depth === 2 || h.depth === 3)
-const showToc = tocHeadings.length >= 3
-
+const primaryLink = link ?? (website ? { href: website, label: 'Visit website' } : null)
 const repoLink = repo && repo !== 'TBD' && repo !== 'private' ? repo : null
+
+const toCell = (p: CollectionProjects | null) =>
+  p
+    ? { href: `/projects/${p.slug}/`, title: p.data.title, eyebrow: p.data.category ?? 'Project' }
+    : null
 ---
 
-<BaseLayout title={title} description={summary} pageType="article" width="wider">
-  <div class="article-layout">
-    {showToc && (
-      <aside class="toc-sidebar">
-        <nav class="toc-nav" aria-label="Table of contents">
-          <div class="toc-title">Contents</div>
-          <ul class="toc-list">
-            {tocHeadings.map(heading => (
-              <li class={`toc-item toc-depth-${heading.depth}`}>
-                <a href={`#${heading.slug}`} class="toc-link">
-                  {heading.text}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </aside>
-    )}
-    <article class="prose article-content">
-      <header class="article-header">
-        <div class="project-header-row">
-          <div class="project-hero-icon">
-            {svg
-              ? <img src={`/projects/${svg}`} alt="" loading="eager" decoding="async" />
-              : <i class={`text-5xl ${icon || 'i-lucide-folder'}`} />
-            }
-          </div>
-          <div class="project-header-text">
-            <span class="article-tag">{category}</span>
-            <h1 class="article-title">{title}</h1>
-          </div>
-        </div>
-        {summary && <p class="article-description">{summary}</p>}
-        <div class="article-meta">
-          {status && <span class={`meta-status status-${status.toLowerCase().replace(/\s+/g, '-')}`}>{status}</span>}
-          {repoLink && (
-            <>
-              {status && <span class="meta-separator" aria-hidden="true">·</span>}
-              <a href={repoLink} class="meta-link" target="_blank" rel="noopener">
-                <i class="i-lucide-github align-middle" /> Source
-              </a>
-            </>
-          )}
-          {website && (
-            <>
-              <span class="meta-separator" aria-hidden="true">·</span>
-              <a href={website} class="meta-link" target="_blank" rel="noopener">
-                <i class="i-lucide-external-link align-middle" /> Website
-              </a>
-            </>
-          )}
-        </div>
-      </header>
-      <div class="article-body">
-        <Content />
+<EditorialLayout
+  title={`${title} · Projects`}
+  description={summary}
+  pageType="article"
+  mainWidth="wide"
+>
+  <article class="article">
+    <header class="article-header">
+      <span class="roman">§</span>
+      {category && <span class="eyebrow article-tag">{category}</span>}
+      <h1 class="article-title" set:html={title} />
+      {summary && <p class="article-description">{summary}</p>}
+
+      <div class="article-meta">
+        <span class={`status-pill status-${status}`}>{status === 'active' ? 'Active' : 'Archive'}</span>
+        {stack && stack.length > 0 && (
+          <>
+            <span class="meta-separator" aria-hidden="true">·</span>
+            <span class="meta-stack">{stack.join(' · ')}</span>
+          </>
+        )}
       </div>
-    </article>
-  </div>
-</BaseLayout>
+
+      {(primaryLink || repoLink) && (
+        <div class="article-actions">
+          {primaryLink && (
+            <a class="btn btn-primary" href={primaryLink.href} target="_blank" rel="noreferrer noopener">
+              {primaryLink.label ?? primaryLink.href.replace(/^https?:\/\//, '').replace(/\/$/, '')}
+              <span class="arrow"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg></span>
+            </a>
+          )}
+          {repoLink && (
+            <a class="btn btn-ghost" href={repoLink} target="_blank" rel="noreferrer noopener">
+              Source
+              <span class="arrow"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg></span>
+            </a>
+          )}
+        </div>
+      )}
+    </header>
+
+    <div class="prose article-body">
+      <Content />
+    </div>
+
+    <ArticleNav prev={toCell(prev)} next={toCell(next)} />
+  </article>
+</EditorialLayout>
 
 <style>
-  .article-layout {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
-    max-width: 100%;
-  }
-
-  @media (min-width: 1024px) {
-    .article-layout:has(.toc-sidebar) {
-      grid-template-columns: 200px 1fr;
-      gap: 3rem;
-    }
-  }
-
-  @media (min-width: 1280px) {
-    .article-layout:has(.toc-sidebar) {
-      grid-template-columns: 220px 1fr;
-      gap: 4rem;
-    }
-  }
-
-  .toc-sidebar {
-    display: none;
-  }
-
-  @media (min-width: 1024px) {
-    .toc-sidebar {
-      display: block;
-    }
-  }
-
-  .toc-nav {
-    position: sticky;
-    top: 6rem;
-    max-height: calc(100vh - 8rem);
-    overflow-y: auto;
-    padding-right: 1rem;
-  }
-
-  .toc-title {
-    font-family: 'Valkyrie B Caps', 'Valkyrie B', sans-serif;
-    font-size: 0.75rem;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: rgba(0, 0, 0, 0.4);
-    margin-bottom: 0.75rem;
-    padding-left: 0.75rem;
-  }
-
-  :global(.dark) .toc-title {
-    color: rgba(255, 255, 255, 0.4);
-  }
-
-  .toc-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    border-left: 1px solid rgba(0, 0, 0, 0.08);
-  }
-
-  :global(.dark) .toc-list {
-    border-left-color: rgba(255, 255, 255, 0.08);
-  }
-
-  .toc-item {
-    margin: 0;
-  }
-
-  .toc-link {
-    display: block;
-    padding: 0.375rem 0.75rem;
-    font-size: 0.8125rem;
-    line-height: 1.4;
-    color: rgba(0, 0, 0, 0.54);
-    text-decoration: none;
-    border-left: 2px solid transparent;
-    margin-left: -1px;
-    transition: color 0.15s ease, border-color 0.15s ease;
-  }
-
-  :global(.dark) .toc-link {
-    color: rgba(255, 255, 255, 0.54);
-  }
-
-  .toc-link:hover {
-    color: rgba(0, 0, 0, 0.87);
-    border-left-color: var(--color-accent);
-  }
-
-  :global(.dark) .toc-link:hover {
-    color: rgba(255, 255, 255, 0.87);
-  }
-
-  .toc-depth-3 {
-    padding-left: 0.5rem;
-  }
-
-  .toc-depth-3 .toc-link {
-    font-size: 0.75rem;
-    color: rgba(0, 0, 0, 0.4);
-  }
-
-  :global(.dark) .toc-depth-3 .toc-link {
-    color: rgba(255, 255, 255, 0.4);
-  }
-
-  /* Article Header */
   .article-header {
-    margin-bottom: 2.5rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-  }
-
-  :global(.dark) .article-header {
-    border-bottom-color: rgba(255, 255, 255, 0.06);
-  }
-
-  .project-header-row {
+    margin-bottom: 48px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--line);
     display: flex;
-    align-items: center;
-    gap: 1.25rem;
-    margin-bottom: 1rem;
+    flex-direction: column;
+    gap: 12px;
   }
-
-  .project-hero-icon {
-    flex-shrink: 0;
-    width: 4rem;
-    height: 4rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: rgba(0, 0, 0, 0.85);
+  .article-header .roman {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 22px;
+    color: var(--ink-faint);
   }
-
-  :global(.dark) .project-hero-icon {
-    color: rgba(255, 255, 255, 0.85);
-  }
-
-  .project-hero-icon img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-
-  .project-header-text {
-    flex: 1;
-    min-width: 0;
-  }
-
   .article-tag {
-    display: inline-block;
-    font-family: 'Valkyrie B Caps', 'Valkyrie B', sans-serif;
-    font-size: 0.6875rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--color-accent);
-    margin-bottom: 0.5rem;
+    color: var(--coral);
   }
-
   .article-title {
-    font-family: 'Valkyrie B', sans-serif;
-    font-weight: 400;
-    font-size: 2.25rem;
-    line-height: 1.15;
-    margin: 0 !important;
-    letter-spacing: -0.01em;
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: var(--fs-h1);
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+    margin: 4px 0 0 0;
+    text-wrap: balance;
   }
+  .article-title :global(em) { color: var(--coral); font-style: italic; }
 
   .article-description {
-    font-size: 1.125rem;
-    line-height: 1.5;
-    color: rgba(0, 0, 0, 0.6);
-    margin: 0 0 1.25rem 0;
+    font-family: var(--serif);
     font-style: italic;
-  }
-
-  :global(.dark) .article-description {
-    color: rgba(255, 255, 255, 0.6);
+    font-size: 20px;
+    line-height: 1.45;
+    color: var(--ink-soft);
+    max-width: 640px;
+    text-wrap: pretty;
+    margin: 0;
   }
 
   .article-meta {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 0.5rem;
-    font-size: 0.875rem;
-    color: rgba(0, 0, 0, 0.54);
+    gap: 10px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--ink-mute);
+    letter-spacing: 0.04em;
+    margin-top: 8px;
   }
-
-  :global(.dark) .article-meta {
-    color: rgba(255, 255, 255, 0.54);
-  }
-
-  .meta-status {
-    font-family: 'Valkyrie B Caps', 'Valkyrie B', sans-serif;
-    font-size: 0.6875rem;
-    letter-spacing: 0.06em;
+  .status-pill {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
-    padding: 0.125rem 0.45rem;
-    border-radius: 0.25rem;
-    background: rgba(0, 0, 0, 0.05);
-    color: rgba(0, 0, 0, 0.55);
-  }
-
-  :global(.dark) .meta-status {
-    background: rgba(255, 255, 255, 0.06);
-    color: rgba(255, 255, 255, 0.55);
-  }
-
-  .meta-status.status-active {
-    color: var(--color-accent);
-    background: rgba(95, 155, 101, 0.08);
-  }
-
-  :global(.dark) .meta-status.status-active {
-    color: #7ab882;
-    background: rgba(122, 184, 130, 0.1);
-  }
-
-  .meta-separator {
-    color: rgba(0, 0, 0, 0.26);
-  }
-
-  :global(.dark) .meta-separator {
-    color: rgba(255, 255, 255, 0.26);
-  }
-
-  .meta-link {
-    color: rgba(0, 0, 0, 0.7);
-    text-decoration: none;
+    color: var(--ink-mute);
     display: inline-flex;
     align-items: center;
-    gap: 0.25rem;
-    transition: color 0.15s ease;
+    gap: 8px;
+    padding: 4px 10px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+  }
+  .status-pill::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--ink-faint);
+  }
+  .status-pill.status-active {
+    color: var(--olive);
+    border-color: var(--olive);
+  }
+  .status-pill.status-active::before {
+    background: var(--olive);
+    box-shadow: 0 0 0 3px rgba(110, 116, 72, 0.18);
+  }
+  .meta-separator { color: var(--ink-faint); }
+  .meta-stack {
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
   }
 
-  .meta-link:hover {
-    color: var(--color-accent);
+  .article-actions {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 12px;
   }
+  .article-actions .arrow { width: 14px; height: 14px; display: inline-grid; place-items: center; }
+  .article-actions .arrow svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.6; }
 
-  :global(.dark) .meta-link {
-    color: rgba(255, 255, 255, 0.7);
-  }
-
-  /* Article Body */
   .article-body {
-    /* Content flows naturally */
+    margin-top: 8px;
   }
 </style>

@@ -1,7 +1,8 @@
 ---
 title: graphrag-claude-code
 category: AI & Dev Tooling
-status: Archive
+status: archive
+order: 11
 repo: https://github.com/BrennonTWilliams/graphrag-claude-code
 summary: A fork of Microsoft's GraphRAG that swaps the OpenAI API for the Claude CLI as the model backend, with local embeddings via Ollama. Integrates as a pure adapter through GraphRAG's official ModelFactory API — no core framework code modified.
 icon: i-lucide-network

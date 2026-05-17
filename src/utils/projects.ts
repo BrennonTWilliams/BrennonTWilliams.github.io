@@ -1,32 +1,36 @@
+/**
+ * Canonical project ordering used by the homepage Selected Work and /projects.
+ *
+ * Sort rule: status active first → `order` ascending → slug fallback.
+ * Soft style guide for authors: `title` ≤ 60 chars, `summary` ≤ 160 chars.
+ * WorkCard.vue clamps both as a safety net.
+ */
 import { getCollection } from 'astro:content'
 import type { CollectionProjects } from '@/types'
 
-const STATUS_RANK: Record<string, number> = {
-  Active: 0,
-  'In Progress': 1,
-  Archive: 2,
+function statusRank(p: CollectionProjects): number {
+  return p.data.status === 'active' ? 0 : 1
 }
 
-function statusRank(status?: string) {
-  if (!status)
-    return 99
-  return STATUS_RANK[status] ?? 50
+function compare(a: CollectionProjects, b: CollectionProjects): number {
+  const rankDiff = statusRank(a) - statusRank(b)
+  if (rankDiff !== 0) return rankDiff
+  const ao = a.data.order ?? 999
+  const bo = b.data.order ?? 999
+  if (ao !== bo) return ao - bo
+  return a.slug.localeCompare(b.slug)
 }
 
-export function sortProjects(a: CollectionProjects, b: CollectionProjects) {
-  const ao = a.data.order ?? Infinity
-  const bo = b.data.order ?? Infinity
-  if (ao !== bo)
-    return ao - bo
-  const sa = statusRank(a.data.status)
-  const sb = statusRank(b.data.status)
-  if (sa !== sb)
-    return sa - sb
-  return a.data.title.localeCompare(b.data.title)
+/** Array-in / array-out comparator wrapper (preferred call shape). */
+export function sortProjects(projects: CollectionProjects[]): CollectionProjects[] {
+  return [...projects].sort(compare)
 }
 
-export async function getProjects() {
-  return (await getCollection('projects')).sort(sortProjects)
+/** Convenience: get all non-draft projects in canonical order. */
+export async function getProjects(): Promise<CollectionProjects[]> {
+  return sortProjects(
+    (await getCollection('projects')).filter(p => !p.data.draft),
+  )
 }
 
 export interface ProjectGroup {
@@ -37,7 +41,7 @@ export interface ProjectGroup {
 export function groupProjectsByCategory(projects: CollectionProjects[]): ProjectGroup[] {
   const groups = new Map<string, CollectionProjects[]>()
   for (const p of projects) {
-    const cat = p.data.category
+    const cat = p.data.category ?? 'Uncategorized'
     if (!groups.has(cat))
       groups.set(cat, [])
     groups.get(cat)!.push(p)

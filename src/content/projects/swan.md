@@ -1,7 +1,8 @@
 ---
 title: swan
 category: Voice & Agents
-status: Archive
+status: archive
+order: 10
 repo: https://github.com/BrennonTWilliams/swan
 summary: A lean Python multi-agent framework (~1,200 lines) that scales from a single CLI process to distributed Celery workers without changing agent code. BAML-typed LLM contracts replace stringly-typed outputs, and Microsandbox isolates execution.
 svg: project-swan.svg

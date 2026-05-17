@@ -1,0 +1,54 @@
+---
+import siteConfig from '@/site-config'
+const { left, right } = siteConfig.editorial.sideRails
+---
+
+<div class="ed-side-rails" aria-hidden="true">
+  <div class="side-rail right">
+    <span class="rail-text">{right}</span>
+  </div>
+  <div class="side-rail left">
+    <span class="rail-text">{left}</span>
+  </div>
+</div>
+
+<style>
+  .side-rail {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 36px;
+    z-index: var(--z-side-rails);
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .side-rail.right {
+    right: 0;
+    border-left: 1px solid var(--line-faint);
+    padding-right: var(--safe-right);
+  }
+  .side-rail.left {
+    left: 0;
+    border-right: 1px solid var(--line-faint);
+    padding-left: var(--safe-left);
+  }
+  .rail-text {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.42em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    writing-mode: vertical-rl;
+    white-space: nowrap;
+  }
+  .side-rail.right .rail-text {
+    transform: rotate(180deg);
+  }
+
+  @media (max-width: 980px) {
+    .side-rail { display: none; }
+  }
+</style>
