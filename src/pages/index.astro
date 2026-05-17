@@ -241,11 +241,13 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
 
   <!-- ─────── CONTACT §V ─────── -->
   <section class="home-cta" id="contact">
-    <div class="home-container cta-grid">
-      <div>
-        <span class="label" data-reveal>Get in touch <span class="ix">· Nº 05</span></span>
-        <h2 class="cta-headline" data-reveal>If you're building something where a model has to <em>actually decide</em> — let's talk.</h2>
-      </div>
+    <div class="home-container">
+      <EdSectionHeader
+        numeral="V"
+        title="Drop me a <em>line</em>"
+        eyebrow="Get in touch — Nº 05"
+        coord="Select collaborations only"
+      />
       <div class="cta-actions" data-reveal>
         <a class="email-pill" href={`mailto:${siteConfig.email}`}>
           <span>{siteConfig.email}</span>
@@ -678,23 +680,6 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
     border-top: 1px solid var(--line);
     position: relative;
   }
-  .cta-grid {
-    display: grid;
-    grid-template-columns: 1.2fr 0.8fr;
-    gap: 48px;
-    align-items: end;
-  }
-  .cta-headline {
-    font-family: var(--serif);
-    font-weight: 500;
-    font-size: clamp(34px, 4.2vw, 56px);
-    line-height: 1.02;
-    letter-spacing: -0.015em;
-    color: var(--ink);
-    text-wrap: balance;
-    margin-top: 18px;
-  }
-  .cta-headline em { color: var(--coral); font-style: italic; }
   .cta-actions {
     display: flex;
     flex-direction: column;
@@ -742,6 +727,5 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
   }
   @media (max-width: 820px) {
     .home-cta { padding: 72px 0 56px; }
-    .cta-grid { grid-template-columns: 1fr; gap: 32px; }
   }
 </style>

@@ -26,7 +26,7 @@ const pad = (n: number) => String(n).padStart(2, '0')
       <div class="wire-left">
         <span class="wire-mark" aria-hidden="true"></span>
         <span class="wire-title">
-          <b>From the workshop</b>
+          <b>From the lab</b>
           <span>Active threads · {{ pad(props.activeCount) }} in flight</span>
         </span>
       </div>

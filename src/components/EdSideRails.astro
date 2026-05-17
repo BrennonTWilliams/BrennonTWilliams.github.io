@@ -1,14 +1,11 @@
 ---
 import siteConfig from '@/site-config'
-const { left, right } = siteConfig.editorial.sideRails
+const { right } = siteConfig.editorial.sideRails
 ---
 
 <div class="ed-side-rails" aria-hidden="true">
   <div class="side-rail right">
     <span class="rail-text">{right}</span>
-  </div>
-  <div class="side-rail left">
-    <span class="rail-text">{left}</span>
   </div>
 </div>
 
@@ -29,11 +26,6 @@ const { left, right } = siteConfig.editorial.sideRails
     border-left: 1px solid var(--line-faint);
     padding-right: var(--safe-right);
   }
-  .side-rail.left {
-    left: 0;
-    border-right: 1px solid var(--line-faint);
-    padding-left: var(--safe-left);
-  }
   .rail-text {
     font-family: var(--sans);
     font-size: 10px;
@@ -52,3 +44,44 @@ const { left, right } = siteConfig.editorial.sideRails
     .side-rail { display: none; }
   }
 </style>
+
+<script>
+  const SECTIONS = [
+    { id: 'about',   label: 'Nº 01' },
+    { id: 'work',    label: 'Nº 02' },
+    { id: 'writing', label: 'Nº 03' },
+    { id: 'now',     label: 'Nº 04' },
+    { id: 'contact', label: 'Nº 05' },
+  ]
+
+  function initRailTracker() {
+    const rail = document.querySelector<HTMLElement>('.side-rail.right .rail-text')
+    if (!rail) return
+
+    const entries = SECTIONS
+      .map(s => ({ el: document.getElementById(s.id), label: s.label }))
+      .filter((s): s is { el: HTMLElement; label: string } => s.el !== null)
+
+    if (!entries.length) return
+
+    const originalText = rail.textContent ?? ''
+    const ac = new AbortController()
+
+    function update() {
+      const threshold = window.innerHeight * 0.4
+      let active: string | null = null
+      for (const s of entries) {
+        if (s.el.getBoundingClientRect().top <= threshold) active = s.label
+      }
+      if (active) {
+        rail.textContent = originalText.replace(/Nº\s*\d+/, active)
+      }
+    }
+
+    window.addEventListener('scroll', update, { passive: true, signal: ac.signal })
+    document.addEventListener('astro:before-swap', () => ac.abort(), { once: true })
+    update()
+  }
+
+  document.addEventListener('astro:page-load', initRailTracker)
+</script>
