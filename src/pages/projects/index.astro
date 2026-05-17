@@ -2,9 +2,11 @@
 import EditorialLayout from '@/layouts/EditorialLayout.astro'
 import EdSectionHeader from '@/components/EdSectionHeader.astro'
 import ProjectCard from '@/components/ProjectCard.vue'
-import { getProjects } from '@/utils/projects'
+import { getProjects, partitionFlagship } from '@/utils/projects'
 
 const all = await getProjects()
+const { flagship, rest } = partitionFlagship(all)
+
 const pad = (n: number) => String(n).padStart(2, '0')
 const year = new Date().getFullYear()
 
@@ -12,13 +14,16 @@ const activeCount = all.filter(p => p.data.status === 'active').length
 const archiveCount = all.length - activeCount
 
 // Group by category, preserving sort order within each group
-const categoryMap = new Map<string, Array<{ project: (typeof all)[0]; globalIdx: number }>>()
-all.forEach((project, i) => {
+const categoryMap = new Map<string, Array<{ project: (typeof rest)[0]; globalIdx: number }>>()
+rest.forEach((project, i) => {
   const cat = project.data.category ?? 'Other'
   if (!categoryMap.has(cat)) categoryMap.set(cat, [])
   categoryMap.get(cat)!.push({ project, globalIdx: i + 1 })
 })
 const categories = [...categoryMap.entries()]
+
+const flHref = flagship?.data.website ?? flagship?.data.repo ?? (flagship ? `/projects/${flagship.slug}/` : '#')
+const flSvg = flagship?.data.svg ? `/projects/${flagship.data.svg}` : undefined
 ---
 
 <EditorialLayout
@@ -33,6 +38,43 @@ const categories = [...categoryMap.entries()]
     coord={`${all.length} entries · ${activeCount} active · ${archiveCount} archive`}
     level={1}
   />
+
+  {flagship && (
+    <>
+      <div class="flagship-lead" data-reveal>
+        <div class="fl-body">
+          <div class="fl-eyebrow">
+            <span class="fl-badge">Flagship</span>
+            {flagship.data.category && <span class="fl-cat">{flagship.data.category}</span>}
+          </div>
+          <h2 class="fl-title" set:html={flagship.data.title} />
+          <p class="fl-summary">{flagship.data.summary}</p>
+          {flagship.data.stack && (
+            <div class="fl-stats">
+              {flagship.data.stack.map(s => <span class="fl-stat">{s}</span>)}
+            </div>
+          )}
+          <div class="fl-actions">
+            <a href={flHref} target="_blank" rel="noreferrer noopener" class="fl-link">
+              {flagship.data.website ? flagship.data.website.replace('https://', '') : 'View on GitHub'} →
+            </a>
+            <a href={`/projects/${flagship.slug}/`} class="fl-detail">Detail page</a>
+          </div>
+        </div>
+        <div class="fl-art">
+          {flSvg
+            ? <img src={flSvg} alt={flagship.data.title} class="fl-img" />
+            : <span class="fl-initial" aria-hidden="true">{flagship.data.title.replace(/<[^>]*>/g, '').charAt(0).toUpperCase()}</span>
+          }
+        </div>
+      </div>
+
+      <div class="more-header">
+        <span class="more-label">More Projects</span>
+        <span class="more-count">{rest.length}</span>
+      </div>
+    </>
+  )}
 
   {categories.map(([cat, items]) => (
     <div class="category-section">
@@ -68,6 +110,204 @@ const categories = [...categoryMap.entries()]
 </EditorialLayout>
 
 <style>
+  /* ── Flagship lead ─────────────────────────────── */
+  .flagship-lead {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 48px;
+    align-items: center;
+    padding: 40px 0 48px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 40px;
+  }
+
+  .fl-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .fl-badge {
+    font-family: var(--caps);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--paper);
+    background: var(--coral);
+    padding: 3px 8px;
+    border-radius: 2px;
+  }
+
+  .fl-cat {
+    font-family: var(--caps);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+
+  .fl-title {
+    font-family: var(--serif);
+    font-size: clamp(30px, 3.4vw, 48px);
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin: 0 0 18px;
+  }
+
+  .fl-title :global(em) {
+    font-style: italic;
+    color: var(--coral);
+  }
+
+  .fl-summary {
+    font-family: var(--body);
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    margin: 0 0 22px;
+    max-width: 48ch;
+  }
+
+  .fl-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+
+  .fl-stat {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-mute);
+    border: 1px solid var(--line-soft);
+    padding: 4px 10px;
+    border-radius: 2px;
+    letter-spacing: 0.04em;
+  }
+
+  .fl-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .fl-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--caps);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--paper);
+    background: var(--ink);
+    padding: 11px 18px;
+    border-radius: 3px;
+    text-decoration: none;
+    border: 1px solid var(--ink);
+    transition: background var(--dur-base) var(--ease-standard),
+                border-color var(--dur-base) var(--ease-standard),
+                color var(--dur-base) var(--ease-standard);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .fl-link:hover {
+      background: var(--coral);
+      border-color: var(--coral);
+      color: white;
+    }
+  }
+
+  .fl-detail {
+    font-family: var(--caps);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    text-decoration: none;
+    border-bottom: 1px solid var(--line);
+    transition: color var(--dur-base), border-color var(--dur-base);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .fl-detail:hover {
+      color: var(--ink);
+      border-color: var(--ink);
+    }
+  }
+
+  .fl-art {
+    aspect-ratio: 1;
+    background: var(--bone);
+    border: 1px solid var(--line-soft);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 40px;
+  }
+
+  .fl-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .fl-initial {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 120px;
+    font-weight: 500;
+    color: var(--line);
+    line-height: 1;
+    user-select: none;
+  }
+
+  /* ── "More Projects" divider ───────────────────── */
+  .more-header {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 16px;
+    padding-left: 2px;
+  }
+
+  .more-label {
+    font-family: var(--caps);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+
+  .more-count {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-faint);
+  }
+
+  /* ── Responsive ────────────────────────────────── */
+  @media (max-width: 820px) {
+    .flagship-lead {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+
+    .fl-art {
+      max-width: 180px;
+    }
+  }
+
+  /* ── Category strips ───────────────────────────── */
   .category-section {
     margin-bottom: 40px;
   }
@@ -97,17 +337,8 @@ const categories = [...categoryMap.entries()]
 
   .card-strip-outer {
     position: relative;
-  }
-  .card-strip-outer::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 80px;
-    background: linear-gradient(to right, transparent, var(--paper));
-    pointer-events: none;
-    z-index: 1;
+    -webkit-mask-image: linear-gradient(to right, black 80%, transparent 100%);
+    mask-image: linear-gradient(to right, black 80%, transparent 100%);
   }
   .card-strip {
     display: flex;
