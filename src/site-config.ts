@@ -51,7 +51,7 @@ export const siteConfig = {
     issue: "Nº 03",
     series: "Notes from the lab · Nº 03",
     filedUnder: "Code · Intelligence",
-    location: "Berlin, VA · Made on Earth",
+    location: "SF · NYC · Dallas",
     coords: "38.89° N · 77.03° W",
     liveStatus: "shipping little-loops v0.4",
     sideRails: {
