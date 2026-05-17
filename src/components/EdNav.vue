@@ -83,7 +83,18 @@ const githubLink = computed(() =>
   <header class="nav ed-nav">
     <div class="container nav-inner">
       <a href="/" class="brand" aria-label="Brennon Williams — home">
-        <span class="brand-mark" style="view-transition-name: brand-mark">B</span>
+        <svg class="brand-morse" style="view-transition-name: brand-mark" viewBox="0 0 46 26" width="46" height="26" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <!-- B: - . . . -->
+          <rect x="3" y="3" width="12" height="6" rx="3" fill="currentColor" />
+          <circle cx="22" cy="6" r="3" fill="currentColor" />
+          <circle cx="31" cy="6" r="3" fill="currentColor" />
+          <circle cx="40" cy="6" r="3" fill="currentColor" />
+          <!-- W: . - - -->
+          <circle cx="6" cy="20" r="3" fill="currentColor" />
+          <rect x="14" y="17" width="12" height="6" rx="3" fill="currentColor" />
+          <rect x="31" y="17" width="12" height="6" rx="3" fill="currentColor" />
+        </svg>
+        <span class="brand-divider" aria-hidden="true"></span>
         <span class="brand-name">Brennon Williams</span>
         <span class="brand-meta">
           <b>Studio of One</b>
@@ -159,30 +170,23 @@ const githubLink = computed(() =>
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
   text-decoration: none;
   color: inherit;
 }
-.brand-mark {
-  width: 38px;
-  height: 38px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--ink);
-  border-radius: 50%;
-  background: var(--ink);
-  font-family: var(--serif);
-  font-style: italic;
-  font-weight: 500;
-  font-size: 22px;
-  line-height: 1;
-  padding-bottom: 2px;
-  color: var(--paper);
-  transition: background var(--dur-base) var(--ease-standard);
+.brand-morse {
+  flex-shrink: 0;
+  color: var(--ink);
+  transition: color var(--dur-base) var(--ease-standard);
+}
+.brand-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--line);
+  flex-shrink: 0;
 }
 @media (hover: hover) and (pointer: fine) {
-  .brand:hover .brand-mark { background: var(--coral); border-color: var(--coral); }
+  .brand:hover .brand-morse { color: var(--coral); }
 }
 .brand-name {
   font-family: var(--serif);
