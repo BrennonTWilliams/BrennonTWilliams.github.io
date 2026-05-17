@@ -24,16 +24,18 @@ const displayYear = computed(() => props.year ?? new Date().getFullYear())
 </script>
 
 <template>
-  <a
-    :href="href"
-    :target="target"
-    :rel="rel"
-    class="project-card"
+  <div
+    class="card-wrapper"
     :class="{ 'is-archive': status === 'archive' }"
     data-reveal
     role="listitem"
   >
-    <div class="card-visual">
+    <a
+      :href="href"
+      :target="target"
+      :rel="rel"
+      class="project-card"
+    >
       <span v-if="category" class="card-cat">{{ category }}</span>
       <div class="card-image-wrap">
         <img v-if="image" :src="image" :alt="name" class="card-img" />
@@ -44,62 +46,60 @@ const displayYear = computed(() => props.year ?? new Date().getFullYear())
       <div class="card-tag-row">
         <span class="card-num">№ {{ idx }}</span>
         <span class="card-year">{{ displayYear }}</span>
+        <span class="card-arrow" aria-hidden="true">→</span>
       </div>
-    </div>
+    </a>
 
-    <div class="card-body">
+    <div class="card-caption">
       <span class="card-name" v-html="name" />
       <p class="card-blurb">{{ blurb }}</p>
-      <span class="card-arrow" aria-hidden="true">→</span>
     </div>
-  </a>
+  </div>
 </template>
 
 <style scoped>
-.project-card {
+.card-wrapper {
   flex: 0 0 216px;
-  aspect-ratio: 5 / 7;
   display: flex;
   flex-direction: column;
+  scroll-snap-align: start;
+}
+
+.card-wrapper.is-archive .project-card {
+  opacity: 0.70;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card-wrapper:hover .project-card {
+    background: var(--paper-warm);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.06);
+    transform: translateY(-2px);
+  }
+  .card-wrapper:hover .card-arrow {
+    transform: translateX(4px);
+  }
+  .card-wrapper.is-archive:hover .project-card {
+    opacity: 1;
+  }
+}
+
+/* ---- Card (visual) ---- */
+.project-card {
+  width: 100%;
+  aspect-ratio: 5 / 7;
+  position: relative;
+  display: block;
   border: 1px solid var(--line-soft);
   border-radius: 10px;
   overflow: hidden;
   text-decoration: none;
   color: inherit;
-  scroll-snap-align: start;
   background: var(--paper);
   box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
   transition: background var(--dur-base) var(--ease-standard),
               opacity var(--dur-base) var(--ease-standard),
               box-shadow var(--dur-base) var(--ease-standard),
               transform var(--dur-base) var(--ease-standard);
-}
-
-.project-card.is-archive {
-  opacity: 0.70;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .project-card:hover {
-    background: var(--paper-warm);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.06);
-    transform: translateY(-2px);
-  }
-  .project-card:hover .card-arrow {
-    transform: translateX(4px);
-  }
-  .project-card.is-archive:hover {
-    opacity: 1;
-  }
-}
-
-/* ---- Visual zone ---- */
-.card-visual {
-  position: relative;
-  flex: 0 0 58%;
-  border-bottom: 1px solid var(--line-soft);
-  overflow: hidden;
-  background: var(--bone);
 }
 
 .card-cat {
@@ -117,15 +117,15 @@ const displayYear = computed(() => props.year ?? new Date().getFullYear())
 }
 
 .card-image-wrap {
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  inset: 0;
+  background: var(--bone);
 }
 
 .card-img {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  padding: 10px;
 }
 
 .card-placeholder {
@@ -158,6 +158,7 @@ const displayYear = computed(() => props.year ?? new Date().getFullYear())
   border-top: 1px solid var(--line-soft);
   background: color-mix(in srgb, var(--bone) 80%, var(--paper) 20%);
   backdrop-filter: blur(2px);
+  z-index: 1;
 }
 
 .card-num {
@@ -174,27 +175,32 @@ const displayYear = computed(() => props.year ?? new Date().getFullYear())
   letter-spacing: 0.05em;
 }
 
-/* ---- Body zone ---- */
-.card-body {
-  padding: 12px 12px 10px;
+.card-arrow {
+  font-family: var(--mono);
+  font-size: 15px;
+  color: var(--coral);
+  transition: transform var(--dur-base) var(--ease-standard);
+}
+
+/* ---- Caption (below card) ---- */
+.card-caption {
+  padding-top: 10px;
   display: flex;
   flex-direction: column;
-  flex: 1;
-  overflow: hidden;
+  gap: 4px;
 }
 
 .card-name {
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 500;
-  line-height: 1.2;
+  line-height: 1.25;
   letter-spacing: -0.01em;
   color: var(--ink);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  margin-bottom: 8px;
   text-wrap: pretty;
 }
 
@@ -209,7 +215,6 @@ const displayYear = computed(() => props.year ?? new Date().getFullYear())
   color: var(--ink-soft);
   line-height: 1.5;
   margin: 0;
-  flex: 1;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
@@ -217,17 +222,8 @@ const displayYear = computed(() => props.year ?? new Date().getFullYear())
   text-wrap: pretty;
 }
 
-.card-arrow {
-  font-family: var(--mono);
-  font-size: 15px;
-  color: var(--coral);
-  margin-top: 6px;
-  display: block;
-  transition: transform var(--dur-base) var(--ease-standard);
-}
-
 @media (max-width: 640px) {
-  .project-card {
+  .card-wrapper {
     flex: 0 0 160px;
   }
   .placeholder-letter {
