@@ -10,6 +10,16 @@ node_modules
 .notes/
 .ll/
 *.png
+!public/covers/*.png
 public/fonts/**/READ*.txt
 public/fonts/**/sample.css
 public/fonts/**/sample.html
+
+# Environment & secrets
+.env
+
+# Generated cover art source directory (selected images live in public/covers/)
+project-cards-cover-art/
+
+# Terminal recordings
+hitl-compare.Cast
