@@ -6,6 +6,7 @@ order: 13
 repo: https://github.com/BrennonTWilliams/untie-ai
 summary: A C# Utility AI framework for Unity that replaces behavior trees and FSMs with a composable scoring pipeline. Pairs with an Influence Mapping layer for spatial reasoning so agents weigh regions of the world, not just direct object relationships.
 icon: i-lucide-brain
+cover: untie-ai.jpg
 ---
 
 ## Overview

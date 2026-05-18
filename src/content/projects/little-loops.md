@@ -7,6 +7,7 @@ repo: https://github.com/BrennonTWilliams/little-loops
 website: https://little-loops.ai
 summary: A Claude Code plugin that turns Claude into a full development workflow engine — issue tracking, sprint planning, and FSM-based autonomous loops that drive multi-step development tasks. Ships with 21 commands and 8 specialized agents, published on PyPI.
 svg: little-loops.svg
+cover: little-loops.jpg
 flagship: true
 ---
 

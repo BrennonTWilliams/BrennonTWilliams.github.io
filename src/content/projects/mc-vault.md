@@ -5,6 +5,7 @@ status: active
 order: 6
 summary: A custom Obsidian knowledge base built on a hybrid LYT/PARA structure. 39+ automation scripts and 11 background macOS services continuously sync the vault with GitHub activity, Raindrop bookmarks, and Claude Code sessions.
 icon: i-lucide-vault
+cover: mc-vault.jpg
 ---
 
 ## Overview

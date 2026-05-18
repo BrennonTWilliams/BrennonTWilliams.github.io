@@ -6,6 +6,7 @@ order: 2
 repo: https://github.com/BrennonTWilliams/blender-agents
 summary: A production AI automation platform that runs Claude agents inside Blender for complex 3D tasks driven from natural language. A structured OODA loop autonomously executes 245 operations across 25 capability domains — modeling, rigging, materials, geometry nodes, and more.
 svg: blender-agents.svg
+cover: blender-agents.jpg
 ---
 
 ## Overview

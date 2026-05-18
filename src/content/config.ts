@@ -91,6 +91,7 @@ const projects = defineCollection({
         href: z.string().url(),
         label: z.string().optional(),
       }).optional(),
+    cover: z.string().optional(),
     /** Hide from production listings. */
     draft: z.boolean().default(false).optional(),
   }),

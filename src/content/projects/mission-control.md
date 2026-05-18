@@ -6,6 +6,7 @@ order: 5
 repo: https://github.com/BrennonTWilliams/mission-control
 summary: The central coordination repository for home network, homelab, cloud services, automation, and dev environment configuration. Single source of truth that makes the entire stack reproducible and auditable.
 icon: i-lucide-satellite-dish
+cover: mission-control.jpg
 ---
 
 ## Overview
