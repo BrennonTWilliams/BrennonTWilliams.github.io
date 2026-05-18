@@ -25,7 +25,7 @@ Subject: A Blender viewport grid viewed at oblique angle — geometric mesh prim
 Subject: An exploded knowledge graph — nodes as orbital junction points, edges as trajectory vectors — radiating outward from a central document nucleus like an atomic fission diagram.
 
 **mission-control**
-Subject: A top-down blueprint of a homelab rack and network diagram — server nodes, DNS zones, and service containers rendered as instrument clusters and atomic-shell diagrams on a coordinate grid. Config-file stacks run as altitude-calibration tick columns flanking the composition. Signal paths between services arc as parabolic trajectory vectors, the whole infrastructure map composed as a mission operations schematic.
+Subject: An atomic-era mission operations console seen from a low 3/4 angle — a curved horseshoe command arc dense with circular dials, oscilloscope screens, toggle-switch banks, and patch-panel jacks rendered as atomic-age instrument clusters. Vacuum-tube readout columns bracket the flanks. Signal paths between stations arc as parabolic trajectory vectors across the console face, the whole nerve-center composed as a NASA Launch Control photograph.
 
 **deep-codebase**
 Subject: A vertical cross-section of geological strata, each layer labeled as a codebase abstraction — UI, logic, data, infra — plotted with survey-line and altitude-marking precision.
@@ -34,13 +34,13 @@ Subject: A vertical cross-section of geological strata, each layer labeled as a 
 Subject: A vast branching note-network rendered as a molecular lattice — each node a vault page with orbital annotation rings, connected by NLP-derived link vectors radiating from a central knowledge core. Automation service threads trace the periphery as signal paths feeding data from external sources, like a neural observatory continuously updating its star charts and cross-referencing 1,900 nodes.
 
 **lmc-voice**
-Subject: A vertical instrument stack — WebRTC audio waveform at the crown feeds downward through a VAD gate envelope, a phoneme-lattice speech-to-text layer, a streaming neural core with BAML contract medallions, and a synthesized waveform at the base. Four observer agent nodes orbit the central pipeline column on electron-shell paths. The full chain rendered as a mission-critical telemetry rack on a coordinate-lined test bench.
+Subject: A circular voice aperture seen head-on — concentric rings of audio signal expanding outward, each ring a distinct processing stage. Four agent nodes orbit the outer ring on elliptical satellite paths. Frequency-spectrum tick marks radiate inward as spokes, the whole diagram rendered as a stellar radio-observatory readout plotted on a coordinate grid.
 
 **swan**
 Subject: A swan silhouette whose long neck is a single CLI process node; the wings decompose into four distinct Celery queue lanes — each a branching trajectory arc. BAML contract medallions punctuate the junction points between orchestration and execution. Concentric Redis orbital rings expand outward from the distributed graph as shared-state shells, the whole system rendered as an atomic diagram of distributed cognition.
 
 **untie-ai**
-Subject: A radiating decision-lattice descending from a central AIBrain node through tiers of Behavior, Reasoner, Option, and Consideration — each layer an orbital shell. Response curves (logistic, parabolic, sine arcs) flank the hierarchy as trajectory geometry. A spatial influence grid overlays the lower quadrant as altitude-calibration coordinates mapping zones of tactical advantage, with radial influence-propagation rings emanating from faction-origin points.
+Subject: A radial influence map viewed from above — concentric tactical zones expanding from a central origin point, each ring scored by strategic advantage. Response curve arcs sweep outward as parabolic trajectory lines, one arc per decision option. The composition reads as a battle-planning overlay atop an atomic-age target-ring diagram with altitude-calibration coordinates and radial propagation rings.
 
 **blubry**
 Subject: A cross-section of a 3.5mm TRRS plug bisected lengthwise — four conductor rings rendered as atomic-shell bands, each ring a separate signal channel. On one side: the silhouette of a smartphone; on the other: PCB traces and component footprints branching outward like atomic bonds. The jack is the sole junction point between two worlds, rendered as a technical assembly diagram etched on a coordinate grid.
