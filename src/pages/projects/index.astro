@@ -35,7 +35,7 @@ const flSvg = flagship?.data.cover
 >
   <EdSectionHeader
     numeral="II"
-    title="<em>Adventures in code and language</em>, curated."
+    title="<em>Adventures</em> in code and language, curated."
     eyebrow="Projects — Nº 02"
     coord={`${all.length} entries · ${activeCount} active · ${archiveCount} archive`}
     level={1}
@@ -47,6 +47,7 @@ const flSvg = flagship?.data.cover
         <div class="fl-body">
           <div class="fl-eyebrow">
             <span class="fl-badge">Flagship</span>
+            {flagship.data.status === 'active' && <span class="fl-status-dot" aria-label="Active" />}
             {flagship.data.category && <span class="fl-cat">{flagship.data.category}</span>}
           </div>
           <h2 class="fl-title" set:html={flagship.data.title} />
@@ -64,10 +65,20 @@ const flSvg = flagship?.data.cover
           </div>
         </div>
         <div class="fl-art">
-          {flSvg
-            ? <img src={flSvg} alt={flagship.data.title} class="fl-img" />
-            : <span class="fl-initial" aria-hidden="true">{flagship.data.title.replace(/<[^>]*>/g, '').charAt(0).toUpperCase()}</span>
-          }
+          <div class="fl-corner fl-corner--tl">
+            <span class="fl-corner-sym">№</span>
+            <span class="fl-corner-num">00</span>
+          </div>
+          <div class="fl-corner fl-corner--br" aria-hidden="true">
+            <span class="fl-corner-sym">№</span>
+            <span class="fl-corner-num">00</span>
+          </div>
+          <div class="fl-art-image-wrap">
+            {flSvg
+              ? <img src={flSvg} alt={flagship.data.title} class="fl-img" />
+              : <span class="fl-initial" aria-hidden="true">{flagship.data.title.replace(/<[^>]*>/g, '').charAt(0).toUpperCase()}</span>
+            }
+          </div>
         </div>
       </div>
 
@@ -87,8 +98,14 @@ const flSvg = flagship?.data.cover
       <div class="card-strip-outer">
         <div class="card-strip" role="list">
           {items.map(({ project, globalIdx }) => {
-            const href = project.data.link?.href ?? project.data.website ?? project.data.repo ?? `/projects/${project.slug}/`
-            const external = Boolean(project.data.link?.href ?? project.data.website ?? project.data.repo)
+            const href = `/projects/${project.slug}/`
+            const links = [
+              project.data.repo    ? { label: 'GitHub', href: project.data.repo }    : null,
+              project.data.website ? { label: 'Site',   href: project.data.website } : null,
+              project.data.link?.href
+                ? { label: project.data.link.label ?? 'Link', href: project.data.link.href }
+                : null,
+            ].filter((l): l is { label: string; href: string } => l !== null)
             const image = project.data.cover
               ? `/covers/${project.data.cover}`
               : project.data.svg ? `/projects/${project.data.svg}` : undefined
@@ -101,7 +118,7 @@ const flSvg = flagship?.data.cover
                 blurb={project.data.summary}
                 status={project.data.status}
                 href={href}
-                external={external}
+                links={links}
                 image={image}
                 year={year}
               />
@@ -117,12 +134,19 @@ const flSvg = flagship?.data.cover
   /* ── Flagship lead ─────────────────────────────── */
   .flagship-lead {
     display: grid;
-    grid-template-columns: 1.1fr 0.9fr;
-    gap: 48px;
-    align-items: center;
+    grid-template-columns: 1fr auto;
+    gap: 56px;
+    align-items: start;
+    max-width: 840px;
+    margin-inline: auto;
     padding: 40px 0 48px;
     border-bottom: 1px solid var(--line);
     margin-bottom: 40px;
+  }
+
+  .fl-art {
+    width: clamp(200px, 26vw, 300px);
+    margin-top: 4px;
   }
 
   .fl-eyebrow {
@@ -130,6 +154,14 @@ const flSvg = flagship?.data.cover
     align-items: center;
     gap: 10px;
     margin-bottom: 20px;
+  }
+
+  .fl-status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--coral);
+    flex-shrink: 0;
   }
 
   .fl-badge {
@@ -248,14 +280,72 @@ const flSvg = flagship?.data.cover
   }
 
   .fl-art {
-    aspect-ratio: 1;
+    aspect-ratio: 5 / 7;
+    position: relative;
     background: var(--bone);
     border: 1px solid var(--line-soft);
     border-radius: 10px;
+    overflow: hidden;
+    box-shadow:
+      inset 0 0 0 8px var(--paper),
+      inset 0 0 0 9px var(--line-soft),
+      0 2px 6px rgba(0,0,0,0.08),
+      0 8px 24px rgba(0,0,0,0.06),
+      0 1px 2px rgba(0,0,0,0.10);
+  }
+
+  /* Paper grain overlay — mirrors .project-card::after */
+  .fl-art::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/></filter><rect width='200' height='200' filter='url(%23n)' opacity='1'/></svg>");
+    opacity: 0.05;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    z-index: 4;
+  }
+
+  .fl-corner {
+    position: absolute;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+    gap: 1px;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .fl-corner--tl { top: 5px; left: 7px; }
+  .fl-corner--br { bottom: 5px; right: 7px; transform: rotate(180deg); }
+
+  .fl-corner-sym {
+    font-family: var(--mono);
+    font-size: 7px;
+    color: var(--ink-mute);
+    letter-spacing: 0.05em;
+    line-height: 1;
+  }
+
+  .fl-corner-num {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .fl-art-image-wrap {
+    position: absolute;
+    inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
+    z-index: 0;
   }
 
   .fl-img {
@@ -306,7 +396,8 @@ const flSvg = flagship?.data.cover
     }
 
     .fl-art {
-      max-width: 180px;
+      max-width: 200px;
+      margin-top: 0;
     }
   }
 

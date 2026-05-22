@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
+interface ExternalLink { label: string; href: string }
+
 interface Props {
   idx: string
   category?: string
@@ -8,15 +10,13 @@ interface Props {
   blurb: string
   status: 'active' | 'archive'
   href: string
-  external?: boolean
   image?: string
   year?: number
+  links?: ExternalLink[]
 }
 
 const props = defineProps<Props>()
 
-const target = computed(() => props.external ? '_blank' : '_self')
-const rel = computed(() => props.external ? 'noreferrer noopener' : undefined)
 const initial = computed(() =>
   props.name.replace(/<[^>]*>/g, '').charAt(0).toUpperCase()
 )
@@ -31,8 +31,6 @@ const initial = computed(() =>
   >
     <a
       :href="href"
-      :target="target"
-      :rel="rel"
       class="project-card"
     >
       <!-- Playing card corner indices -->
@@ -55,8 +53,22 @@ const initial = computed(() =>
     </a>
 
     <div class="card-caption">
-      <span class="card-name" v-html="name" />
+      <div class="card-name-row">
+        <span v-if="status === 'active'" class="status-dot" aria-label="Active" />
+        <span class="card-name" v-html="name" />
+      </div>
       <p class="card-blurb">{{ blurb }}</p>
+    </div>
+    <div v-if="links?.length" class="card-chips">
+      <a
+        v-for="link in links"
+        :key="link.href"
+        :href="link.href"
+        target="_blank"
+        rel="noreferrer noopener"
+        class="chip"
+        @click.stop
+      >{{ link.label }}</a>
     </div>
   </div>
 </template>
@@ -69,10 +81,6 @@ const initial = computed(() =>
   scroll-snap-align: start;
 }
 
-.card-wrapper.is-archive .project-card {
-  opacity: 0.70;
-}
-
 @media (hover: hover) and (pointer: fine) {
   .card-wrapper:hover .project-card {
     transform: translateY(-5px) scale(1.025);
@@ -83,15 +91,12 @@ const initial = computed(() =>
       0 16px 40px rgba(0,0,0,0.10),
       0 1px 3px rgba(0,0,0,0.12);
   }
-  .card-wrapper.is-archive:hover .project-card {
-    opacity: 1;
-  }
 }
 
 /* ── Card shell ──────────────────────────────── */
 .project-card {
   width: 100%;
-  aspect-ratio: 5 / 4;
+  aspect-ratio: 5 / 7;
   position: relative;
   display: block;
   border: 1px solid var(--line-soft);
@@ -206,6 +211,21 @@ const initial = computed(() =>
   gap: 4px;
 }
 
+.card-name-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.status-dot {
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--coral);
+  margin-top: 5px;
+}
+
 .card-name {
   font-family: var(--serif);
   font-size: 15px;
@@ -236,6 +256,35 @@ const initial = computed(() =>
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-wrap: pretty;
+}
+
+/* ── External link chips ──────────────────────── */
+.card-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding-top: 8px;
+}
+
+.chip {
+  font-family: var(--caps);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  border: 1px solid var(--line-soft);
+  border-radius: 2px;
+  padding: 3px 8px;
+  text-decoration: none;
+  transition: color var(--dur-base), border-color var(--dur-base);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .chip:hover {
+    color: var(--ink);
+    border-color: var(--line);
+  }
 }
 
 @media (max-width: 640px) {
