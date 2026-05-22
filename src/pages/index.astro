@@ -3,7 +3,7 @@ import { Image } from 'astro:assets'
 import { getCollection } from 'astro:content'
 import EditorialLayout from '@/layouts/EditorialLayout.astro'
 import EdSectionHeader from '@/components/EdSectionHeader.astro'
-import EdWire from '@/components/EdWire.vue'
+import PoVMarquee from '@/components/PoVMarquee.vue'
 import WriteItem from '@/components/WriteItem.vue'
 import siteConfig from '@/site-config'
 import { sortProjects } from '@/utils/projects'
@@ -11,7 +11,6 @@ import { getPosts } from '@/utils/posts'
 import headshotImage from '@/assets/images/profile/brennon-stylized-headshot-2025-cropped.png'
 
 const allProjects = sortProjects((await getCollection('projects')).filter(p => !p.data.draft))
-const activeCount = allProjects.filter(p => p.data.status === 'active').length
 const flagship = allProjects.find(p => p.data.flagship) ?? allProjects[0]
 
 const recentPosts = (await getPosts()).slice(0, 2)
@@ -97,15 +96,60 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
   </main>
 
   <!-- ─────── WIRE ─────── -->
-  <EdWire activeCount={activeCount} client:visible />
+  <PoVMarquee client:visible />
 
-  <!-- ─────── ABOUT §I ─────── -->
-  <section class="home-section" id="about">
+  <!-- ─────── WORK §I ─────── -->
+  <section class="home-section" id="work">
     <div class="home-container">
       <EdSectionHeader
         numeral="I"
+        title="Passion Projects"
+        eyebrow="Work — Nº 01"
+        coord={`${allProjects.length} entries · 2012 – 2026`}
+      />
+
+      <div class="flagship-grid" data-reveal>
+        <div class="flagship-plate">
+          {flagship.data.cover && (
+            <img src={`/covers/${flagship.data.cover}`} alt={flagship.data.title} class="flagship-img" />
+          )}
+        </div>
+        <div class="flagship-body">
+          {flagship.data.category && <span class="flagship-cat">{flagship.data.category}</span>}
+          <h3 class="flagship-name">{flagship.data.title}</h3>
+          <p class="flagship-summary">{flagship.data.summary}</p>
+          {flagship.data.stack && flagship.data.stack.length > 0 && (
+            <div class="flagship-stack">
+              {flagship.data.stack.slice(0, 5).join(' · ')}
+            </div>
+          )}
+          <div class="flagship-actions">
+            <a href={`/projects/${flagship.slug}/`} class="btn btn-primary">
+              View project
+              <span class="arrow"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19L19 5M19 5H8M19 5v11"/></svg></span>
+            </a>
+            {flagship.data.website && (
+              <a href={flagship.data.website} class="btn btn-ghost" target="_blank" rel="noreferrer noopener">
+                Website ↗
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div class="work-foot">
+        <a href="/projects/" class="see-all">All projects →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────── ABOUT §II ─────── -->
+  <section class="home-section" id="about">
+    <div class="home-container">
+      <EdSectionHeader
+        numeral="II"
         title="The <em>project-based</em> life."
-        eyebrow="About — Nº 01"
+        eyebrow="About — Nº 02"
         coord="Filed 2026 · prose"
       />
 
@@ -142,51 +186,6 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
             <span class="v status-row"><span class="status-dot" aria-hidden="true"></span>Open to select collaboration</span>
           </div>
         </aside>
-      </div>
-    </div>
-  </section>
-
-  <!-- ─────── WORK §II ─────── -->
-  <section class="home-section" id="work">
-    <div class="home-container">
-      <EdSectionHeader
-        numeral="II"
-        title="Passion Projects"
-        eyebrow="Work — Nº 02"
-        coord={`${allProjects.length} entries · 2012 – 2026`}
-      />
-
-      <div class="flagship-grid" data-reveal>
-        <div class="flagship-plate">
-          {flagship.data.cover && (
-            <img src={`/covers/${flagship.data.cover}`} alt={flagship.data.title} class="flagship-img" />
-          )}
-        </div>
-        <div class="flagship-body">
-          {flagship.data.category && <span class="flagship-cat">{flagship.data.category}</span>}
-          <h3 class="flagship-name">{flagship.data.title}</h3>
-          <p class="flagship-summary">{flagship.data.summary}</p>
-          {flagship.data.stack && flagship.data.stack.length > 0 && (
-            <div class="flagship-stack">
-              {flagship.data.stack.slice(0, 5).join(' · ')}
-            </div>
-          )}
-          <div class="flagship-actions">
-            <a href={`/projects/${flagship.slug}/`} class="btn btn-primary">
-              View project
-              <span class="arrow"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19L19 5M19 5H8M19 5v11"/></svg></span>
-            </a>
-            {flagship.data.website && (
-              <a href={flagship.data.website} class="btn btn-ghost" target="_blank" rel="noreferrer noopener">
-                Website ↗
-              </a>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <div class="work-foot">
-        <a href="/projects/" class="see-all">All projects →</a>
       </div>
     </div>
   </section>
