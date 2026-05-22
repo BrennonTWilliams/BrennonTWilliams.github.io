@@ -9,6 +9,7 @@ node_modules
 
 .notes/
 .ll/
+.loops/
 *.png
 !public/covers/*.png
 public/fonts/**/READ*.txt

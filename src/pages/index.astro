@@ -4,7 +4,6 @@ import { getCollection } from 'astro:content'
 import EditorialLayout from '@/layouts/EditorialLayout.astro'
 import EdSectionHeader from '@/components/EdSectionHeader.astro'
 import EdWire from '@/components/EdWire.vue'
-import WorkCard from '@/components/WorkCard.vue'
 import WriteItem from '@/components/WriteItem.vue'
 import siteConfig from '@/site-config'
 import { sortProjects } from '@/utils/projects'
@@ -12,10 +11,8 @@ import { getPosts } from '@/utils/posts'
 import headshotImage from '@/assets/images/profile/brennon-stylized-headshot-2025-cropped.png'
 
 const allProjects = sortProjects((await getCollection('projects')).filter(p => !p.data.draft))
-const selectedWork = allProjects.slice(0, 8)
 const activeCount = allProjects.filter(p => p.data.status === 'active').length
-const archiveCount = allProjects.length - selectedWork.length
-const archiveSlugs = allProjects.slice(8).map(p => p.slug).join(', ')
+const flagship = allProjects.find(p => p.data.flagship) ?? allProjects[0]
 
 const recentPosts = (await getPosts()).slice(0, 2)
 
@@ -59,7 +56,7 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
           </div>
           <div class="stat">
             <span class="ring coral">1</span>
-            <span class="stat-label"><b>good dog</b>under the desk</span>
+            <span class="stat-label"><b>patent</b>material sensing probe</span>
           </div>
         </div>
 
@@ -107,22 +104,22 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
     <div class="home-container">
       <EdSectionHeader
         numeral="I"
-        title="An <em>essay</em> in three paragraphs."
+        title="The <em>project-based</em> life."
         eyebrow="About — Nº 01"
         coord="Filed 2026 · prose"
       />
 
       <div class="about-grid">
         <div class="about-prose" data-reveal>
-          <p>I'm a software architect, mostly working at the seam between <em>machine reasoning</em> and the messier world of production systems. I write Python, TypeScript, and a fair amount of C# &amp; Lua — but the language I'm most fluent in is probably <a href="#work">specfile-to-shipped-thing</a>.</p>
-          <p>My favorite problems are the ones where an LLM has to <em>actually decide</em> something — orchestrate tools, draw the next bone in a rig, pick up the conversation thread mid-sentence. Lately that means agent loops in Blender, a self-hosted voice assistant that runs offline, and a Claude Code plugin I keep accidentally turning into a project manager.</p>
-          <p>Before that: game AI, Unity, custom PCBs, a smartphone-to-hardware bridge built out of a 3.5mm jack. I read a lot, hike, and live with one extremely good dog.</p>
+          <p>I have always learned by building. At fourteen I was at a medical device startup reworking 3D scanners used for prosthetic fittings — real hardware, real patients, more responsibility than I probably should have had. Soon, I was in the IDEO toy lab designing circuits for prototypes headed to Sesame Street and Mattel. A material sensing probe I created was patented before I was old enough to vote. None of it felt like a career. I just kept finding the edge of what I understood and building past it.</p>
+          <p>I studied Computer Science and English in College — I couldn't choose, and the two halves kept showing up in each other's work. My Computer Science concentration was machine learning: replicating the foundational research, the work from the eighties and nineties that everything since has grown out of. One experiment has stayed with me. Feed corrupted rings to a Hopfield network and watch it reconstruct the originals — the system wasn't following instructions, it was <em>remembering</em>. That gap between code that does what it's told and something that actually reasons became the thing I kept building toward. For years before ChatGPT I was writing a utility-based AI framework in C#, to give software agents the ability to weigh many competing dimensions of context and arrive at a decision.</p>
+          <p>When ChatGPT released I made a decision I'd call intentional if it hadn't also felt inevitable — go all in on large language models as the center of my work and my life. It was a natural continuation. The same obsession with artificial minds, just suddenly with far greater urgency and a much clearer mission. I'm an AI architect now. I help enterprise teams ship production systems — agents that make business decisions, pipelines that run at scale, orchestration systems that coordinate context across domains. I also create and run trainings for engineers on how to use AI in software development. After hours I keep building: a Claude Code plugin that keeps becoming a project manager, an offline voice assistant, agentic long-lived modeling in Blender. It's always been the same impulse: Discover something I don't understand. Build something until I do.</p>
         </div>
 
         <aside class="dispatch" data-reveal>
           <div class="dispatch-row">
             <span class="k">Role</span>
-            <span class="v"><b>Software Architect</b><span class="tag">— AI/ML</span></span>
+            <span class="v"><b>AI Architect</b><span class="tag">— Training &amp; Delivery</span></span>
           </div>
           <div class="dispatch-row">
             <span class="k">Currents</span>
@@ -130,7 +127,11 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
           </div>
           <div class="dispatch-row">
             <span class="k">Stack</span>
-            <span class="v">Python · TypeScript · BAML · Claude CLI · Ollama · Unity</span>
+            <span class="v">Python · TypeScript · Claude CLI · BAML</span>
+          </div>
+          <div class="dispatch-row">
+            <span class="k">Also</span>
+            <span class="v">Patent-holder · Published Writer · CS &amp; English</span>
           </div>
           <div class="dispatch-row">
             <span class="k">Off-screen</span>
@@ -145,36 +146,46 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
     </div>
   </section>
 
-  <!-- ─────── SELECTED WORK §II ─────── -->
+  <!-- ─────── WORK §II ─────── -->
   <section class="home-section" id="work">
     <div class="home-container">
       <EdSectionHeader
         numeral="II"
-        title="Selected <em>work</em>, mostly things that decide for themselves."
+        title="Passion Projects"
         eyebrow="Work — Nº 02"
         coord={`${allProjects.length} entries · 2012 – 2026`}
       />
 
-      <div class="work-grid">
-        {selectedWork.map((project, i) => (
-          <WorkCard
-            client:visible
-            idx={pad(i + 1)}
-            category={project.data.category}
-            name={project.data.title}
-            stack={project.data.stack}
-            blurb={project.data.summary}
-            status={project.data.status}
-            href={project.data.link?.href ?? project.data.website ?? project.data.repo ?? `/projects/${project.slug}/`}
-            external={Boolean(project.data.link?.href ?? project.data.website ?? project.data.repo)}
-          />
-        ))}
+      <div class="flagship-grid" data-reveal>
+        <div class="flagship-plate">
+          {flagship.data.cover && (
+            <img src={`/covers/${flagship.data.cover}`} alt={flagship.data.title} class="flagship-img" />
+          )}
+        </div>
+        <div class="flagship-body">
+          {flagship.data.category && <span class="flagship-cat">{flagship.data.category}</span>}
+          <h3 class="flagship-name">{flagship.data.title}</h3>
+          <p class="flagship-summary">{flagship.data.summary}</p>
+          {flagship.data.stack && flagship.data.stack.length > 0 && (
+            <div class="flagship-stack">
+              {flagship.data.stack.slice(0, 5).join(' · ')}
+            </div>
+          )}
+          <div class="flagship-actions">
+            <a href={`/projects/${flagship.slug}/`} class="btn btn-primary">
+              View project
+              <span class="arrow"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19L19 5M19 5H8M19 5v11"/></svg></span>
+            </a>
+            {flagship.data.website && (
+              <a href={flagship.data.website} class="btn btn-ghost" target="_blank" rel="noreferrer noopener">
+                Website ↗
+              </a>
+            )}
+          </div>
+        </div>
       </div>
 
       <div class="work-foot">
-        {archiveCount > 0 && (
-          <span>↳ {archiveCount} more in the archive{archiveSlugs ? ` — ${archiveSlugs}` : ''}</span>
-        )}
         <a href="/projects/" class="see-all">All projects →</a>
       </div>
     </div>
@@ -608,6 +619,77 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
     font-size: 11px;
   }
   .work-foot .see-all:hover { color: var(--coral); }
+
+  /* ---------- FLAGSHIP HERO ---------- */
+  .flagship-grid {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: 64px;
+    align-items: start;
+    border-top: 1px solid var(--ink);
+    padding-top: 40px;
+  }
+  .flagship-plate {
+    border: 1px solid var(--ink);
+    background: var(--bone);
+    overflow: hidden;
+    aspect-ratio: 4 / 5;
+  }
+  .flagship-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .flagship-body {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-top: 4px;
+  }
+  .flagship-cat {
+    font-family: var(--sans);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--coral);
+  }
+  .flagship-name {
+    font-family: var(--serif);
+    font-size: var(--fs-h1);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 0.97;
+    color: var(--ink);
+    margin: 0;
+  }
+  .flagship-summary {
+    font-family: var(--body);
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: 500px;
+    margin: 0;
+    text-wrap: pretty;
+  }
+  .flagship-stack {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--ink-mute);
+    letter-spacing: 0.04em;
+  }
+  .flagship-actions {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 4px;
+  }
+  @media (max-width: 980px) {
+    .flagship-grid { grid-template-columns: 1fr; gap: 32px; }
+    .flagship-plate { aspect-ratio: 4 / 5; max-width: 480px; }
+  }
+
   .empty {
     font-family: var(--serif);
     font-style: italic;

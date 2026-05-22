@@ -55,7 +55,7 @@ export const siteConfig = {
     coords: "38.89° N · 77.03° W",
     liveStatus: "shipping little-loops v0.4",
     sideRails: {
-      left: "Reasoning · Local-first · Physical computing · Prototyping",
+      left: "Agent Harnesses · Eval-driven-development · Agentic Coding Loops · Enterprise AI · Physical computing",
       right: "BW — Vol. 01 · Issue Nº 03 · 2026 · MIT",
     },
   },
