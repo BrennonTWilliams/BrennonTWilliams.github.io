@@ -35,10 +35,14 @@ const track = [...pillars, ...pillars]
 
 <style scoped>
 .pov-marquee {
+  position: relative;
+  z-index: var(--z-shell);
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
+  background: var(--paper-dark);
   padding: 14px 0;
   overflow: hidden;
+  isolation: isolate;
 }
 .pov-inner {
   display: flex;
@@ -75,7 +79,7 @@ const track = [...pillars, ...pillars]
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--bone);
+  background: var(--paper);
 }
 .pov-title {
   display: flex;

@@ -13,8 +13,7 @@ import headshotImage from '@/assets/images/profile/brennon-stylized-headshot-202
 
 const allProjects = sortProjects((await getCollection('projects')).filter(p => !p.data.draft))
 const flagship = allProjects.find(p => p.data.flagship) ?? allProjects[0]
-const cardSlugs = ['blender-agents', 'lmc-voice', 'swan', 'graphrag-claude-code', 'dotfiles']
-const restProjects = allProjects.filter(p => p !== flagship && cardSlugs.includes(p.slug))
+const restProjects = allProjects.filter(p => p !== flagship)
 
 const recentPosts = (await getPosts()).slice(0, 2)
 
@@ -204,7 +203,16 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
 
       {restProjects.length > 0 && (
         <div class="home-card-strip-outer">
-          <div class="home-card-strip" role="list">
+          <button
+            class="strip-nav strip-nav--prev"
+            type="button"
+            aria-label="Scroll to previous projects"
+            data-strip-prev
+            hidden
+          >
+            <span class="strip-nav__glyph" aria-hidden="true">‹</span>
+          </button>
+          <div class="home-card-strip" role="list" data-strip>
             {restProjects.map((project, i) => {
               const href = `/projects/${project.slug}/`
               const links = [
@@ -233,6 +241,15 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
               )
             })}
           </div>
+          <button
+            class="strip-nav strip-nav--next"
+            type="button"
+            aria-label="Scroll to next projects"
+            data-strip-next
+            hidden
+          >
+            <span class="strip-nav__glyph" aria-hidden="true">›</span>
+          </button>
         </div>
       )}
 
@@ -340,7 +357,7 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
   }
 
   /* ---------- HERO ---------- */
-  .home-hero { padding: 80px 0 56px; position: relative; }
+  .home-hero { padding: 56px 0 36px; position: relative; }
   .hero-grid {
     display: grid;
     grid-template-columns: 1.15fr 0.85fr;
@@ -350,7 +367,7 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
   .hero-copy { padding-top: 4px; }
 
   .label {
-    font-family: var(--sans);
+    font-family: var(--caps);
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.28em;
@@ -395,7 +412,7 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
     display: inline-flex;
     flex-wrap: wrap;
     gap: 14px;
-    margin-bottom: 48px;
+    margin-bottom: 34px;
   }
   .btn .arrow { width: 16px; height: 16px; display: inline-grid; place-items: center; }
   .btn .arrow svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.6; }
@@ -404,7 +421,7 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 24px;
-    padding: 28px 0;
+    padding: 20px 0;
     border-top: 1px solid var(--line);
     border-bottom: 1px solid var(--line);
   }
@@ -432,7 +449,7 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
     display: flex;
     flex-direction: column;
     gap: 2px;
-    font-family: var(--sans);
+    font-family: var(--caps);
     font-size: 12px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -445,7 +462,7 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
     justify-content: space-between;
     align-items: center;
     gap: 24px;
-    margin-top: 22px;
+    margin-top: 14px;
   }
   .hero-foot .meta {
     font-family: var(--mono);
@@ -511,7 +528,7 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
 
   .art-index {
     position: absolute;
-    left: 14px; right: 14px; bottom: 48px;
+    left: 14px; right: 14px; bottom: 0;
     z-index: 2;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -548,12 +565,12 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
 
   /* ---------- SECTION shell ---------- */
   .home-section {
-    padding: 96px 0;
+    padding: 72px 0;
     border-top: 1px solid var(--line);
     position: relative;
   }
   .home-section.reading-section { padding-bottom: 56px; }
-  .home-section#about { padding: 72px 0; }
+  .home-section#about { padding: 60px 0; }
   @media (max-width: 820px) {
     .home-section { padding: 64px 0; }
     .home-section#about { padding: 56px 0; }
@@ -574,7 +591,7 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
     max-width: 640px;
     text-wrap: pretty;
   }
-  .about-prose p + p { margin-top: 14px; }
+  .about-prose p + p { margin-top: 18px; }
   .about-prose em { color: var(--coral); font-style: italic; }
   .about-prose a {
     color: var(--ink);
@@ -598,7 +615,7 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
   }
   .dispatch-row:last-child { border-bottom: none; }
   .dispatch-row .k {
-    font-family: var(--sans);
+    font-family: var(--caps);
     font-size: 10.5px;
     font-weight: 600;
     letter-spacing: 0.24em;
@@ -653,7 +670,7 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
     .writing-grid { grid-template-columns: 1fr; }
   }
   .work-foot {
-    margin-top: 32px;
+    margin-top: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -681,10 +698,13 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
   .home-card-strip-outer {
     position: relative;
     margin-top: 32px;
-    -webkit-mask-image: linear-gradient(to right, black 80%, transparent 100%);
-    mask-image: linear-gradient(to right, black 80%, transparent 100%);
+    display: flex;
+    align-items: stretch;
+    gap: 14px;
   }
   .home-card-strip {
+    flex: 1;
+    min-width: 0;
     display: flex;
     flex-direction: row;
     gap: 24px;
@@ -692,26 +712,69 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
     padding: 16px 2px 24px;
+    scroll-padding-left: 2px;
     scrollbar-width: none;
+    scroll-behavior: smooth;
   }
   .home-card-strip::-webkit-scrollbar {
     display: none;
   }
 
+  .strip-nav {
+    flex: 0 0 auto;
+    align-self: flex-end;
+    width: 32px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    border: 0;
+    background: var(--coral);
+    color: var(--paper);
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: 24px;
+    transition: background var(--dur-base) var(--ease-standard),
+                opacity var(--dur-base) var(--ease-standard);
+  }
+  .strip-nav[hidden] { display: none; }
+  .strip-nav:disabled {
+    opacity: 0.3;
+    cursor: default;
+    pointer-events: none;
+  }
+  .strip-nav__glyph {
+    font-family: 'Valkyrie B', 'Times New Roman', serif;
+    font-style: italic;
+    font-size: 20px;
+    line-height: 1;
+    font-weight: 400;
+    transform: translateY(-1px);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .strip-nav:not(:disabled):hover {
+      background: var(--ink);
+    }
+  }
+  @media (max-width: 820px) {
+    .home-card-strip-outer { gap: 8px; }
+    .strip-nav { width: 28px; height: 26px; }
+    .strip-nav__glyph { font-size: 18px; }
+  }
+
   /* ---------- FLAGSHIP HERO ---------- */
   .flagship-grid {
     display: grid;
-    grid-template-columns: 0.85fr 1.15fr;
-    gap: 64px;
+    grid-template-columns: 0.7fr 1.3fr;
+    gap: 56px;
     align-items: start;
-    border-top: 1px solid var(--ink);
-    padding-top: 40px;
+    padding-top: 20px;
   }
   .flagship-plate {
     border: 1px solid var(--ink);
     background: var(--bone);
     overflow: hidden;
     aspect-ratio: 4 / 5;
+    max-width: 380px;
   }
   .flagship-img {
     width: 100%;
@@ -722,7 +785,7 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
   .flagship-body {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 16px;
     padding-top: 4px;
   }
   .flagship-cat {
@@ -788,7 +851,7 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
   }
   .reading-col:last-child { border-right: none; }
   .reading-col .k {
-    font-family: var(--sans);
+    font-family: var(--caps);
     font-size: 10.5px;
     font-weight: 600;
     letter-spacing: 0.24em;
@@ -837,7 +900,7 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
 
   /* ---------- CTA ---------- */
   .home-cta {
-    padding: 120px 0 96px;
+    padding: 72px 0 56px;
     border-top: 1px solid var(--line);
     position: relative;
   }
@@ -890,3 +953,41 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
     .home-cta { padding: 72px 0 56px; }
   }
 </style>
+
+<script>
+  // Carousel arrows for the Passion Projects strip.
+  // Re-init on each Astro navigation so the listeners survive client routing.
+  function initProjectCarousel() {
+    const strip = document.querySelector<HTMLElement>('[data-strip]')
+    const prev = document.querySelector<HTMLButtonElement>('[data-strip-prev]')
+    const next = document.querySelector<HTMLButtonElement>('[data-strip-next]')
+    if (!strip || !prev || !next) return
+
+    const update = () => {
+      const overflow = strip.scrollWidth - strip.clientWidth
+      if (overflow <= 2) {
+        prev.hidden = true
+        next.hidden = true
+        return
+      }
+      prev.hidden = false
+      next.hidden = false
+      prev.disabled = strip.scrollLeft <= 2
+      next.disabled = strip.scrollLeft >= overflow - 2
+    }
+
+    const step = () => Math.max(strip.clientWidth * 0.8, 280)
+    prev.addEventListener('click', () => strip.scrollBy({ left: -step(), behavior: 'smooth' }))
+    next.addEventListener('click', () => strip.scrollBy({ left: step(), behavior: 'smooth' }))
+    strip.addEventListener('scroll', update, { passive: true })
+    window.addEventListener('resize', update)
+
+    update()
+    // Re-check after images load (they change scrollWidth).
+    requestAnimationFrame(update)
+    setTimeout(update, 500)
+  }
+
+  initProjectCarousel()
+  document.addEventListener('astro:page-load', initProjectCarousel)
+</script>

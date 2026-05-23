@@ -82,14 +82,14 @@ const githubLink = computed(() =>
   <header class="nav ed-nav">
     <div class="container nav-inner">
       <a href="/" class="brand" aria-label="Brennon Williams — home">
-        <svg class="brand-morse" style="view-transition-name: brand-mark" viewBox="0 0 46 26" width="46" height="26" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <svg class="brand-morse" style="view-transition-name: brand-mark" viewBox="2 0 42 26" width="42" height="26" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <!-- B: - . . . -->
           <rect x="3" y="3" width="12" height="6" rx="3" fill="currentColor" />
           <circle cx="22" cy="6" r="3" fill="currentColor" />
           <circle cx="31" cy="6" r="3" fill="currentColor" />
           <circle cx="40" cy="6" r="3" fill="currentColor" />
           <!-- W: . - - -->
-          <circle cx="6" cy="20" r="3" fill="currentColor" />
+          <circle cx="6" cy="20" r="3" fill="var(--coral)" />
           <rect x="14" y="17" width="12" height="6" rx="3" fill="currentColor" />
           <rect x="31" y="17" width="12" height="6" rx="3" fill="currentColor" />
         </svg>
