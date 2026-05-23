@@ -12,7 +12,7 @@ SUBJECTS[graphrag-claude-code]="A river delta viewed from directly above — a s
 SUBJECTS[mission-control]="A mid-century mission operations console seen from a low 3/4 angle — a curved horseshoe command arc dense with circular dials, oscilloscope screens, toggle-switch banks, and patch-panel jacks rendered as mid-century instrument clusters. Vacuum-tube readout columns bracket the flanks. Signal paths between stations arc as parabolic trajectory vectors across the console face, the whole nerve-center composed as a NASA Launch Control photograph."
 SUBJECTS[deep-codebase]="A vertical cross-section of geological strata — four distinct codebase abstraction bands from surface to bedrock — plotted with survey-line and altitude-marking precision."
 SUBJECTS[mc-vault]="A vast branching note-network rendered as a structural lattice — each node a vault page with bearing annotation rings, connected by link vectors radiating from a central knowledge core. Automation service threads trace the periphery as signal paths feeding data from external sources, like a signal observatory continuously updating its star charts and cross-referencing 1,900 nodes."
-SUBJECTS[lmc-voice]="A gramophone horn seen from a low 3/4 angle — the wide bell mouth aimed diagonally upward-left, its curved throat tapering steeply to the lower right. Bold parallel wave crests radiate outward from the bell as sweeping arcs. The horn's cross-sectioned interior reveals a parabolic reflector surface with survey-ring calibration marks. A stark diagonal silhouette dominating the picture plane."
+SUBJECTS[lmc-voice]="A single bold continuous line forming a closed loop: it begins as a spoken waveform at lower-left, curves up through a faceted geometric node at the center, and resolves into three branching arrows at upper-right that each terminate in a small task glyph. The entire loop is enclosed within a softly rounded square boundary. Flat two-tone palette, high contrast, stark diagonal composition dominating the picture plane."
 SUBJECTS[swan]="A swan silhouette whose long neck is a single process node; the wings decompose into four distinct task queue lanes — each a branching trajectory arc. Geometric contract medallions punctuate the junction points between orchestration and execution. Concentric state-store rings expand outward from the distributed graph as shared-state shells, the whole system rendered as a distributed system schematic."
 SUBJECTS[untie-ai]="A radial influence map viewed from above — concentric tactical zones expanding from a central origin point, each ring scored by strategic advantage. Response curve arcs sweep outward as parabolic trajectory lines, one arc per decision option. The composition reads as a battle-planning overlay atop a mid-century target-ring diagram with altitude-calibration coordinates and radial propagation rings."
 SUBJECTS[blubry]="A cross-section of a four-ring audio plug bisected lengthwise — four conductor rings rendered as layered band segments, each ring a separate signal channel. On one side: the silhouette of a smartphone; on the other: PCB traces and component footprints branching outward like circuit connections. The plug is the sole junction point between two worlds, rendered as a technical assembly diagram etched on a coordinate grid."
@@ -22,23 +22,23 @@ SUBJECTS[untie-animation]="A humanoid figure built from connected bone segments 
 PROJECT="${1:-all}"
 
 if [[ "$PROJECT" == "all" ]]; then
-  first=true
-  for key in $(echo "${!SUBJECTS[@]}" | tr ' ' '\n' | sort); do
-    [[ "$first" == "true" ]] || printf '\n---\n\n'
-    echo "${STYLE} Subject: ${SUBJECTS[$key]}"
-    first=false
-  done
-  exit 0
+    first=true
+    for key in $(echo "${!SUBJECTS[@]}" | tr ' ' '\n' | sort); do
+        [[ "$first" == "true" ]] || printf '\n---\n\n'
+        echo "${STYLE} Subject: ${SUBJECTS[$key]}"
+        first=false
+    done
+    exit 0
 fi
 
 if [[ -z "${SUBJECTS[$PROJECT]:-}" ]]; then
-  echo "Unknown project: $PROJECT"
-  echo ""
-  echo "Available projects:"
-  for key in "${!SUBJECTS[@]}"; do
-    echo "  $key"
-  done | sort
-  exit 1
+    echo "Unknown project: $PROJECT"
+    echo ""
+    echo "Available projects:"
+    for key in "${!SUBJECTS[@]}"; do
+        echo "  $key"
+    done | sort
+    exit 1
 fi
 
 echo "${STYLE} Subject: ${SUBJECTS[$PROJECT]}"
