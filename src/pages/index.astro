@@ -4,6 +4,7 @@ import { getCollection } from 'astro:content'
 import EditorialLayout from '@/layouts/EditorialLayout.astro'
 import EdSectionHeader from '@/components/EdSectionHeader.astro'
 import PoVMarquee from '@/components/PoVMarquee.vue'
+import ProjectCard from '@/components/ProjectCard.vue'
 import WriteItem from '@/components/WriteItem.vue'
 import siteConfig from '@/site-config'
 import { sortProjects } from '@/utils/projects'
@@ -12,8 +13,25 @@ import headshotImage from '@/assets/images/profile/brennon-stylized-headshot-202
 
 const allProjects = sortProjects((await getCollection('projects')).filter(p => !p.data.draft))
 const flagship = allProjects.find(p => p.data.flagship) ?? allProjects[0]
+const cardSlugs = ['blender-agents', 'lmc-voice', 'swan', 'graphrag-claude-code', 'dotfiles']
+const restProjects = allProjects.filter(p => p !== flagship && cardSlugs.includes(p.slug))
 
 const recentPosts = (await getPosts()).slice(0, 2)
+
+const allBooks = (await getCollection('books')).flatMap(entry => entry.data)
+const allWhitepapers = (await getCollection('whitepapers')).flatMap(entry => entry.data)
+const readingHighlights = [
+  ...allBooks
+    .filter(book => book.featured)
+    .map(book => ({ kind: 'Book', title: book.title, meta: book.author })),
+  ...allWhitepapers
+    .filter(paper => paper.featured)
+    .map(paper => ({
+      kind: 'Paper',
+      title: paper.title,
+      meta: [paper.author, String(paper.year)].filter(Boolean).join(' · '),
+    })),
+]
 
 const pad = (n: number) => String(n).padStart(2, '0')
 const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev').slice(0, 7)
@@ -98,13 +116,60 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
   <!-- ─────── WIRE ─────── -->
   <PoVMarquee client:visible />
 
-  <!-- ─────── WORK §I ─────── -->
-  <section class="home-section" id="work">
+  <!-- ─────── ABOUT §I ─────── -->
+  <section class="home-section" id="about">
     <div class="home-container">
       <EdSectionHeader
         numeral="I"
+        title="The <em>project-based</em> life."
+        eyebrow="About — Nº 01"
+        coord="Filed 2026 · prose"
+      />
+
+      <div class="about-grid">
+        <div class="about-prose" data-reveal>
+          <p>I have always learned by building. At fourteen I was programming 3D scanners at a medical device startup to create prosthetic fittings. Soon I was at the IDEO toy lab, designing circuits for prototypes headed to Sesame Street and Mattel. A material sensing probe I designed was patented before I was old enough to vote. None of it felt like a career — I just kept finding the edge of what I understood and building past it.</p>
+          <p>I studied Computer Science and English in college — I couldn't choose, and the two halves kept showing up in each other's work. My CS concentration was machine learning, and freshman year I built my first Hopfield network and fed it corrupted rings. Watching it reconstruct a perfect ring from a noisy, fragmentary input was my first contact with the <em>magic</em> of AI — the moment a system stopped feeling like code and started feeling like something mysterious and sublime. For years before ChatGPT I was building a utility-based AI framework in C# — software agents weighing competing dimensions of context to arrive at a decision.</p>
+          <p>When ChatGPT released I made a decision I'd call intentional if it hadn't also felt inevitable — go all in on large language models as the center of my work and my life. The same obsession with artificial minds, now with far greater urgency and a clearer mission. I'm an AI architect now. I help enterprise teams ship production systems — agents that make business decisions, pipelines that run at scale, orchestration that coordinates context across domains. I also train engineers on using AI in software development. After hours I keep building: a Claude Code plugin that keeps becoming a project manager, an offline voice assistant, a system for agentic long-lived modeling in Blender. It's always been the same impulse: discover something I don't understand. Build something until I do.</p>
+        </div>
+
+        <aside class="dispatch" data-reveal>
+          <div class="dispatch-row">
+            <span class="k">Role</span>
+            <span class="v"><b>AI Architect</b><span class="tag">— Training &amp; Delivery</span></span>
+          </div>
+          <div class="dispatch-row">
+            <span class="k">Currents</span>
+            <span class="v">SDLC automation · Agent loops · Enterprise AI · Physical computing</span>
+          </div>
+          <div class="dispatch-row">
+            <span class="k">Stack</span>
+            <span class="v">Python · TypeScript · BAML · llamacpp</span>
+          </div>
+          <div class="dispatch-row">
+            <span class="k">Also</span>
+            <span class="v">Patent-holder · Published Author · CS &amp; English</span>
+          </div>
+          <div class="dispatch-row">
+            <span class="k">Off-screen</span>
+            <span class="v">Hiker · reader · tinkerer · dog dad</span>
+          </div>
+          <div class="dispatch-row">
+            <span class="k">Status</span>
+            <span class="v status-row"><span class="status-dot" aria-hidden="true"></span>Open to select collaboration</span>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────── WORK §II ─────── -->
+  <section class="home-section" id="work">
+    <div class="home-container">
+      <EdSectionHeader
+        numeral="II"
         title="Passion Projects"
-        eyebrow="Work — Nº 01"
+        eyebrow="Work — Nº 02"
         coord={`${allProjects.length} entries · 2012 – 2026`}
       />
 
@@ -137,55 +202,42 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
         </div>
       </div>
 
+      {restProjects.length > 0 && (
+        <div class="home-card-strip-outer">
+          <div class="home-card-strip" role="list">
+            {restProjects.map((project, i) => {
+              const href = `/projects/${project.slug}/`
+              const links = [
+                project.data.repo    ? { label: 'GitHub', href: project.data.repo }    : null,
+                project.data.website ? { label: 'Site',   href: project.data.website } : null,
+                project.data.link?.href
+                  ? { label: project.data.link.label ?? 'Link', href: project.data.link.href }
+                  : null,
+              ].filter((l): l is { label: string; href: string } => l !== null)
+              const image = project.data.cover
+                ? `/covers/${project.data.cover}`
+                : project.data.svg ? `/projects/${project.data.svg}` : undefined
+              return (
+                <ProjectCard
+                  client:visible
+                  idx={pad(i + 1)}
+                  category={project.data.category}
+                  name={project.data.title}
+                  blurb={project.data.summary}
+                  status={project.data.status}
+                  href={href}
+                  links={links}
+                  image={image}
+                  year={new Date().getFullYear()}
+                />
+              )
+            })}
+          </div>
+        </div>
+      )}
+
       <div class="work-foot">
         <a href="/projects/" class="see-all">All projects →</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ─────── ABOUT §II ─────── -->
-  <section class="home-section" id="about">
-    <div class="home-container">
-      <EdSectionHeader
-        numeral="II"
-        title="The <em>project-based</em> life."
-        eyebrow="About — Nº 02"
-        coord="Filed 2026 · prose"
-      />
-
-      <div class="about-grid">
-        <div class="about-prose" data-reveal>
-          <p>I have always learned by building. At fourteen I was at a medical device startup reworking 3D scanners used for prosthetic fittings — real hardware, real patients, more responsibility than I probably should have had. Soon, I was in the IDEO toy lab designing circuits for prototypes headed to Sesame Street and Mattel. A material sensing probe I created was patented before I was old enough to vote. None of it felt like a career. I just kept finding the edge of what I understood and building past it.</p>
-          <p>I studied Computer Science and English in College — I couldn't choose, and the two halves kept showing up in each other's work. My Computer Science concentration was machine learning: replicating the foundational research, the work from the eighties and nineties that everything since has grown out of. One experiment has stayed with me. Feed corrupted rings to a Hopfield network and watch it reconstruct the originals — the system wasn't following instructions, it was <em>remembering</em>. That gap between code that does what it's told and something that actually reasons became the thing I kept building toward. For years before ChatGPT I was writing a utility-based AI framework in C#, to give software agents the ability to weigh many competing dimensions of context and arrive at a decision.</p>
-          <p>When ChatGPT released I made a decision I'd call intentional if it hadn't also felt inevitable — go all in on large language models as the center of my work and my life. It was a natural continuation. The same obsession with artificial minds, just suddenly with far greater urgency and a much clearer mission. I'm an AI architect now. I help enterprise teams ship production systems — agents that make business decisions, pipelines that run at scale, orchestration systems that coordinate context across domains. I also create and run trainings for engineers on how to use AI in software development. After hours I keep building: a Claude Code plugin that keeps becoming a project manager, an offline voice assistant, agentic long-lived modeling in Blender. It's always been the same impulse: Discover something I don't understand. Build something until I do.</p>
-        </div>
-
-        <aside class="dispatch" data-reveal>
-          <div class="dispatch-row">
-            <span class="k">Role</span>
-            <span class="v"><b>AI Architect</b><span class="tag">— Training &amp; Delivery</span></span>
-          </div>
-          <div class="dispatch-row">
-            <span class="k">Currents</span>
-            <span class="v">{siteConfig.editorial.sideRails.left}</span>
-          </div>
-          <div class="dispatch-row">
-            <span class="k">Stack</span>
-            <span class="v">Python · TypeScript · Claude CLI · BAML</span>
-          </div>
-          <div class="dispatch-row">
-            <span class="k">Also</span>
-            <span class="v">Patent-holder · Published Writer · CS &amp; English</span>
-          </div>
-          <div class="dispatch-row">
-            <span class="k">Off-screen</span>
-            <span class="v">Hiker · reader · tinkerer · dog dad</span>
-          </div>
-          <div class="dispatch-row">
-            <span class="k">Status</span>
-            <span class="v status-row"><span class="status-dot" aria-hidden="true"></span>Open to select collaboration</span>
-          </div>
-        </aside>
       </div>
     </div>
   </section>
@@ -227,24 +279,28 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
     </div>
   </section>
 
-  <!-- ─────── NOW §IV ─────── -->
-  <section class="home-section now-section" id="now">
+  <!-- ─────── READING §IV ─────── -->
+  <section class="home-section reading-section" id="reading">
     <div class="home-container">
       <EdSectionHeader
         numeral="IV"
-        title="What I'm <em>doing</em> right now."
-        eyebrow="Now — Nº 04"
-        coord={`Updated ${siteConfig.now.lastUpdated}`}
+        title="What I'm <em>reading</em> and recommend."
+        eyebrow="Reading — Nº 04"
+        coord={`${allBooks.length} books · ${allWhitepapers.length} papers`}
       />
 
-      <div class="now-strip">
-        {siteConfig.now.entries.map(entry => (
-          <div class="now-col" data-reveal>
-            <div class="k">{entry.kind}</div>
-            <div class="v" set:html={entry.title} />
-            <div class="sub">{entry.meta}</div>
+      <div class="reading-strip">
+        {readingHighlights.map(item => (
+          <div class="reading-col" data-reveal>
+            <div class="k">{item.kind}</div>
+            <div class="v">{item.title}</div>
+            <div class="sub">{item.meta}</div>
           </div>
         ))}
+      </div>
+
+      <div class="work-foot">
+        <a href="/reading/" class="see-all">All reading →</a>
       </div>
     </div>
   </section>
@@ -496,9 +552,11 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
     border-top: 1px solid var(--line);
     position: relative;
   }
-  .home-section.now-section { padding-bottom: 56px; }
+  .home-section.reading-section { padding-bottom: 56px; }
+  .home-section#about { padding: 72px 0; }
   @media (max-width: 820px) {
     .home-section { padding: 64px 0; }
+    .home-section#about { padding: 56px 0; }
   }
 
   /* ---------- ABOUT ---------- */
@@ -510,13 +568,13 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
   }
   .about-prose {
     font-family: var(--serif);
-    font-size: 24px;
-    line-height: 1.42;
+    font-size: 20px;
+    line-height: 1.5;
     color: var(--ink);
-    max-width: 580px;
+    max-width: 640px;
     text-wrap: pretty;
   }
-  .about-prose p + p { margin-top: 18px; }
+  .about-prose p + p { margin-top: 14px; }
   .about-prose em { color: var(--coral); font-style: italic; }
   .about-prose a {
     color: var(--ink);
@@ -619,6 +677,27 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
   }
   .work-foot .see-all:hover { color: var(--coral); }
 
+  /* ---------- HOME CARD STRIP ---------- */
+  .home-card-strip-outer {
+    position: relative;
+    margin-top: 32px;
+    -webkit-mask-image: linear-gradient(to right, black 80%, transparent 100%);
+    mask-image: linear-gradient(to right, black 80%, transparent 100%);
+  }
+  .home-card-strip {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding: 16px 2px 24px;
+    scrollbar-width: none;
+  }
+  .home-card-strip::-webkit-scrollbar {
+    display: none;
+  }
+
   /* ---------- FLAGSHIP HERO ---------- */
   .flagship-grid {
     display: grid;
@@ -696,19 +775,19 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
     padding: 24px 0;
   }
 
-  /* ---------- NOW ---------- */
-  .now-strip {
+  /* ---------- READING ---------- */
+  .reading-strip {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     border-top: 1px solid var(--line);
     border-bottom: 1px solid var(--line);
   }
-  .now-col {
+  .reading-col {
     padding: 22px 24px;
     border-right: 1px solid var(--line);
   }
-  .now-col:last-child { border-right: none; }
-  .now-col .k {
+  .reading-col:last-child { border-right: none; }
+  .reading-col .k {
     font-family: var(--sans);
     font-size: 10.5px;
     font-weight: 600;
@@ -720,13 +799,13 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
     align-items: center;
     gap: 8px;
   }
-  .now-col .k::before {
+  .reading-col .k::before {
     content: '';
     width: 6px; height: 6px;
     border-radius: 50%;
     background: var(--coral);
   }
-  .now-col .v {
+  .reading-col .v {
     font-family: var(--serif);
     font-size: 19px;
     font-weight: 500;
@@ -734,8 +813,7 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
     color: var(--ink);
     text-wrap: balance;
   }
-  .now-col .v em { font-style: italic; color: var(--coral); }
-  .now-col .sub {
+  .reading-col .sub {
     font-family: var(--mono);
     font-size: 11px;
     color: var(--ink-mute);
@@ -743,16 +821,18 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
     letter-spacing: 0.03em;
   }
   @media (max-width: 820px) {
-    .now-strip { grid-template-columns: 1fr 1fr; }
-    .now-col:nth-child(2n) { border-right: none; }
+    .reading-strip { grid-template-columns: 1fr 1fr; }
+    .reading-col:nth-child(2n) { border-right: none; }
+    .reading-col:nth-child(n+3) { border-top: 1px solid var(--line); }
   }
   @media (max-width: 480px) {
-    .now-strip { grid-template-columns: 1fr; }
-    .now-col {
+    .reading-strip { grid-template-columns: 1fr; }
+    .reading-col {
       border-right: none;
       border-bottom: 1px solid var(--line);
     }
-    .now-col:last-child { border-bottom: none; }
+    .reading-col:nth-child(n+3) { border-top: none; }
+    .reading-col:last-child { border-bottom: none; }
   }
 
   /* ---------- CTA ---------- */
