@@ -22,6 +22,9 @@ public/fonts/**/sample.html
 # Generated cover art source directory (selected images live in public/covers/)
 project-cards-cover-art/
 
+# Local cover-art generation scripts (kept out of git)
+scripts/
+
 # Terminal recordings
 hitl-compare.Cast
 
