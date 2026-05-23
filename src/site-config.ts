@@ -35,9 +35,8 @@ export const siteConfig = {
 
   header: {
     navLinks: [
-      { text: "Work", href: "/#work" },
       { text: "Writing", href: "/blog/" },
-      { text: "Now", href: "/now/" },
+      { text: "Reading", href: "/reading/" },
       { text: "Projects", href: "/projects/" },
     ],
   },
@@ -61,34 +60,12 @@ export const siteConfig = {
   },
 
   /**
-   * Now-page content. `lastUpdated` is a manual signal — bump when entries
-   * change, not on every release.
+   * Reading-page meta. `lastUpdated` is a manual signal — bump when the
+   * books/whitepapers lists change, not on every release. The entries
+   * themselves live in the `books` / `whitepapers` content collections.
    */
-  now: {
-    lastUpdated: "2026-05-16",
-    entries: [
-      {
-        kind: "Building",
-        title: "<em>little-loops</em> v0.4 — sprint planning + handoff",
-        meta: "PyPI · 21 cmds · 8 agents",
-      },
-      {
-        kind: "Reading",
-        title:
-          "Cognitive Behaviors that Enable <em>Self-Improving Reasoners</em>",
-        meta: "Gandhi et al · Stanford · 2025",
-      },
-      {
-        kind: "Listening",
-        title: "<em>Long</em> ambient sets while soldering",
-        meta: "Brian Eno · Jon Hopkins · Hania Rani",
-      },
-      {
-        kind: "Off-screen",
-        title: "Trails with the <em>dog</em> &amp; the Blue Ridge mountains",
-        meta: "38.89° N · 77.03° W",
-      },
-    ],
+  reading: {
+    lastUpdated: "2026-05-22",
   },
 
   favicon: "/favicon.svg",

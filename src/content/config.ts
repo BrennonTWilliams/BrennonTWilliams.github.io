@@ -97,4 +97,35 @@ const projects = defineCollection({
   }),
 })
 
-export const collections = { pages, blog, projects }
+/**
+ * Reading lists — structured data, no prose body, so `type: 'data'` (the Astro
+ * convention for YAML/JSON collections). Each collection is a single YAML file
+ * whose contents are a top-level array; the page flattens entries to one list.
+ */
+const books = defineCollection({
+  type: 'data',
+  schema: z.array(
+    z.object({
+      title: z.string(),
+      author: z.string(),
+      note: z.string().optional(),
+      featured: z.boolean().default(false).optional(),
+    }),
+  ),
+})
+
+const whitepapers = defineCollection({
+  type: 'data',
+  schema: z.array(
+    z.object({
+      title: z.string(),
+      author: z.string().optional(),
+      year: z.number(),
+      category: z.string(),
+      note: z.string(),
+      featured: z.boolean().default(false).optional(),
+    }),
+  ),
+})
+
+export const collections = { pages, blog, projects, books, whitepapers }

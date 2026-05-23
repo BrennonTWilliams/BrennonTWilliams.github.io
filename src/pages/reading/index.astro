@@ -1,0 +1,161 @@
+---
+import { getCollection } from 'astro:content'
+import EditorialLayout from '@/layouts/EditorialLayout.astro'
+import EdSectionHeader from '@/components/EdSectionHeader.astro'
+import siteConfig from '@/site-config'
+
+const books = (await getCollection('books')).flatMap(entry => entry.data)
+const whitepapers = (await getCollection('whitepapers')).flatMap(entry => entry.data)
+
+const pad = (n: number) => String(n).padStart(2, '0')
+
+const updated = new Date(`${siteConfig.reading.lastUpdated}T00:00:00Z`)
+const updatedLabel = updated.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  timeZone: 'UTC',
+})
+---
+
+<EditorialLayout
+  title={`Reading · ${siteConfig.author}`}
+  description="Books and whitepapers I keep coming back to — favorites and recommendations."
+  mainWidth="wide"
+>
+  <EdSectionHeader
+    numeral="I"
+    title="Books and papers I keep coming <em>back</em> to."
+    eyebrow="Reading — Nº 04"
+    coord={`Updated ${siteConfig.reading.lastUpdated}`}
+    level={1}
+  />
+
+  <section class="read-block">
+    <div class="read-head">
+      <span class="read-label">Books</span>
+      <span class="read-count">{pad(books.length)}</span>
+    </div>
+    <ul class="read-list">
+      {books.map((book, i) => (
+        <li class="read-row" data-reveal>
+          <span class="read-num">{pad(i + 1)}</span>
+          <div class="read-body">
+            <span class="read-title">{book.title}</span>
+            <span class="read-by">{book.author}</span>
+            {book.note && <p class="read-note">{book.note}</p>}
+          </div>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="read-block">
+    <div class="read-head">
+      <span class="read-label">Whitepapers</span>
+      <span class="read-count">{pad(whitepapers.length)}</span>
+    </div>
+    <ul class="read-list">
+      {whitepapers.map((paper, i) => (
+        <li class="read-row" data-reveal>
+          <span class="read-num">{pad(i + 1)}</span>
+          <div class="read-body">
+            <span class="read-title">{paper.title}</span>
+            <span class="read-by">
+              {[paper.author, String(paper.year)].filter(Boolean).join(' · ')}
+            </span>
+            <p class="read-note">{paper.note}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <p class="coord read-foot">Last updated {updatedLabel}</p>
+</EditorialLayout>
+
+<style>
+  .read-block {
+    margin-bottom: 56px;
+  }
+  .read-head {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 4px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--ink);
+  }
+  .read-label {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .read-count {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--ink-faint);
+  }
+  .read-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .read-row {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    gap: 16px;
+    padding: 20px 4px;
+    border-bottom: 1px solid var(--line);
+  }
+  .read-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-faint);
+    letter-spacing: 0.04em;
+    padding-top: 5px;
+  }
+  .read-body {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .read-title {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.25;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+  .read-by {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--ink-mute);
+    letter-spacing: 0.03em;
+  }
+  .read-note {
+    font-family: var(--body);
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: 62ch;
+    margin: 4px 0 0;
+    text-wrap: pretty;
+  }
+  .read-foot {
+    margin-top: 8px;
+    text-align: right;
+  }
+
+  @media (max-width: 480px) {
+    .read-row {
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+    .read-num { padding-top: 0; }
+  }
+</style>

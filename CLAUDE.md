@@ -85,7 +85,7 @@ Legacy shortcuts removed: `bg-main`, `text-main`, `text-link`, `text-title`, `bo
 **Static routes:**
 - `/` — homepage, full-bleed sections (uses `noMainWrapper={true}` and puts `id="main"` on the hero)
 - `/projects/` — projects index (editorial list, Archive divider on status transition)
-- `/now/` — Now page, fed from `siteConfig.now`
+- `/reading/` — Reading page, an editorial list of favorite books + whitepapers, fed from the `books` / `whitepapers` collections
 - `/404.astro` — `noindex={true}`, two pill CTAs
 - `/robots.txt.ts`, `/rss.xml.ts` — generated
 
@@ -104,6 +104,10 @@ Markdown plugins wired in `astro.config.ts`: `rehype-slug` + `rehype-autolink-he
 - **`projects`** — required: `title`, `summary`, `status` (`active` | `archive`, default `active`). Optional: `category`, `stack: string[]`, `repo`, `website`, `icon`, `svg`, `order`, `flagship`, `link: { href, label }`, `draft`.
   - `link.href` is the primary outbound link on the detail page (rendered as `btn-primary`).
 - **`pages`** — required: `title`. Optional: `description`, `image`.
+- **`books`** / **`whitepapers`** — `type: 'data'` collections. Each is a single YAML file (`src/content/books/books.yaml`, `src/content/whitepapers/whitepapers.yaml`) holding a top-level array; the schema is `z.array(...)` and pages flatten entries with `.flatMap(e => e.data)`.
+  - `books` item: `title`, `author` (req); `note`, `featured` (opt).
+  - `whitepapers` item: `title`, `year`, `category`, `note` (req); `author`, `featured` (opt).
+  - `featured: true` surfaces an item in the homepage Reading strip (Section IV).
 
 ### Data utilities (`src/utils/`)
 
@@ -118,10 +122,10 @@ Markdown plugins wired in `astro.config.ts`: `rehype-slug` + `rehype-autolink-he
 
 ### Site config (`src/site-config.ts`)
 
-Single source of truth for nav, social, editorial chrome strings, and Now-page entries.
+Single source of truth for nav, social, and editorial chrome strings.
 
 - `editorial` — `volume`, `issue`, `series`, `filedUnder`, `location`, `coords`, `liveStatus`, `sideRails.{left,right}`. Components read from here; bump volume/issue in one place.
-- `now` — `lastUpdated` (manual signal, bump when entries change) + `entries[]` (`kind`, `title` (may contain raw `<em>`), `meta`)
+- `reading` — `lastUpdated` (manual signal, bump when the books/whitepapers lists change). The list content lives in the `books` / `whitepapers` collections. `astro.config.ts`'s `readingFreshnessCheck` warns if this date drifts > 14 days behind the config file mtime.
 - Internal route `href`s end in `/` (matches Astro's directory build, avoids GH Pages 301)
 
 ## Development Guidelines
@@ -173,6 +177,33 @@ draft: false
 ```
 
 The card title may contain raw `<em>` for coral italic; `WorkCard.vue` `v-html`s it.
+
+### Adding a book or whitepaper
+
+Append a block to the relevant YAML file — no new file needed.
+
+- **Book** → `src/content/books/books.yaml`:
+
+  ```yaml
+  - title: "Book Title"
+    author: "Author Name"
+    note: "Optional — one line on why it stays on the shelf."
+    featured: true   # optional — surfaces in the homepage Reading strip
+  ```
+
+- **Whitepaper** → `src/content/whitepapers/whitepapers.yaml`:
+
+  ```yaml
+  - title: "Paper Title"
+    author: "Author et al."   # optional — omit if none
+    year: 2026
+    category: "Reasoning & Cognition"
+    note: "Required — one line on why it matters."
+    featured: true            # optional
+  ```
+
+Bump `siteConfig.reading.lastUpdated` when the lists change. Plain text only —
+titles are not `v-html`'d, so no raw `<em>`.
 
 ### Styling patterns
 

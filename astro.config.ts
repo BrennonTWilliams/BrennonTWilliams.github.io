@@ -21,13 +21,13 @@ function shortGitHash(): string {
 
 /**
  * Warn when src/site-config.ts has been edited more than 14 days after
- * `siteConfig.now.lastUpdated`. Signal: nav/issue/volume got bumped but the
- * Now block was forgotten. Fires once at config:setup so it's visible in dev
- * server boot and at build start.
+ * `siteConfig.reading.lastUpdated`. Signal: nav/issue/volume got bumped but the
+ * Reading lists were forgotten. Fires once at config:setup so it's visible in
+ * dev server boot and at build start.
  */
-function nowFreshnessCheck(): AstroIntegration {
+function readingFreshnessCheck(): AstroIntegration {
   return {
-    name: 'now-freshness-check',
+    name: 'reading-freshness-check',
     hooks: {
       'astro:config:setup': ({ config, logger }) => {
         try {
@@ -42,8 +42,8 @@ function nowFreshnessCheck(): AstroIntegration {
 
           if (diffDays > 14) {
             logger.warn(
-              `siteConfig.now.lastUpdated is ${Math.floor(diffDays)} days behind src/site-config.ts mtime — `
-              + `bump the date and refresh the Now entries.`,
+              `siteConfig.reading.lastUpdated is ${Math.floor(diffDays)} days behind src/site-config.ts mtime — `
+              + `bump the date and refresh the Reading lists.`,
             )
           }
         }
@@ -72,7 +72,7 @@ export default defineConfig({
       injectReset: true,
     }),
     vue(),
-    nowFreshnessCheck(),
+    readingFreshnessCheck(),
   ],
   markdown: {
     shikiConfig: {

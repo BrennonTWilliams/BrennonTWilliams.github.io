@@ -23,8 +23,8 @@ function isCurrent(href: string): boolean {
     return props.currentPath === '/'
   if (href === '/blog/')
     return props.currentPath.startsWith('/blog') || props.currentPath.startsWith('/posts')
-  if (href === '/now/')
-    return props.currentPath.startsWith('/now')
+  if (href === '/reading/')
+    return props.currentPath.startsWith('/reading')
   if (href === '/projects/')
     return props.currentPath.startsWith('/projects')
   return props.currentPath === href

@@ -24,3 +24,10 @@ project-cards-cover-art/
 
 # Terminal recordings
 hitl-compare.Cast
+
+# Internal working docs / drafts (not part of the published site)
+docs/
+/*.md
+!README.md
+!CLAUDE.md
+!CHANGELOG.md

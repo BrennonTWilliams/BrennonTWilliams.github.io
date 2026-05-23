@@ -43,8 +43,8 @@ function isCurrent(href: string): boolean {
   if (href === '/blog/') {
     return currentPath.value.startsWith('/blog') || currentPath.value.startsWith('/posts')
   }
-  if (href === '/now/') {
-    return currentPath.value.startsWith('/now')
+  if (href === '/reading/') {
+    return currentPath.value.startsWith('/reading')
   }
   if (href === '/projects/') {
     return currentPath.value.startsWith('/projects')
@@ -53,7 +53,6 @@ function isCurrent(href: string): boolean {
 }
 
 function countFor(text: string): number | undefined {
-  if (text === 'Work') return props.workCount
   if (text === 'Writing') return props.writingCount
   if (text === 'Projects') return props.workCount
   return undefined
