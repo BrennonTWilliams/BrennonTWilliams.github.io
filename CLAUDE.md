@@ -77,7 +77,7 @@ Legacy shortcuts removed: `bg-main`, `text-main`, `text-link`, `text-title`, `bo
 
 **Global styles** (`src/styles/`):
 - `tokens.css` — palettes (Paper light + Ink dark via `html.dark`), motion vars, z-index scale, type/spacing, safe-area insets
-- `global.css` — `@font-face`, paper grain overlay, `.js`-gated reveal animations, scroll-padding-top, smooth scroll under reduced-motion gate, skip-link, `:focus-visible`, marquee/pulse keyframes, view-transition stacking, print stylesheet
+- `global.css` — `@font-face`, paper grain overlay, `.js`-gated reveal animations, scroll-padding-top, smooth scroll under reduced-motion gate, skip-link, `:focus-visible`, marquee keyframe, view-transition stacking, print stylesheet
 - `prose.css` — coral italic emphasis in headings, coral underlined links, bone code/quote panels, heading anchor styles for `rehype-autolink-headings`, optional `.lede` drop cap, `hyphens: auto`
 
 ### Routing
@@ -124,7 +124,7 @@ Markdown plugins wired in `astro.config.ts`: `rehype-slug` + `rehype-autolink-he
 
 Single source of truth for nav, social, and editorial chrome strings.
 
-- `editorial` — `volume`, `issue`, `series`, `filedUnder`, `location`, `coords`, `liveStatus`, `sideRails.{left,right}`. Components read from here; bump volume/issue in one place.
+- `editorial` — `volume`, `issue`, `series`, `filedUnder`, `location`, `coords`, `sideRails.{left,right}`. Components read from here; bump volume/issue in one place.
 - `reading` — `lastUpdated` (manual signal, bump when the books/whitepapers lists change). The list content lives in the `books` / `whitepapers` collections. `astro.config.ts`'s `readingFreshnessCheck` warns if this date drifts > 14 days behind the config file mtime.
 - Internal route `href`s end in `/` (matches Astro's directory build, avoids GH Pages 301)
 

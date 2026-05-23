@@ -191,11 +191,6 @@ html.dark ::selection { background: rgba(237, 111, 92, 0.28); color: var(--ink);
 
 /* ---------- keyframes ---------- */
 
-@keyframes pulse {
-  0%, 100% { opacity: 1;    transform: scale(1); }
-  50%      { opacity: 0.55; transform: scale(0.78); }
-}
-
 @keyframes marquee {
   to { transform: translateX(-50%); }
 }

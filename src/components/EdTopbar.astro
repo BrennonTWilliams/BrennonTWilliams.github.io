@@ -1,6 +1,18 @@
 ---
 import siteConfig from '@/site-config'
-const { volume, issue, filedUnder, location, liveStatus } = siteConfig.editorial
+import { getPosts } from '@/utils/posts'
+
+const { volume, issue, filedUnder, location } = siteConfig.editorial
+
+const posts = await getPosts()
+const latestFiled = posts[0]?.data.dateRaw
+const dateline = latestFiled
+  ? latestFiled.toLocaleDateString('en-US', {
+      day: 'numeric',
+      month: 'short',
+      timeZone: 'UTC',
+    })
+  : null
 ---
 
 <div class="ed-topbar">
@@ -11,9 +23,9 @@ const { volume, issue, filedUnder, location, liveStatus } = siteConfig.editorial
       <span>{location}</span>
     </span>
     <span class="right">
-      <a class="topbar-link" href="/#now">
-        <span class="pulse"></span>Live · <span>{liveStatus}</span>
-      </a>
+      {dateline && (
+        <span class="dateline">Last filed · <b>{dateline}</b></span>
+      )}
       <span class="locale-switch">
         <b>EN</b>
       </span>
@@ -48,35 +60,7 @@ const { volume, issue, filedUnder, location, liveStatus } = siteConfig.editorial
   .topbar-inner .right { display: inline-flex; gap: 18px; align-items: center; }
   .topbar-inner > span,
   .topbar-inner .mid > span,
-  .topbar-inner .right > span,
-  .topbar-inner .right > a { white-space: nowrap; }
-
-  .topbar-link {
-    color: inherit;
-    text-decoration: none;
-    border-bottom: 1px solid transparent;
-    transition: color var(--dur-base) var(--ease-standard),
-                border-color var(--dur-base) var(--ease-standard);
-  }
-  @media (hover: hover) and (pointer: fine) {
-    .topbar-link:hover {
-      color: var(--coral);
-      border-bottom-color: var(--coral);
-    }
-  }
-
-  .pulse {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--coral);
-    display: inline-block;
-    margin-right: 6px;
-    animation: pulse 2.4s ease-in-out infinite;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .pulse { animation: none; }
-  }
+  .topbar-inner .right > span { white-space: nowrap; }
 
   @media (max-width: 980px) {
     .topbar-inner .mid { display: none; }
