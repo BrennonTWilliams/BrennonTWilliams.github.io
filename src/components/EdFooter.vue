@@ -28,9 +28,10 @@ const year = new Date().getUTCFullYear()
           <h4>Index</h4>
           <ul>
             <li><a href="/#about" @click="onHashClick($event)">About</a></li>
-            <li><a href="/#work" @click="onHashClick($event)">Selected Work</a></li>
             <li><a href="/blog/">Writing</a></li>
-            <li><a href="/now/">Now</a></li>
+            <li><a href="/reading/">Reading</a></li>
+            <li><a href="/projects/">Projects</a></li>
+            <li><a href="/cv/">CV</a></li>
             <li><a href="/#contact" @click="onHashClick($event)">Contact</a></li>
           </ul>
         </div>
