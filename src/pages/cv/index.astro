@@ -1,0 +1,502 @@
+---
+import EditorialLayout from '@/layouts/EditorialLayout.astro'
+import EdSectionHeader from '@/components/EdSectionHeader.astro'
+import siteConfig from '@/site-config'
+
+const updated = '2026-05-22'
+
+const experience = [
+  {
+    role: 'AI Architect, prev. Team Lead',
+    company: 'Headstorm',
+    location: 'Dallas, TX',
+    dates: 'May 2022 — Present',
+    bullets: [
+      'Headstorm is a technology consulting firm that provides full-service product and engineering capabilities from strategy through implementation.',
+      'AI Architect (March 2025 — Present): lead AI architecture and delivery across client engagements.',
+      'Team Lead (May 2022 — March 2025): led a delivery team across product and engineering work for client projects.',
+    ],
+  },
+  {
+    role: 'Product Manager',
+    company: 'HealthMine Inc',
+    location: 'Dallas, TX',
+    dates: 'January 2019 — May 2022',
+    bullets: [
+      'HealthMine flags members likely to have an undiagnosed medical condition using large-scale data, then builds health action plans and patient monitoring tailored to each individual to maximize quality of care and minimize cost.',
+      'Own vision, strategy, market fit, feature ideation and prioritization, road mapping, and shared engineering team management for the product squad.',
+      'Oversee technical documentation; rewrote our core docs to explain the models, data collection, analysis, and care-plan logic in lay terms.',
+      'Manage the First-Time Experience (FTE) data collection procedure — the single most valuable data source on patients.',
+      'Partner with the CTO on engineering operations, including writing stories for new features and technical-debt reduction.',
+      'Overhauled and redesigned the device integration and patient device tracking system.',
+      'Own our industry-leading, NCQA-certified Health Risk Assessment product; implemented an update process across Product, Engineering, Clinical, Client Services, Marketing, and Business Architecture. Under this direction the HRA scored 100% on NCQA certification.',
+    ],
+  },
+  {
+    role: 'Software Engineer',
+    company: 'Convene Inc',
+    location: 'New York, NY',
+    dates: 'September 2017 — January 2019',
+    bullets: [
+      'Convene is a leader in real-estate technology and coworking; raised a $152M Series D and made Forbes’ top-ten places to work in New York.',
+      'One of the first on-site engineers on the Enterprise Software team — sole developer on a team of six, the only person writing backend code.',
+      'Built an AWS Lambda microservice for the Elevate team — an "operating system for large office buildings" — that retrieved and assembled data for the app’s food and beverage component, plus a Clover POS integration proof-of-concept.',
+      'Built a microservice to create, save, and send invoices for Convene clients (many Fortune 500), and a Salesforce platform integration.',
+      'Built a reporting microservice that pulls usage, bookings, and visitor logs and emails weekly reports to Sales and Data Science.',
+      'Built the True Occupancy Tool (true-occupancy.convene.com) in Vue + D3 for Sales — visually compares the total cost of a traditional lease to Convene products using city-level data and user inputs.',
+    ],
+  },
+  {
+    role: 'Software Engineering Intern',
+    company: 'Dialexa Inc',
+    location: 'Dallas, TX',
+    dates: 'Summer 2016',
+    bullets: [
+      'Joined the hardware engineering team to write firmware for a Bluetooth-enabled hookah charcoal replacement device, EasyCharcoal.',
+      'Built firmware on Mbed + a Nordic NRF51 board. Settings (session size, heat) were configured over Bluetooth from a smartphone; an onboard barometer and thermometer detected a draw and modulated the heating element in real time.',
+      'After the EasyCharcoal project, joined a VR team and spent the rest of the summer building a VR drone simulator for client demos in Unity + C#.',
+    ],
+  },
+  {
+    role: 'Software Engineering Intern, then Contractor',
+    company: 'Jobscience Inc',
+    location: 'San Francisco, CA',
+    dates: '2015',
+    bullets: [
+      'Extended and maintained the Jobscience product suite alongside a small team of developers.',
+      'Primarily Salesforce APEX and JavaScript; also wrote Python scripts to automate tedious tasks.',
+      'Wrote and conducted load tests for new and existing products.',
+      'Automated version control and deployment, saving my supervisor an estimated 4–6 hours a week.',
+      'Asked to continue as a part-time remote contractor through the following college semester, focused on bug fixes.',
+    ],
+  },
+  {
+    role: 'Software Engineering Student',
+    company: 'DEV Bootcamp',
+    location: 'San Francisco, CA',
+    dates: 'Summer 2014',
+    bullets: [
+      'Roughly 100 hours/week of programming with heavy emphasis on Ruby and JavaScript.',
+      'Built proficiency with front-end development in CSS and HTML.',
+      'Pair-programmed on ≈75% of projects using driver-navigator roles.',
+      'Regularly presented programming topics — database eager loading, iPhone app development with RubyMotion.',
+      'Built FrogPress, an educational tool for students to submit essays for grading and feedback. Owned text analysis (Flesch-Kincaid, etc.) and data visualization; used TDD throughout.',
+    ],
+  },
+  {
+    role: 'Software Engineering Intern',
+    company: 'IDEO Toy Lab',
+    location: 'Palo Alto, CA',
+    dates: '2012 — 2013',
+    bullets: [
+      'Designed, implemented, and tested electronics in dozens of prototypes.',
+      'Applied skills to confidential toy projects delivered to clients including Sesame Street and Mattel.',
+      'Built Arduino- and PIC-microcontroller-based "play patterns" for new-to-world toys.',
+      'Designed a custom PCB for internal use in the IDEO Electrical Engineering Lab.',
+      'Invited to stay on part-time for another year at the end of the summer internship.',
+    ],
+  },
+  {
+    role: 'Software Engineering Intern',
+    company: 'Bespoke Innovations, LLC',
+    location: 'San Francisco, CA',
+    dates: 'Summer 2011',
+    bullets: [
+      'Returned for a second summer alongside a team of Stanford and Carnegie Mellon students.',
+      'Helped deliver a 3D scanning application with iPad support.',
+      'Worked closely with Bob Vallone (former CTO of TiVo) on the scanning system’s user interface.',
+    ],
+  },
+  {
+    role: 'Software Engineering Intern',
+    company: 'Bespoke Innovations, LLC',
+    location: 'San Francisco, CA',
+    dates: 'Summer 2010',
+    bullets: [
+      'Modified and re-engineered 3D structured-light scanners for use scanning patients in a hospital environment.',
+      'Operated under industrial designer Scott Summit (Stanford, Carnegie Mellon, Singularity University ID faculty).',
+      'During my time at Bespoke, the company was featured in a 2010 New York Times article on 3D printing and design.',
+    ],
+  },
+]
+
+const awards = [
+  { year: '2016', text: 'Awarded the Maxwell P. Wilkinson Scholarship for excellence in English.' },
+  { year: '2014', text: 'First place, Washington and Lee Venture Club Mondavi Consultancy Competition.' },
+  { year: '2014', text: 'Peer Counselor of the Year award.' },
+  { year: '2013', text: 'First place, Washington and Lee Annual Student Pitch Competition.' },
+  { year: '2013', text: 'Conceived, designed, and prototyped a sensor that uses timed electrical pulses to identify materials in a fencing sword. Filed by IDEO and approved by USPTO (Patent No. 9358443).' },
+  { year: '2012', text: 'Selected for publication in the Menlo Roundtable, a yearly magazine featuring the top student research papers of the year.' },
+  { year: '2011', text: 'Part of the Bespoke team that won the Industrial Design Society of America Gold Award for our 3D-printed prosthetic fairing.' },
+  { year: '2010', text: 'Profiled by PC World Magazine.' },
+  { year: '2010', text: 'Authored "Beginner Robotics" for the nationally syndicated magazine Servo.' },
+  { year: '2009', text: 'Wrote a chapter of "Internet for All: 32 Visions on the Internet, Technology, and Society," published in Dutch by XS4ALL — juxtaposing the tech generation with my parents’ generation.' },
+  { year: '2009', text: 'Won the Sun Microsystems Digital Open Award for my online robotics-kit business, BW Science Labs. Recognized and interviewed by Boing Boing.' },
+  { year: '2009', text: 'Featured on MAKE Magazine’s site for a lecture on educational pursuits, "If Brennon is our Future…"' },
+]
+
+const projects = [
+  { year: '2017', text: 'Built a VR side project in Unity (C#) that procedurally generates an interactive indoor office environment populated with enemies at runtime, using a modified Binary Space Partitioning algorithm. Nine selectable weapons; players activate a hidden generator. Includes in-game virtual goggles that toggle distortion effects, filters (e.g. Sobel edge), and color shifts.' },
+  { year: '2015', text: 'Led a small W&L Robotics team to develop an aerial drone navigation system using optical flow. Worked closely with Prof. Simon Levy.' },
+  { year: '2013–2015', text: 'Member of the W&L Venture Club Consultancy group consulting on real-world companies and products including Eventuosity — market research and competitor analysis.' },
+  { year: '2014', text: 'Built FrogPress at DEV Bootcamp — an educational tool for students to submit essays for instructor grading and feedback, using metrics like the Flesch-Kincaid score to give educators more objective progress signal.' },
+  { year: '2013', text: 'Developed a crowdsourced 3D printing platform written about by GigaOM, 3D Printer World, and others.' },
+  { year: '2013', text: 'Designed and engineered a wireless, low-cost EKG with a 3D-printed chassis that transmitted data from multiple patients to a monitoring iPad — my Menlo Senior Project.' },
+  { year: '2012–2013', text: 'Designed and built a circuit board that connects to an iPhone via the audio port to create a serial connection — letting sensor data be read by the iPhone and letting the iPhone control external hardware. My Applied Science Research Honors final project.' },
+]
+
+const skills = [
+  'Extensive hands-on experience with plastic 3D printing on the IDEO and Menlo School printers; logged significant time maintaining and repairing a Stratasys Prodigy Plus FDM printer.',
+  'Extensive Arduino and PIC microcontroller wiring and programming — including Bluetooth communications, motor control, and sensor integration.',
+  'Expert with through-hole soldering and breadboarding.',
+  'Some CAD experience with SolidWorks.',
+  'Significant programming experience in C#, Python, Ruby, and JavaScript.',
+]
+
+const education = [
+  {
+    school: 'Washington and Lee University',
+    location: 'Lexington, VA',
+    dates: '2013 — 2017',
+    bullets: [
+      'Double major in Computer Science and English.',
+      'Maxwell P. Wilkinson Scholarship recipient.',
+      'GPA: 3.7',
+    ],
+  },
+  {
+    school: 'Menlo High School',
+    location: 'Atherton, CA',
+    dates: '2006 — 2013',
+    bullets: [
+      'Senior-semester GPA 4.12; cumulative GPA 3.73.',
+      'AP and Honors coursework across both the sciences and the humanities.',
+    ],
+  },
+]
+
+const service = [
+  {
+    org: 'The National Crisis Text Line',
+    location: 'New York, NY',
+    dates: '2018 — Present',
+    body: 'Crisis Counselor for the National Crisis Text Line. Committed 4+ hours per week providing support to people experiencing mental-health crises and other general crises.',
+  },
+  {
+    org: 'W&L Peer Counseling Program',
+    location: 'Lexington, VA',
+    dates: '2014 — 2017',
+    body: 'Over 150 applicants for 11 spots — the most competitive student leadership position at the University. As elected steering committee member, co-responsible for interviewing, hiring, and training new peer counselors. As treasurer, represented the program at the annual Executive Committee budget review and at University health-policy meetings. Won Peer Counselor of the Year (2014) at the W&L LEAD Benefit.',
+  },
+  {
+    org: 'The Office on Youth',
+    location: 'Rockbridge County, VA',
+    dates: '2014',
+    body: 'Worked weekly with elementary school students in an after-school program — tutoring and homework help.',
+  },
+  {
+    org: 'The Riekes Center for Human Enhancement',
+    location: 'Menlo Park, CA',
+    dates: '2010 — 2013',
+    body: 'Youth mentor for at-risk teens and exercise supervisor for patrons after school (≈5–10 hours/week).',
+  },
+]
+
+const pad = (n: number) => String(n).padStart(2, '0')
+
+const updatedLabel = new Date(`${updated}T00:00:00Z`).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  timeZone: 'UTC',
+})
+---
+
+<EditorialLayout
+  title={`CV · ${siteConfig.author}`}
+  description="Curriculum vitae for Brennon Williams — software engineering, product, hardware, and research."
+  mainWidth="wide"
+>
+  <EdSectionHeader
+    numeral="I"
+    title="Curriculum <em>Vitae</em>."
+    eyebrow="CV — Nº 05"
+    coord={`Updated ${updated}`}
+    level={1}
+  />
+
+  <section class="cv-block">
+    <div class="cv-head">
+      <span class="cv-label">Experience</span>
+      <span class="cv-count">{pad(experience.length)}</span>
+    </div>
+    <ol class="cv-list">
+      {experience.map((role, i) => (
+        <li class="cv-row cv-role" data-reveal>
+          <span class="cv-num">{pad(i + 1)}</span>
+          <div class="cv-body">
+            <h3 class="cv-title">
+              {role.role} · <span class="cv-company">{role.company}</span>
+            </h3>
+            <p class="cv-meta">{role.location} · {role.dates}</p>
+            <ul class="cv-bullets">
+              {role.bullets.map(b => <li>{b}</li>)}
+            </ul>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="cv-block">
+    <div class="cv-head">
+      <span class="cv-label">Awards, Authorship &amp; Patents</span>
+      <span class="cv-count">{pad(awards.length)}</span>
+    </div>
+    <ul class="cv-list cv-list--simple">
+      {awards.map((a, i) => (
+        <li class="cv-row cv-row--simple" data-reveal>
+          <span class="cv-num">{pad(i + 1)}</span>
+          <div class="cv-body">
+            <p class="cv-line"><span class="cv-year">{a.year}</span> {a.text}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="cv-block">
+    <div class="cv-head">
+      <span class="cv-label">Notable Projects</span>
+      <span class="cv-count">{pad(projects.length)}</span>
+    </div>
+    <ul class="cv-list cv-list--simple">
+      {projects.map((p, i) => (
+        <li class="cv-row cv-row--simple" data-reveal>
+          <span class="cv-num">{pad(i + 1)}</span>
+          <div class="cv-body">
+            <p class="cv-line"><span class="cv-year">{p.year}</span> {p.text}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="cv-block">
+    <div class="cv-head">
+      <span class="cv-label">Software &amp; Hardware Skills</span>
+      <span class="cv-count">{pad(skills.length)}</span>
+    </div>
+    <ul class="cv-list cv-list--simple">
+      {skills.map((s, i) => (
+        <li class="cv-row cv-row--simple" data-reveal>
+          <span class="cv-num">{pad(i + 1)}</span>
+          <div class="cv-body">
+            <p class="cv-line">{s}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="cv-block">
+    <div class="cv-head">
+      <span class="cv-label">Education</span>
+      <span class="cv-count">{pad(education.length)}</span>
+    </div>
+    <ol class="cv-list">
+      {education.map((ed, i) => (
+        <li class="cv-row cv-role" data-reveal>
+          <span class="cv-num">{pad(i + 1)}</span>
+          <div class="cv-body">
+            <h3 class="cv-title">{ed.school}</h3>
+            <p class="cv-meta">{ed.location} · {ed.dates}</p>
+            <ul class="cv-bullets">
+              {ed.bullets.map(b => <li>{b}</li>)}
+            </ul>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="cv-block">
+    <div class="cv-head">
+      <span class="cv-label">Community Service</span>
+      <span class="cv-count">{pad(service.length)}</span>
+    </div>
+    <ol class="cv-list">
+      {service.map((s, i) => (
+        <li class="cv-row cv-role" data-reveal>
+          <span class="cv-num">{pad(i + 1)}</span>
+          <div class="cv-body">
+            <h3 class="cv-title">{s.org}</h3>
+            <p class="cv-meta">{s.location} · {s.dates}</p>
+            <p class="cv-note">{s.body}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="cv-block">
+    <div class="cv-head">
+      <span class="cv-label">Languages</span>
+    </div>
+    <p class="cv-prose">Working proficiency in Spanish; a strong desire to learn new languages.</p>
+  </section>
+
+  <section class="cv-block">
+    <div class="cv-head">
+      <span class="cv-label">References</span>
+    </div>
+    <p class="cv-prose">Available upon request.</p>
+  </section>
+
+  <p class="coord cv-foot">Last updated {updatedLabel}</p>
+</EditorialLayout>
+
+<style>
+  .cv-block {
+    margin-bottom: 56px;
+  }
+  .cv-head {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 4px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--ink);
+  }
+  .cv-label {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .cv-count {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--ink-faint);
+  }
+  .cv-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .cv-row {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    gap: 16px;
+    padding: 24px 4px;
+    border-bottom: 1px solid var(--line);
+  }
+  .cv-row--simple {
+    padding: 16px 4px;
+  }
+  .cv-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-faint);
+    letter-spacing: 0.04em;
+    padding-top: 6px;
+  }
+  .cv-body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+  }
+  .cv-title {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--ink);
+    margin: 0;
+    text-wrap: balance;
+  }
+  .cv-company {
+    font-style: italic;
+    color: var(--ink);
+  }
+  .cv-meta {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--ink-mute);
+    letter-spacing: 0.03em;
+    margin: 0;
+  }
+  .cv-bullets {
+    list-style: none;
+    margin: 6px 0 0;
+    padding: 0;
+  }
+  .cv-bullets li {
+    position: relative;
+    padding-left: 18px;
+    font-family: var(--body);
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: 64ch;
+    margin: 4px 0;
+    text-wrap: pretty;
+  }
+  .cv-bullets li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--ink-faint);
+    font-family: var(--mono);
+  }
+  .cv-note {
+    font-family: var(--body);
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: 64ch;
+    margin: 4px 0 0;
+    text-wrap: pretty;
+  }
+  .cv-line {
+    font-family: var(--body);
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: 64ch;
+    margin: 0;
+    text-wrap: pretty;
+  }
+  .cv-year {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--ink-mute);
+    letter-spacing: 0.03em;
+    margin-right: 8px;
+    white-space: nowrap;
+  }
+  .cv-prose {
+    font-family: var(--body);
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    max-width: 64ch;
+    margin: 16px 0 0;
+  }
+  .cv-foot {
+    margin-top: 8px;
+    text-align: right;
+  }
+
+  @media (max-width: 480px) {
+    .cv-row {
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+    .cv-num { padding-top: 0; }
+  }
+</style>

@@ -1,0 +1,28 @@
+# Favorite / recommended books. Append a block to add an entry.
+#   title    (required)
+#   author   (required)
+#   note     (optional) — a line on why it stays on the shelf
+#   featured (optional) — surfaces in the homepage Reading strip
+
+- title: "Infinite Jest"
+  author: "David Foster Wallace"
+  featured: true
+
+- title: "Memories, Dreams, Reflections"
+  author: "Carl Gustav Jung"
+  featured: true
+
+- title: "The Verificationist"
+  author: "Donald Antrim"
+
+- title: "The Poetics of Space"
+  author: "Gaston Bachelard"
+
+- title: "London Fields"
+  author: "Martin Amis"
+
+- title: "CivilWarLand in Bad Decline"
+  author: "George Saunders"
+
+- title: "At the Mountains of Madness"
+  author: "H.P. Lovecraft"

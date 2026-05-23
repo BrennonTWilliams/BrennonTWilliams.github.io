@@ -1,10 +1,12 @@
 ---
 title: claude-loop
 category: AI & Dev Tooling
-status: Archive
+status: archive
+order: 15
 repo: https://github.com/BrennonTWilliams/claude-loop
 summary: An early automated Claude Code agent inspired by self-directing AI research, exploring whether Claude could autonomously loop on a task without step-by-step guidance. The direct precursor to little-loops.
 svg: claude-loop.svg
+cover: claude-loop.png
 ---
 
 ## Overview

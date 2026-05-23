@@ -1,12 +1,13 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro'
-import ListPosts from '@/components/ListPosts.vue'
+import EditorialLayout from '@/layouts/EditorialLayout.astro'
+import EdSectionHeader from '@/components/EdSectionHeader.astro'
+import WriteItem from '@/components/WriteItem.vue'
 import siteConfig from '@/site-config'
 import { getPosts } from '@/utils/posts'
 
 export async function getStaticPaths() {
   const paths = siteConfig.page.blogLinks.map((nav) => {
-    const href = nav.href.replace('/blog', '')
+    const href = nav.href.replace(/^\/blog\/?/, '')
     return {
       params: {
         path: href === '' ? undefined : href.replace(/^\/+|\/+$/g, ''),
@@ -17,31 +18,65 @@ export async function getStaticPaths() {
 }
 
 const { path } = Astro.params
-
 const posts = await getPosts(path)
 
-function activeLink(pathname: string) {
-  return Astro.url.pathname.replace(/\/+/g, '/').replace(/\/$/, '') === pathname
+function monthFor(d: Date): string {
+  return d.toLocaleString('en', { month: 'short', timeZone: 'UTC' }).toUpperCase()
 }
 ---
 
-<BaseLayout
+<EditorialLayout
   title="Writing"
-  description="List of all writing posts."
-  width="wide"
+  description="Long-form notes on machine reasoning and local-first software."
+  mainWidth="wide"
 >
-  <div class="flex flex-col gap-2 sm:flex-row sm:gap-4 flex-wrap mb-8">
-    {
-      siteConfig.page.blogLinks.map((nav) => (
-        <a
-          aria-label={nav.text}
-          class={`nav-link text-3xl font-bold ${activeLink(nav.href) ? 'opacity-80' : 'opacity-30 hover:opacity-50'}`}
-          href={nav.href}
-        >
-          {nav.text}
-        </a>
-      ))
-    }
-  </div>
-  <ListPosts list={posts} />
-</BaseLayout>
+  <EdSectionHeader
+    numeral="I"
+    title="Writing — Notes from the <em>lab</em>"
+    eyebrow="Writing"
+    coord={`${posts.length} entries · indexed`}
+  />
+
+  {posts.length === 0 ? (
+    <div class="empty-state">
+      <span class="eyebrow">Empty for now</span>
+      <p class="italic">No posts published yet — drafts in flight.</p>
+    </div>
+  ) : (
+    <div class="writing-grid">
+      {posts.map(post => (
+        <WriteItem
+          year={post.data.dateRaw.getUTCFullYear()}
+          month={monthFor(post.data.dateRaw)}
+          name={post.data.title}
+          desc={post.data.description}
+          tags={post.data.tag ? [post.data.tag] : []}
+          href={`/posts/${post.slug}/`}
+          client:visible
+        />
+      ))}
+    </div>
+  )}
+</EditorialLayout>
+
+<style>
+  .writing-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border-top: 1px solid var(--ink);
+  }
+  @media (max-width: 820px) {
+    .writing-grid { grid-template-columns: 1fr; }
+  }
+  .empty-state {
+    padding: 48px 0;
+    color: var(--ink-mute);
+  }
+  .empty-state p {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 18px;
+    margin-top: 8px;
+  }
+</style>

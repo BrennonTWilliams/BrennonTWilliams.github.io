@@ -1,6 +1,7 @@
 ---
 title: Optimizing Local LLM SVG Code Generation with TextGrad
 date: 2024-12-27
+dateRaw: 2024-12-27
 author: Brennon Williams
 description: An exploration of using TextGrad to improve SVG generation with local LLMs
 tags: ["LLM", "TextGrad", "SVG", "Machine Learning", "AI", "reasoning"]

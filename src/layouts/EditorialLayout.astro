@@ -1,0 +1,97 @@
+---
+import { ViewTransitions } from 'astro:transitions'
+import { getCollection } from 'astro:content'
+import BaseHead from '@/components/BaseHead.astro'
+import EdSideRails from '@/components/EdSideRails.astro'
+import EdTopbar from '@/components/EdTopbar.astro'
+import EdNav from '@/components/EdNav.vue'
+import EdFooter from '@/components/EdFooter.vue'
+import ScrollToTop from '@/components/ScrollToTop.vue'
+import { getPosts } from '@/utils/posts'
+
+interface Props {
+  title?: string
+  description?: string
+  image?: { src: string; alt?: string }
+  socialImage?: { src: string; alt: string }
+  pageType?: 'website' | 'article'
+  mainWidth?: 'prose' | 'wide' | 'wider' | 'full'
+  bodyClass?: string
+  lang?: string
+  noindex?: boolean
+  structuredData?: Record<string, unknown> | null
+  /** When true, the page provides its own `<main id="main">` (homepage uses
+   *  full-bleed sections and wraps the hero with id="main" itself). */
+  noMainWrapper?: boolean
+}
+
+const {
+  mainWidth = 'prose',
+  bodyClass = '',
+  lang = 'en-US',
+  noMainWrapper = false,
+  ...head
+} = Astro.props
+
+const widthClass = {
+  prose: 'main-prose',
+  wide:  'main-wide',
+  wider: 'main-wider',
+  full:  'main-full',
+}[mainWidth]
+
+// Computed nav badge counts — siteConfig can't do this at import time.
+// Stable for any given build (content collection size doesn't change between
+// client-side navs), so passing as props to a persisted island is safe.
+const allProjects = await getCollection('projects')
+const workCount = allProjects.filter(p => !p.data.draft).length
+const writingCount = (await getPosts()).length
+---
+
+<!doctype html>
+<html lang={lang} data-astro-current-path={Astro.url.pathname}>
+  <head>
+    <BaseHead {...head} />
+    <ViewTransitions />
+  </head>
+  <body class={`editorial ${bodyClass}`.trim()}>
+    <a href="#main" class="skip-link">Skip to content</a>
+
+    <EdSideRails />
+
+    <div class="shell">
+      <EdTopbar />
+      <EdNav
+        workCount={workCount}
+        writingCount={writingCount}
+        client:idle
+        transition:persist
+      />
+
+      {noMainWrapper ? (
+        <slot />
+      ) : (
+        <main id="main" class:list={['ed-main', widthClass, 'mx-auto', 'px-6', 'sm:px-8']}>
+          <slot />
+        </main>
+      )}
+
+      <EdFooter />
+    </div>
+
+    <ScrollToTop client:idle transition:persist />
+  </body>
+</html>
+
+<style is:global>
+  .ed-main {
+    padding-top: 48px;
+    padding-bottom: 80px;
+  }
+  @media (min-width: 640px) {
+    .ed-main {
+      padding-top: 64px;
+      padding-bottom: 96px;
+    }
+  }
+</style>

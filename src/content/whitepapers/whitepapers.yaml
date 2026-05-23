@@ -1,0 +1,160 @@
+# Favorite / recommended whitepapers. Append a block to add an entry.
+#   title    (required)
+#   author   (optional) — author(s) / org; omit if none
+#   year     (required)
+#   category (required) — grouping label; kept for data integrity
+#   note     (required) — a line on why it matters
+#   featured (optional) — surfaces in the homepage Reading strip
+
+- title: "The Bitter Lesson"
+  author: "Rich Sutton"
+  year: 2019
+  category: "Reasoning & Cognition"
+  note: "General methods leveraging computation beat hand-crafted structure. Foundational to how I think about AI engineering."
+  featured: true
+
+- title: "Self-Discover: Large Language Models Self-Compose Reasoning Structures"
+  author: "Zhou et al. (DeepMind)"
+  year: 2024
+  category: "Reasoning & Cognition"
+  note: "LLMs compose reasoning modules at query time. Built a prototype implementing this."
+
+- title: "Cognitive Behaviors that Enable Self-Improving Reasoners, or, Four Habits of Highly Effective STaRs"
+  author: "Gandhi et al. (Stanford)"
+  year: 2025
+  category: "Reasoning & Cognition"
+  note: "Four cognitive traits a model needs for self-improving reasoning: Verification, Backtracking, Subgoal Setting, Backward Chaining."
+
+- title: "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning"
+  author: "DeepSeek"
+  year: 2025
+  category: "Reasoning & Cognition"
+  note: "Landmark paper demonstrating RL-based reasoning emergence in open-weight models."
+
+- title: "s1: Simple Test-Time Scaling"
+  year: 2025
+  category: "Reasoning & Cognition"
+  note: "Minimalist approach to test-time compute scaling that matches or exceeds far more complex methods."
+
+- title: "Chain of Draft: Thinking Faster by Writing Less"
+  year: 2025
+  category: "Reasoning & Cognition"
+  note: "LLMs reason effectively with much sparser intermediate steps — an efficiency counterpoint to chain-of-thought."
+
+- title: "Learning to Reason in 13 Parameters (TinyLoRA)"
+  year: 2026
+  category: "Reasoning & Cognition"
+  note: "8B model to 91% GSM8K accuracy with only 13 trainable parameters via RL. arXiv:2602.04118."
+
+- title: "Building Effective AI Agents"
+  author: "Anthropic"
+  year: 2025
+  category: "Agents & Multi-Agent Systems"
+  note: "The canonical practical guide to agent construction. Shaped how the field thinks about agent architectures and the workflow-vs-autonomy spectrum."
+  featured: true
+
+- title: "Why Do Multi-Agent LLM Systems Fail? (MAST)"
+  author: "Cemri et al."
+  year: 2025
+  category: "Agents & Multi-Agent Systems"
+  note: "First failure taxonomy for multi-agent systems: 14 failure modes across 3 categories. A sobering reality check on benchmark gains."
+
+- title: "Multi-agentic Software Development is a Distributed Systems Problem"
+  year: 2025
+  category: "Agents & Multi-Agent Systems"
+  note: "Reframes multi-agent coordination through distributed systems theory: consensus, partial failure, message passing."
+
+- title: "Expensively Quadratic: the LLM Agent Cost Curve"
+  year: 2025
+  category: "Agents & Multi-Agent Systems"
+  note: "Rigorous analysis of why agent costs grow quadratically with complexity. Essential for production agent systems."
+
+- title: "Agentic Software Engineering: Foundational Pillars and a Research Roadmap"
+  year: 2025
+  category: "Agents & Multi-Agent Systems"
+  note: "Comprehensive research agenda at the intersection of agents and software engineering."
+
+- title: "AsymFlow: Asymmetric Flow Models"
+  author: "Hansheng Chen et al. (Stanford/Princeton)"
+  year: 2026
+  category: "Image & Video Generation"
+  note: "1.57 FID on ImageNet 256x256. Introduces a latent-to-pixel finetuning route."
+
+- title: "Verbalized Sampling: How to Mitigate Mode Collapse and Unlock LLM Diversity"
+  author: "Zhang et al."
+  year: 2025
+  category: "Image & Video Generation"
+  note: "Identifies typicality bias as the root cause of mode collapse. Training-free, 1.6-2.1x diversity improvement."
+
+- title: "Specifications: The missing link to making the development of LLM systems an engineering discipline"
+  year: 2025
+  category: "Software Engineering & Spec-Driven Development"
+  note: "Argues that formal specifications are the key to transforming LLM development from alchemy into engineering."
+
+- title: "Spec-Driven Development with AI"
+  author: "Personal synthesis"
+  year: 2025
+  category: "Software Engineering & Spec-Driven Development"
+  note: "Synthesis of 45+ papers on how specifications, formal methods, and AI intersect to create reliable software engineering workflows."
+
+- title: "Augmented Coding: Beyond the Vibes"
+  author: "Kent Beck"
+  year: 2025
+  category: "Software Engineering & Spec-Driven Development"
+  note: "A sober, thoughtful assessment of AI-assisted coding from the creator of Extreme Programming and TDD."
+
+- title: "QualityFlow: An Agentic Workflow for Program Synthesis Controlled by LLM Quality Checks"
+  author: "Hu et al."
+  year: 2025
+  category: "Software Engineering & Spec-Driven Development"
+  note: "SOTA on MBPP and HumanEval. Dynamic quality-check gating for code generation workflows."
+
+- title: "Cognitive Load is What Matters"
+  year: 2024
+  category: "Software Engineering & Spec-Driven Development"
+  note: "The fundamental constraint in software is human working memory, not tool speed or language features."
+
+- title: "Malleable Software in the Age of LLMs"
+  year: 2025
+  category: "Software Engineering & Spec-Driven Development"
+  note: "How LLMs change the nature of software itself — from fixed artifacts to fluid, recomposable systems."
+
+- title: "TextGrad: Automatic Differentiation via Text"
+  year: 2024
+  category: "Training & Optimization"
+  note: "Applies backpropagation-style optimization to text, treating language model outputs as differentiable."
+
+- title: "MegaTrain: Full Precision Training of 100B+ Parameter LLMs on a Single GPU"
+  year: 2026
+  category: "Training & Optimization"
+  note: "120B params on a single H200. 1.84x throughput over DeepSpeed ZeRO-3. arXiv:2604.05091."
+
+- title: "From Local to Global: A GraphRAG Approach to Query-Focused Summarization"
+  author: "Microsoft"
+  year: 2024
+  category: "Knowledge & Context"
+  note: "The paper that launched the GraphRAG paradigm. Directly relevant to the graphrag-claude-code project."
+
+- title: "The Illustrated Transformer"
+  author: "Jay Alammar"
+  year: 2018
+  category: "Knowledge & Context"
+  note: "The most widely referenced educational resource on transformer architecture. Visual clarity on the mechanism that started it all."
+
+- title: "Magic Ink: Information Software and the Graphical Interface"
+  author: "Bret Victor"
+  year: 2006
+  category: "AI & Society"
+  note: "A vision for software as a medium for understanding rather than a toolbox for tasks."
+
+- title: "The Homogenizing Effect of Large Language Models on Human Expression and Thought"
+  author: "Sourati et al."
+  year: 2025
+  category: "AI & Society"
+  note: "Evidence across linguistics, psychology, and CS that LLMs risk standardizing language and reasoning."
+
+- title: "The Space of Minds"
+  author: "Andrej Karpathy"
+  year: 2025
+  category: "AI & Society"
+  note: "A philosophical exploration of what kinds of intelligence are possible, grounding AI capabilities in a broader framework."

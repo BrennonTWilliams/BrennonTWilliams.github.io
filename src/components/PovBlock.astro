@@ -1,6 +1,7 @@
 ---
 // src/components/PovBlock.astro
-// CSS-only infinite carousel - no JavaScript required
+// CSS-only stepped carousel — no JS required.
+// Re-skinned against the Paper/Ink palette (bone surface, coral left rule).
 
 const povItems = [
   { top: 'DYNAMISM', bottom: 'DOGMA' },
@@ -25,11 +26,11 @@ const allItems = [...povItems, ...povItems]
           class="carousel-item flex flex-col items-center justify-center px-3 py-2"
           aria-hidden={index >= povItems.length ? 'true' : undefined}
         >
-          <span class="font-valkyrie-a-caps text-lg leading-tight text-center block">
+          <span class="pov-caps text-lg leading-tight text-center block">
             {item.top}
           </span>
           <div class="divider w-1/3 my-2" />
-          <span class="font-valkyrie-a-caps text-lg leading-tight text-center block">
+          <span class="pov-caps text-lg leading-tight text-center block">
             {item.bottom}
           </span>
         </li>
@@ -42,14 +43,25 @@ const allItems = [...povItems, ...povItems]
   .pov-block-container {
     width: 240px;
     height: 10rem;
+    background: var(--bone);
+    border-left: 2px solid var(--coral);
+    color: var(--ink-soft);
   }
 
   .carousel {
     animation: scroll 16.5s ease-in-out infinite;
   }
 
-  .pov-block-container:hover .carousel {
-    animation-play-state: paused;
+  @media (hover: hover) and (pointer: fine) {
+    .pov-block-container:hover .carousel {
+      animation-play-state: paused;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .carousel {
+      animation: none;
+    }
   }
 
   .carousel-item {
@@ -57,18 +69,17 @@ const allItems = [...povItems, ...povItems]
     flex-shrink: 0;
   }
 
-  /* Font is applied via UnoCSS class 'font-valkyrie-a-caps' */
-  .font-valkyrie-a-caps {
-    font-family: 'Valkyrie B Caps', sans-serif;
+  .pov-caps {
+    font-family: 'Valkyrie B Caps', 'Inter Tight', sans-serif;
+    letter-spacing: 0.18em;
+    color: var(--ink);
   }
 
-  /* Style the divider div */
   .carousel-item .divider {
     height: 1px;
-    background-color: currentColor;
+    background-color: var(--coral);
   }
 
-  /* Ensure text is properly contained */
   .carousel-item span {
     max-width: 100%;
     word-wrap: break-word;
@@ -77,16 +88,16 @@ const allItems = [...povItems, ...povItems]
   }
 
   /*
-   * Stepped animation: pause at each item, then move to next
-   * 5 items × (3s pause + 0.3s transition) = 16.5s total
-   * Each item: 240px width + 10px gap = 250px
+   * Stepped animation: pause at each item, then move to next.
+   * 5 items × (3s pause + 0.3s transition) = 16.5s total.
+   * Each item: 240px width + 10px gap = 250px.
    */
   @keyframes scroll {
-    0%, 18% { transform: translateX(0); }
-    20%, 38% { transform: translateX(-250px); }
-    40%, 58% { transform: translateX(-500px); }
-    60%, 78% { transform: translateX(-750px); }
-    80%, 98% { transform: translateX(-1000px); }
-    100% { transform: translateX(-1250px); }
+    0%, 18%   { transform: translateX(0); }
+    20%, 38%  { transform: translateX(-250px); }
+    40%, 58%  { transform: translateX(-500px); }
+    60%, 78%  { transform: translateX(-750px); }
+    80%, 98%  { transform: translateX(-1000px); }
+    100%      { transform: translateX(-1250px); }
   }
 </style>

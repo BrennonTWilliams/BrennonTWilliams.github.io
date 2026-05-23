@@ -1,11 +1,13 @@
 ---
 title: deep-codebase
 category: AI & Dev Tooling
-status: Active
+status: active
+order: 4
 website: https://deep-codebase.com
 summary: A CLI tool that uses Tree-sitter parsing and Claude AI to extract working implementations and map architectures from any open-source codebase. Produces byte-accurate snippets, dependency chains, and integration notes — built for developers who need code, not documentation.
 icon: i-lucide-search-code
 svg: deep-codebase.png
+cover: deep-codebase.jpg
 ---
 
 ## Overview

@@ -1,10 +1,11 @@
 ---
 title: UntieAnimation
 category: Game AI
-status: Archive
+status: archive
+order: 14
 repo: https://github.com/BrennonTWilliams/untie-ai
 summary: A Unity animation framework that decouples AI decisions from animation logic. The agent emits named actions; physics-aware blending, predictive transitions, and editor-driven configuration handle everything that follows.
-svg: untie-animation.svg
+cover: untie-animation.jpg
 ---
 
 ## Overview

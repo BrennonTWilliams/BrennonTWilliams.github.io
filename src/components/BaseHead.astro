@@ -1,96 +1,162 @@
 ---
 import siteConfig from '@/site-config'
+import '@/styles/tokens.css'
 import '@/styles/global.css'
 import '@/styles/prose.css'
-import '@/styles/dot.css'
 
 interface Props {
   title?: string
   description?: string
   image?: { src: string; alt?: string }
+  socialImage?: { src: string; alt: string }
   pageType?: 'website' | 'article'
+  noindex?: boolean
+  structuredData?: Record<string, unknown> | null
 }
 
 const {
-  description = '',
-  image = siteConfig.image,
+  description = siteConfig.description,
+  image,
+  socialImage,
   pageType = 'website',
+  noindex = false,
+  structuredData = null,
 } = Astro.props
 
 const title = [Astro.props.title, siteConfig.title].filter(Boolean).join(' | ')
 
-const resolvedImage = image?.src
-  ? {
-      src: new URL(image.src, Astro.site).toString(),
-      alt: image.alt,
-    }
-  : undefined
-
 const canonicalURL = new URL(Astro.request.url, Astro.site)
-
 function formatCanonicalURL(url: string | URL) {
   let path = url.toString()
   const hasQueryParams = path.includes('?')
   if (hasQueryParams) path = path.replace(/\/?$/, '')
   return path.replace(/\/?$/, hasQueryParams ? '' : '/')
 }
+
+const ogImage = socialImage
+  ?? (image?.src ? { src: image.src, alt: image.alt ?? siteConfig.title } : null)
+  ?? { src: '/og-image.png', alt: 'Brennon Williams — I wonder what the machines think.' }
+
+const absoluteOgImage = new URL(ogImage.src, Astro.site).toString()
+
+const personLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: siteConfig.author,
+  jobTitle: 'AI/ML Software Architect',
+  url: Astro.site?.toString(),
+  email: siteConfig.email,
+  sameAs: siteConfig.socialLinks?.map(l => l.href) ?? [],
+}
 ---
 
 <!-- High Priority Global Metadata -->
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>{title}</title>
 <meta name="generator" content={Astro.generator} />
 
-<!-- Low Priority Global Metadata -->
+<!-- Theme color — flips with light/dark preference -->
+<meta name="theme-color" content="#efe7d2" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#15140f" media="(prefers-color-scheme: dark)" />
+
+<!-- Brand assets / manifest -->
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/manifest.json" />
 <link rel="sitemap" href="/sitemap-index.xml" />
 <link rel="alternate" type="application/rss+xml" href="/rss.xml" title="RSS" />
 
-<!-- Preload Critical Fonts -->
-<link
-  rel="preload"
-  href="/fonts/WOFF2/Valkyrie B/valkyrie_b_regular.woff2"
-  as="font"
-  type="font/woff2"
-  crossorigin
-/>
-<link
-  rel="preload"
-  href="/fonts/WOFF2/Valkyrie B/valkyrie_b_bold.woff2"
-  as="font"
-  type="font/woff2"
-  crossorigin
-/>
+<!-- Preload Critical Fonts (CORS required so @font-face consumes the same request) -->
+<link rel="preload" href="/fonts/WOFF2/Valkyrie B/valkyrie_b_regular.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/fonts/WOFF2/Valkyrie B/valkyrie_b_italic.woff2"  as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/fonts/WOFF2/Valkyrie B/valkyrie_b_bold.woff2"    as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/fonts/WOFF2/Valkyrie B Caps/valkyrie_b_caps_regular.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/fonts/WOFF2/Inter Tight/InterTight-Latin.woff2" as="font" type="font/woff2" crossorigin />
 
 <!-- Page Metadata -->
 <link rel="canonical" href={formatCanonicalURL(canonicalURL)} />
 <meta name="description" content={description} />
+{noindex && <meta name="robots" content="noindex,nofollow" />}
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content={pageType} />
-<meta property="og:url" content={formatCanonicalURL(canonicalURL)} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
-{resolvedImage?.src && <meta property="og:image" content={resolvedImage.src} />}
-{
-  resolvedImage?.alt && (
-    <meta property="og:image:alt" content={resolvedImage.alt} />
-  )
-}
+<meta property="og:url" content={formatCanonicalURL(canonicalURL)} />
+<meta property="og:site_name" content="Brennon Williams" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:image" content={absoluteOgImage} />
+<meta property="og:image:alt" content={ogImage.alt} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:type" content="image/png" />
 
 <!-- X / Twitter -->
-<meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:url" content={formatCanonicalURL(canonicalURL)} />
-<meta property="twitter:title" content={title} />
-<meta property="twitter:description" content={description} />
-{
-  resolvedImage?.src && (
-    <meta property="twitter:image" content={resolvedImage.src} />
-  )
-}
-{
-  resolvedImage?.alt && (
-    <meta name="twitter:image:alt" content={resolvedImage?.alt} />
-  )
-}
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={absoluteOgImage} />
+<meta name="twitter:image:alt" content={ogImage.alt} />
+
+<!-- Inline no-flash theme script + .js class flag.
+     Runs before first paint so Ink mode and reveal-gated content paint correctly. -->
+<script is:inline>
+  (function applyTheme() {
+    try {
+      var stored = localStorage.getItem('vueuse-color-scheme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var isDark = stored === 'dark' || ((stored === null || stored === 'auto') && prefersDark);
+      document.documentElement.classList.toggle('dark', isDark);
+    } catch (e) { /* storage blocked (Safari private mode etc.) — fall through to Paper. */ }
+    document.documentElement.classList.add('js');
+  })();
+  // Re-apply after Astro view transitions (inline script tag is replaced during swap).
+  document.addEventListener('astro:after-swap', function () {
+    try {
+      var stored = localStorage.getItem('vueuse-color-scheme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var isDark = stored === 'dark' || ((stored === null || stored === 'auto') && prefersDark);
+      document.documentElement.classList.toggle('dark', isDark);
+    } catch (e) {}
+  });
+</script>
+
+<!-- Reveal observer — wired site-wide so [data-reveal] works on every page,
+     including after view-transition swaps. -->
+<script is:inline>
+  (function registerReveals() {
+    function reveal(root) {
+      var els = (root || document).querySelectorAll('[data-reveal]:not([data-revealed])');
+      if (!els.length) return;
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce || !('IntersectionObserver' in window)) {
+        for (var i = 0; i < els.length; i++) els[i].dataset.revealed = 'true';
+        return;
+      }
+      var io = new IntersectionObserver(function (entries) {
+        for (var j = 0; j < entries.length; j++) {
+          var e = entries[j];
+          if (e.isIntersecting) {
+            e.target.dataset.revealed = 'true';
+            io.unobserve(e.target);
+          }
+        }
+      }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+      for (var k = 0; k < els.length; k++) io.observe(els[k]);
+    }
+    document.addEventListener('astro:page-load', function () { reveal(); });
+    if (document.readyState !== 'loading') reveal();
+    else document.addEventListener('DOMContentLoaded', function () { reveal(); });
+  })();
+</script>
+
+<!-- ThemeToggle is meaningless without JS — hide it for JS-off readers. -->
+<noscript>
+  <style>.theme-toggle { display: none !important; }</style>
+</noscript>
+
+<!-- Structured data: Person (site-wide) and optional per-page extra (e.g. BlogPosting). -->
+<script type="application/ld+json" set:html={JSON.stringify(personLd)} />
+{structuredData && <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />}

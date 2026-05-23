@@ -1,0 +1,98 @@
+/* ---------------------------------------------------------------------------
+ * tokens.css — canonical theme. Imported before global.css.
+ *
+ * Rule: never hardcode durations, easings, z-indexes, or hero-scale type
+ * clamps in component CSS — always reference a token here. UnoCSS shortcuts
+ * read from these vars so theme toggling is free.
+ * ------------------------------------------------------------------------- */
+
+:root {
+  /* ---------- Paper (light) palette ---------- */
+  --paper:      #efe7d2;
+  --paper-warm: #ece4cf;
+  --paper-dark: #ddd2b6;
+  --bone:       #f7f1de;
+  --ink:        #15140f;
+  --ink-soft:   #2a2620;
+  --ink-mute:   #5a5448;
+  --ink-faint:  #8b8676;
+  --coral:      #ed6f5c;     /* accent — never use for sustained body copy
+                                (~3.0:1 on paper, fails WCAG AA for body). */
+  --coral-soft: #f08e7c;
+  --mustard:    #e9b94a;
+  --olive:      #6e7448;
+  --line:       rgba(21, 20, 15, 0.16);
+  --line-soft:  rgba(21, 20, 15, 0.08);
+  --line-faint: rgba(21, 20, 15, 0.05);
+  --shadow:     0 30px 60px -30px rgba(21, 20, 15, 0.18);
+
+  /* ---------- Font stacks ----------
+   * Self-hosted: Valkyrie B, Valkyrie B Caps, Inter Tight (latin subset, variable),
+   * DM Mono (via UnoCSS presetWebFonts). No Playfair Display or JetBrains Mono.
+   */
+  --serif: 'Valkyrie B', 'Times New Roman', serif;
+  --sans:  'Inter Tight', 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --body:  'Valkyrie B', 'Times New Roman', serif;
+  --caps:  'Valkyrie B Caps', 'Inter Tight', sans-serif;
+  --mono:  'DM Mono', 'SF Mono', Menlo, monospace;
+
+  /* ---------- Motion ---------- */
+  --dur-fast:    120ms;
+  --dur-base:    200ms;
+  --dur-slow:    360ms;
+  --dur-marquee: 60s;
+  --ease-standard:   cubic-bezier(0.2, 0, 0.2, 1);
+  --ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
+  --ease-linear:     linear;
+
+  /* ---------- Z-index scale ---------- */
+  --z-base:            0;
+  --z-grain:           1;
+  --z-shell:           2;
+  --z-side-rails:     10;
+  --z-scroll-top:     40;
+  --z-topbar:         50;
+  --z-nav:            60;
+  --z-drawer-backdrop: 80;
+  --z-drawer:         81;
+  --z-skip-link:     100;
+
+  /* ---------- Type & spacing scale ---------- */
+  --fs-display: clamp(48px, 7.6vw, 112px);
+  --fs-h1:      clamp(36px, 5vw, 64px);
+  --fs-h2:      clamp(28px, 3.4vw, 44px);
+  --fs-h3:      22px;
+  --fs-body:    17px;
+  --fs-ui:      15px;
+  --fs-caps:    10.5px;
+
+  --space-section: clamp(64px, 9vw, 128px);
+  --space-block:   clamp(32px, 4vw, 56px);
+  --space-row:     24px;
+
+  /* ---------- iOS safe-area (requires viewport-fit=cover) ---------- */
+  --safe-top:    env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left:   env(safe-area-inset-left, 0px);
+  --safe-right:  env(safe-area-inset-right, 0px);
+}
+
+/* ---------- Ink (dark) palette — wired to html.dark per ThemeToggle ---------- */
+html.dark {
+  --paper:      #15140f;
+  --paper-warm: #1d1b15;
+  --paper-dark: #2a2620;
+  --bone:       #1d1b15;
+
+  --ink:        #efe7d2;
+  --ink-soft:   #ddd2b6;
+  --ink-mute:   #aaa28a;
+  --ink-faint:  #6d695c;
+
+  --line:       rgba(239, 231, 210, 0.18);
+  --line-soft:  rgba(239, 231, 210, 0.08);
+  --line-faint: rgba(239, 231, 210, 0.05);
+
+  --shadow:     0 30px 60px -30px rgba(0, 0, 0, 0.6);
+  /* --coral stays #ed6f5c — reads well on both surfaces. */
+}

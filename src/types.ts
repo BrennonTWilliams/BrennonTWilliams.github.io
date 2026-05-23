@@ -12,6 +12,14 @@ export type ProjectKey = 'projects'
 
 export type CollectionProjects = CollectionEntry<ProjectKey>
 
+export type BooksKey = 'books'
+
+export type CollectionBooks = CollectionEntry<BooksKey>
+
+export type WhitepapersKey = 'whitepapers'
+
+export type CollectionWhitepapers = CollectionEntry<WhitepapersKey>
+
 export interface NavLink {
   text: string
   href: string

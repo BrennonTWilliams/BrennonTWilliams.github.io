@@ -7,7 +7,7 @@ import globals from "globals";
 export default tseslint.config(
   // Global ignores
   {
-    ignores: ["dist/", ".astro/", "node_modules/", "**/*.css"],
+    ignores: ["dist/", ".astro/", "node_modules/", "**/*.css", "**/*.d.ts"],
   },
 
   // ESLint recommended rules (base)
