@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content'
 import EditorialLayout from '@/layouts/EditorialLayout.astro'
 import ArticleNav from '@/components/ArticleNav.astro'
+import { getCoverSrc } from '@/utils/covers'
 import { sortProjects } from '@/utils/projects'
 import type { CollectionProjects } from '@/types'
 
@@ -29,9 +30,8 @@ const { project, prev, next } = Astro.props
 const { title, category, status, repo, website, summary, stack, link, cover, svg } = project.data
 const { Content } = await project.render()
 
-const coverImage = cover
-  ? `/covers/${cover}`
-  : svg ? `/projects/${svg}` : undefined
+const coverSrc = await getCoverSrc(cover)
+const coverImage = coverSrc?.src ?? (svg ? `/projects/${svg}` : undefined)
 
 const primaryLink = link ?? (website ? { href: website, label: 'Visit website' } : null)
 const repoLink = repo && repo !== 'TBD' && repo !== 'private' ? repo : null
@@ -94,7 +94,14 @@ const toCell = (p: CollectionProjects | null) =>
             <span class="cover-corner-sym">№</span>
             <span class="cover-corner-num">01</span>
           </div>
-          <img src={coverImage} alt="" class="cover-img" />
+          <img
+            src={coverImage}
+            width={coverSrc?.width}
+            height={coverSrc?.height}
+            alt=""
+            class="cover-img"
+            decoding="async"
+          />
         </div>
       )}
     </header>

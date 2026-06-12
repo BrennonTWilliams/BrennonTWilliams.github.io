@@ -2,10 +2,12 @@
 import EditorialLayout from '@/layouts/EditorialLayout.astro'
 import EdSectionHeader from '@/components/EdSectionHeader.astro'
 import ProjectCard from '@/components/ProjectCard.vue'
+import { getCoverSrcMap } from '@/utils/covers'
 import { getProjects, partitionFlagship } from '@/utils/projects'
 
 const all = await getProjects()
 const { flagship, rest } = partitionFlagship(all)
+const coverSrcs = await getCoverSrcMap(all)
 
 const pad = (n: number) => String(n).padStart(2, '0')
 const year = new Date().getFullYear()
@@ -23,9 +25,9 @@ rest.forEach((project, i) => {
 const categories = [...categoryMap.entries()]
 
 const flHref = flagship?.data.website ?? flagship?.data.repo ?? (flagship ? `/projects/${flagship.slug}/` : '#')
-const flSvg = flagship?.data.cover
-  ? `/covers/${flagship.data.cover}`
-  : flagship?.data.svg ? `/projects/${flagship.data.svg}` : undefined
+const flCover = flagship ? coverSrcs.get(flagship.slug) : undefined
+const flSvg = flCover?.src
+  ?? (flagship?.data.svg ? `/projects/${flagship.data.svg}` : undefined)
 ---
 
 <EditorialLayout
@@ -75,7 +77,17 @@ const flSvg = flagship?.data.cover
           </div>
           <div class="fl-art-image-wrap">
             {flSvg
-              ? <img src={flSvg} alt={flagship.data.title} class="fl-img" />
+              ? (
+                <img
+                  src={flSvg}
+                  width={flCover?.width}
+                  height={flCover?.height}
+                  alt={flagship.data.title}
+                  class="fl-img"
+                  loading="lazy"
+                  decoding="async"
+                />
+              )
               : <span class="fl-initial" aria-hidden="true">{flagship.data.title.replace(/<[^>]*>/g, '').charAt(0).toUpperCase()}</span>
             }
           </div>
@@ -106,9 +118,8 @@ const flSvg = flagship?.data.cover
                 ? { label: project.data.link.label ?? 'Link', href: project.data.link.href }
                 : null,
             ].filter((l): l is { label: string; href: string } => l !== null)
-            const image = project.data.cover
-              ? `/covers/${project.data.cover}`
-              : project.data.svg ? `/projects/${project.data.svg}` : undefined
+            const image = coverSrcs.get(project.slug)?.src
+              ?? (project.data.svg ? `/projects/${project.data.svg}` : undefined)
             return (
               <ProjectCard
                 client:visible

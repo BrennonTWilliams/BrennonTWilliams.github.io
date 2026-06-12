@@ -7,6 +7,7 @@ import PoVMarquee from '@/components/PoVMarquee.vue'
 import ProjectCard from '@/components/ProjectCard.vue'
 import WriteItem from '@/components/WriteItem.vue'
 import siteConfig from '@/site-config'
+import { getCoverSrcMap } from '@/utils/covers'
 import { sortProjects } from '@/utils/projects'
 import { getPosts } from '@/utils/posts'
 import headshotImage from '@/assets/images/profile/brennon-stylized-headshot-2025-cropped.png'
@@ -14,6 +15,8 @@ import headshotImage from '@/assets/images/profile/brennon-stylized-headshot-202
 const allProjects = sortProjects((await getCollection('projects')).filter(p => !p.data.draft))
 const flagship = allProjects.find(p => p.data.flagship) ?? allProjects[0]
 const restProjects = allProjects.filter(p => p !== flagship)
+const coverSrcs = await getCoverSrcMap(allProjects)
+const flagshipCover = coverSrcs.get(flagship.slug)
 
 const recentPosts = (await getPosts()).slice(0, 2)
 
@@ -174,8 +177,16 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
 
       <div class="flagship-grid" data-reveal>
         <div class="flagship-plate">
-          {flagship.data.cover && (
-            <img src={`/covers/${flagship.data.cover}`} alt={flagship.data.title} class="flagship-img" />
+          {flagshipCover && (
+            <img
+              src={flagshipCover.src}
+              width={flagshipCover.width}
+              height={flagshipCover.height}
+              alt={flagship.data.title}
+              class="flagship-img"
+              loading="lazy"
+              decoding="async"
+            />
           )}
         </div>
         <div class="flagship-body">
@@ -222,9 +233,8 @@ const buildHash = (typeof __BUILD_HASH__ !== 'undefined' ? __BUILD_HASH__ : 'dev
                   ? { label: project.data.link.label ?? 'Link', href: project.data.link.href }
                   : null,
               ].filter((l): l is { label: string; href: string } => l !== null)
-              const image = project.data.cover
-                ? `/covers/${project.data.cover}`
-                : project.data.svg ? `/projects/${project.data.svg}` : undefined
+              const image = coverSrcs.get(project.slug)?.src
+                ?? (project.data.svg ? `/projects/${project.data.svg}` : undefined)
               return (
                 <ProjectCard
                   client:visible

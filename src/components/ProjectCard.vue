@@ -17,9 +17,9 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const initial = computed(() =>
-  props.name.replace(/<[^>]*>/g, '').charAt(0).toUpperCase()
-)
+const plainName = computed(() => props.name.replace(/<[^>]*>/g, ''))
+
+const initial = computed(() => plainName.value.charAt(0).toUpperCase())
 </script>
 
 <template>
@@ -45,7 +45,7 @@ const initial = computed(() =>
 
       <!-- Full-bleed art -->
       <div class="card-image-wrap">
-        <img v-if="image" :src="image" :alt="name" class="card-img" />
+        <img v-if="image" :src="image" :alt="plainName" class="card-img" loading="lazy" decoding="async" />
         <div v-else class="card-placeholder">
           <span class="placeholder-letter" aria-hidden="true">{{ initial }}</span>
         </div>
@@ -95,6 +95,10 @@ const initial = computed(() =>
 
 /* ── Card shell ──────────────────────────────── */
 .project-card {
+  /* local stacking order: art < corners < grain overlay */
+  --z-card-art: 0;
+  --z-card-corner: 3;
+  --z-card-grain: 4;
   width: 100%;
   aspect-ratio: 5 / 7;
   position: relative;
@@ -127,13 +131,13 @@ const initial = computed(() =>
   opacity: 0.05;
   mix-blend-mode: overlay;
   pointer-events: none;
-  z-index: 4;
+  z-index: var(--z-card-grain);
 }
 
 /* ── Corner indices ───────────────────────────── */
 .card-corner {
   position: absolute;
-  z-index: 3;
+  z-index: var(--z-card-corner);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -176,7 +180,7 @@ const initial = computed(() =>
   position: absolute;
   inset: 0;
   background: var(--bone);
-  z-index: 0;
+  z-index: var(--z-card-art);
 }
 
 .card-img {
