@@ -40,6 +40,7 @@
   --dur-fast:    120ms;
   --dur-base:    200ms;
   --dur-slow:    360ms;
+  --dur-theme:   400ms; /* theme-toggle View Transition reveal — read from JS in ThemeToggle.vue */
   --dur-marquee: 60s;
   --ease-standard:   cubic-bezier(0.2, 0, 0.2, 1);
   --ease-emphasized: cubic-bezier(0.2, 0, 0, 1);

@@ -41,6 +41,11 @@ const allItems = [...povItems, ...povItems]
 
 <style>
   .pov-block-container {
+    /* Stepped-carousel timing — keyframe stops below assume 5 items and the
+       pause:step ratio; update them together if these change. */
+    --povblock-items: 5;
+    --povblock-pause: 3s;
+    --povblock-step: 0.3s;
     width: 240px;
     height: 10rem;
     background: var(--bone);
@@ -49,7 +54,9 @@ const allItems = [...povItems, ...povItems]
   }
 
   .carousel {
-    animation: scroll 16.5s ease-in-out infinite;
+    animation: scroll
+      calc(var(--povblock-items) * (var(--povblock-pause) + var(--povblock-step)))
+      ease-in-out infinite;
   }
 
   @media (hover: hover) and (pointer: fine) {
@@ -89,7 +96,7 @@ const allItems = [...povItems, ...povItems]
 
   /*
    * Stepped animation: pause at each item, then move to next.
-   * 5 items × (3s pause + 0.3s transition) = 16.5s total.
+   * Total duration derives from --povblock-* vars (5 × (3s + 0.3s) = 16.5s).
    * Each item: 240px width + 10px gap = 250px.
    */
   @keyframes scroll {

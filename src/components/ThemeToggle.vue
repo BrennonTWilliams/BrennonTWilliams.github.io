@@ -33,10 +33,13 @@ function toggleTheme(event: MouseEvent) {
       `circle(0px at ${x}px ${y}px)`,
       `circle(${endRadius}px at ${x}px ${y}px)`,
     ]
+    const duration = Number.parseFloat(
+      getComputedStyle(document.documentElement).getPropertyValue('--dur-theme'),
+    ) || 400
     document.documentElement.animate(
       { clipPath: isDark.value ? [...clipPath].reverse() : clipPath },
       {
-        duration: 400,
+        duration,
         easing: 'ease-in',
         pseudoElement: isDark.value
           ? '::view-transition-old(root)'
