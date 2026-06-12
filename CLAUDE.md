@@ -117,7 +117,11 @@ Markdown plugins wired in `astro.config.ts`: `rehype-slug` + `rehype-autolink-he
 - `projects.ts`
   - `sortProjects(projects[])` — comparator-wrapped sort: status active first → `order` asc → slug fallback
   - `getProjects()` — convenience: non-draft, sorted
-  - `groupProjectsByCategory()`, `partitionFlagship()` — for legacy grouping (unused by current pages)
+  - `partitionFlagship()` — splits flagship from the rest (used by `/projects/`)
+- `covers.ts`
+  - Project cover art lives in `src/assets/covers/` and is referenced by bare filename in project frontmatter (`cover: little-loops.jpg`).
+  - `getCoverSrc(filename)` — runs the file through Astro's image pipeline (`getImage()`, 960w WebP) and returns `{ src, width, height }`
+  - `getCoverSrcMap(projects[])` — same, batched per project slug. Never reference covers by raw `/covers/...` URL.
 - `link.ts` — `getLinkTarget(link)`, `isExternalLink(link)`
 
 ### Site config (`src/site-config.ts`)
@@ -126,6 +130,7 @@ Single source of truth for nav, social, and editorial chrome strings.
 
 - `editorial` — `volume`, `issue`, `series`, `filedUnder`, `location`, `coords`, `sideRails.{left,right}`. Components read from here; bump volume/issue in one place.
 - `reading` — `lastUpdated` (manual signal, bump when the books/whitepapers lists change). The list content lives in the `books` / `whitepapers` collections. `astro.config.ts`'s `readingFreshnessCheck` warns if this date drifts > 14 days behind the config file mtime.
+- `analytics` — `goatcounter` site code. Empty string disables analytics entirely; when set, `BaseHead.astro` renders the GoatCounter script in production builds only (cookie-free, counts view-transition navs via `astro:after-swap`).
 - Internal route `href`s end in `/` (matches Astro's directory build, avoids GH Pages 301)
 
 ## Development Guidelines
@@ -171,6 +176,7 @@ website: "https://..."
 link:                 # optional primary outbound on detail page
   href: "https://..."
   label: "Visit site"
+cover: "project-name.jpg"   # optional cover art — file must exist in src/assets/covers/
 flagship: false
 draft: false
 ---

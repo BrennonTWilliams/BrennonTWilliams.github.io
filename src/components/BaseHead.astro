@@ -160,3 +160,23 @@ const personLd = {
 <!-- Structured data: Person (site-wide) and optional per-page extra (e.g. BlogPosting). -->
 <script type="application/ld+json" set:html={JSON.stringify(personLd)} />
 {structuredData && <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />}
+
+<!-- GoatCounter analytics — cookie-free, only in production builds and only when a
+     site code is configured in siteConfig.analytics. Auto-count covers the initial
+     page view; the after-swap listener covers client-side view-transition navs. -->
+{import.meta.env.PROD && siteConfig.analytics.goatcounter && (
+  <>
+    <script
+      is:inline
+      async
+      src="https://gc.zgo.at/count.js"
+      data-goatcounter={`https://${siteConfig.analytics.goatcounter}.goatcounter.com/count`}
+    />
+    <script is:inline>
+      document.addEventListener('astro:after-swap', function () {
+        if (window.goatcounter && window.goatcounter.count)
+          window.goatcounter.count({ path: location.pathname + location.search });
+      });
+    </script>
+  </>
+)}

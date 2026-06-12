@@ -33,22 +33,6 @@ export async function getProjects(): Promise<CollectionProjects[]> {
   )
 }
 
-export interface ProjectGroup {
-  category: string
-  projects: CollectionProjects[]
-}
-
-export function groupProjectsByCategory(projects: CollectionProjects[]): ProjectGroup[] {
-  const groups = new Map<string, CollectionProjects[]>()
-  for (const p of projects) {
-    const cat = p.data.category ?? 'Uncategorized'
-    if (!groups.has(cat))
-      groups.set(cat, [])
-    groups.get(cat)!.push(p)
-  }
-  return Array.from(groups.entries()).map(([category, projects]) => ({ category, projects }))
-}
-
 export function partitionFlagship(projects: CollectionProjects[]) {
   const flagship = projects.find(p => p.data.flagship) ?? null
   const rest = flagship ? projects.filter(p => p !== flagship) : projects

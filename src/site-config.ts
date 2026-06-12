@@ -51,7 +51,7 @@ export const siteConfig = {
     series: "Notes from the lab · Nº 03",
     filedUnder: "Code · Intelligence",
     location: "SF · NYC · Dallas",
-    coords: "38.89° N · 77.03° W",
+    coords: "32.78° N · 96.80° W",
     sideRails: {
       left: "Agent Harnesses · Eval-driven-development · Agentic Coding Loops · Enterprise AI · Physical computing",
       right: "BW — Vol. 01 · Issue Nº 03 · 2026 · MIT",
@@ -65,6 +65,16 @@ export const siteConfig = {
    */
   reading: {
     lastUpdated: "2026-05-22",
+  },
+
+  /**
+   * Privacy-friendly analytics (GoatCounter — no cookies, no consent banner).
+   * Set `goatcounter` to your site code (the `<code>` in `<code>.goatcounter.com`)
+   * to enable; leave empty to keep the script out of the build entirely.
+   * The script only renders in production builds (see BaseHead.astro).
+   */
+  analytics: {
+    goatcounter: "",
   },
 
   favicon: "/favicon.svg",
